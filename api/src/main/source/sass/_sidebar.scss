@@ -1,0 +1,31 @@
+.sidebar {
+  padding-bottom: 0;
+}
+
+.list {
+  padding-left: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  list-style: none;
+
+  .item {
+    border-bottom: 1px solid #f4f4f4;
+    margin: 0;
+    position: relative;
+    display: block;
+    float: none;
+
+    a {
+      text-decoration: none;
+      position: relative;
+      display: block;
+      padding: 10px 15px;
+      color: #444;
+
+      &:hover {
+        background: #f7f7f7;
+      }
+    }
+  }
+
+}

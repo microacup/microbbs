@@ -1,0 +1,9 @@
+@mixin text-grey {
+  color: #ccc;
+}
+
+@mixin signle-line-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

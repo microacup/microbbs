@@ -1,0 +1,12 @@
+/**
+ * 重写Bootstrap中的样式
+ */
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+  background-color: #337ab7;
+}
+
+.nav-pills>li>a {
+  @include border-radius(2px);
+  border-top: 0;
+  padding: 5px 15px;
+}

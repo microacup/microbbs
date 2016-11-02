@@ -1,0 +1,80 @@
+buildscript {
+	ext {
+		springRepo = 'http://repo.spring.io/libs-release'
+		springSnapshot = 'https://repo.spring.io/libs-snapshot'
+		springBootVersion = '1.4.1.RELEASE'
+	}
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven { url springRepo }
+		maven { url springSnapshot }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath 'io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE'
+	}
+
+}
+
+
+def vJavaLang = '1.8'
+def javaProjects = [project(':api')]
+
+subprojects {
+	version = "1.0.0"
+}
+
+allprojects {
+	gradle.projectsEvaluated {
+		tasks.withType(JavaCompile) {
+			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+		}
+	}
+}
+
+configure(javaProjects) {
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	apply plugin: "io.spring.dependency-management"
+
+	targetCompatibility = vJavaLang
+	sourceCompatibility = vJavaLang
+
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven { url springRepo }
+		maven { url springSnapshot }
+	}
+
+	dependencies {
+		compile 'org.slf4j:slf4j-api'
+		testCompile 'junit:junit'
+		testCompile 'org.hamcrest:hamcrest-library'
+		testCompile 'org.mockito:mockito-core'
+		testCompile 'org.objenesis:objenesis'
+	}
+
+	afterEvaluate {
+		dependencyManagement {
+			imports {
+				mavenBom ('io.spring.platform:platform-bom:Athens-RELEASE')
+				/*{
+					bomProperties([
+							'elasticsearch.version': '2.1.0' // see io.searchbox:jest
+					])
+				}*/
+			}
+		}
+	}
+
+	[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+	configurations {
+		// replaced with jcl-over-slf4j
+		all*.exclude group: 'commons-logging', module: 'commons-logging'
+		// replaced with log4j-over-slf4j
+		all*.exclude group: 'log4j', module: 'log4j'
+	}
+}

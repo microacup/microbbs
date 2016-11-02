@@ -1,0 +1,138 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="site/layout">
+<head>
+  <title th:inline="text">[[#{app.title}]]</title>
+</head>
+<body>
+<!--tags-->
+<section layout:fragment="tags" class="content-header">
+  <ul class="nav nav-pills" role="tablist">
+    <li role="presentation" class="active"><a href="#">技术 <span class="badge">42</span></a></li>
+    <li role="presentation"><a href="#">考试</a></li>
+    <li role="presentation"><a href="#">培训 <span class="badge">3</span></a></li>
+  </ul>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="#">Layout</a></li>
+    <li class="active">Top Navigation</li>
+  </ol>
+</section><!--/tags-->
+
+<!--content-->
+<main class="col-xs-12 col-md-9" layout:fragment="content">
+    <ul class="list-group">
+      <li class="list-group-item" th:each="i: ${#numbers.sequence( 1, 8)}">
+        <div class="media-left">
+          <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
+        </div>
+        <div class="media-body">
+          <h4 class="post-title">Java 程序员最可能被考到的面试题</h4>
+          <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
+          <div class="post-footer">
+            <a href="#" class="label label-default tag tag-sm">Spring</a>
+            <a href="#" class="label label-default tag tag-sm">技术</a>
+            <span class="post-author">小黑</span>
+            <span class="post-author-last">最后由小明回复于</span>
+            <span class="post-time-last">1小时14分钟前</span>
+          </div>
+        </div>
+        <div class="media-right">
+          <span class="badge">14</span>
+        </div>
+      </li>
+      <li class="list-group-item">B</li>
+      <li class="list-group-item">C</li>
+    </ul>
+</main><!--/content-->
+
+<aside class="col-xs-12 col-md-3" layout:fragment="sidebar">
+
+  <section class="sidebar box box-widget widget-user">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header bg-aqua-active text-center">
+      <h3 class="widget-user-username">张小明</h3>
+      <h5 class="widget-user-desc">我的愿望是，世界和平</h5>
+    </div>
+    <div class="widget-user-image">
+      <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="img-circle"
+           alt="User Image">
+    </div>
+    <div class="box-footer">
+      <div class="row">
+        <div class="col-sm-4 border-right">
+          <div class="description-block">
+            <h5 class="description-header">3,200</h5>
+            <span class="description-text">话题</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4 border-right">
+          <div class="description-block">
+            <h5 class="description-header">13,000</h5>
+            <span class="description-text">回复</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4">
+          <div class="description-block">
+            <h5 class="description-header">35</h5>
+            <span class="description-text">关注</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+  </section>
+
+
+  <!--相关讨论-->
+  <section class="sidebar box box-success">
+    <div class="box-header with-border">
+      <h3 class="box-title">相关话题</h3>
+    </div>
+    <div class="box-body no-padding">
+      <ul class="list">
+        <li class="item"><a href="#">A</a></li>
+        <li class="item"><a href="#">B</a></li>
+        <li class="item"><a href="#">C</a></li>
+      </ul>
+    </div>
+  </section><!--/相关讨论-->
+
+  <!--此刻-->
+  <section class="sidebar box box-info">
+    <div class="box-header with-border">
+      <h3 class="box-title">此刻</h3>
+    </div>
+    <div class="box-body no-padding">
+      <ul class="list">
+        <li class="item"><a href="#">A</a></li>
+        <li class="item"><a href="#">B</a></li>
+        <li class="item"><a href="#">C</a></li>
+      </ul>
+    </div>
+  </section><!--/此刻-->
+
+  <section class="sidebar box box-danger">
+    <div class="box-header with-border">
+      <h3 class="box-title">热门标签</h3>
+    </div>
+    <div class="box-body no-padding">
+      <ul class="list">
+        <li class="item"><a href="#">A</a></li>
+        <li class="item"><a href="#">B</a></li>
+        <li class="item"><a href="#">C</a></li>
+      </ul>
+    </div>
+  </section>
+
+</aside>
+
+</body>
+</html>

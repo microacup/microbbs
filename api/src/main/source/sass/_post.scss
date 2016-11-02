@@ -1,0 +1,38 @@
+@import "mixin";
+
+.media-left, .modal-body, .media-right {
+  vertical-align: middle;
+}
+
+.post-avatar {
+  height: 48px;
+  width: 48px;
+}
+
+.post-footer span, .post-author,.post-author-last {
+  @include text-grey;
+}
+
+.post-title {
+  font-size: 15px;
+}
+
+.post-title, .post-summary {
+  @include signle-line-text;
+}
+
+.post-author-last:before {
+  content: '•';
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.post-footer {
+  padding-bottom: 0.3em;
+  font-size: 12px;
+
+  .label {
+    font-weight: normal;
+    @include border-radius(2px);
+  }
+}

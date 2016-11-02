@@ -1,0 +1,48 @@
+project:
+  artifactId: api
+  name: bbs
+  description: microbbs
+
+server:
+    port: 7000
+    contextPath: /bbs
+spring:
+  datasource:
+    driverClassName:  com.mysql.jdbc.Driver
+    url:  jdbc:mysql://127.0.0.1/microbbs?serverTimezone=UTC&useSSL=false
+    username: root
+    password: root
+  session:
+    store-type: redis
+    cookie:
+      http-only: true
+  thymeleaf:
+    mode: LEGACYHTML5
+  jpa:
+    show_sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+      ddl_auto: update
+  mvc:
+    static-path-pattern: /static/**
+
+security:
+  user:
+    password: 111111
+  basic:
+    enabled:  true
+  require_ssl: false
+
+logging:
+  level:
+    ROOT: WARN
+    org.apache.http: WARN
+    # turn up to DEBUG to diagnose GitHub API issues
+    org.apache.http.headers: WARN
+    # turn up to DEBUG to see information about guides as they are fetched and processed
+    sagan.guides.support: WARN
+    # always log high-level information about application startup
+    sagan.SiteApplication: INFO
+    # log generated password for admin endpoints, e.g. /env, /beans
+    # See http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints
+    org.springframework.boot.autoconfigure.security.AuthenticationManagerConfiguration: INFO

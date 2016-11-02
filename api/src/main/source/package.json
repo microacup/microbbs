@@ -1,0 +1,30 @@
+{
+  "name": "lms",
+  "description": "node.js packages for lms UI.",
+  "repository": {
+    "type": "git"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "admin-lte": "^2.3.6",
+    "ionicons":"^2.0.1",
+    "font-awesome": "^4.5.0",
+    "jquery": "^2.2.3"
+  },
+  "devDependencies": {
+    "gulp": "3.9.1",
+    "gulp-minify-css": "^1.2.2",
+    "gulp-util": "3.0.1",
+    "jshint": "2.1",
+    "gulp-uglify": "^2.0.0",
+    "wd": "0.2.17"
+  },
+  "directories": {
+    "test": "test",
+    "baseURL": "src",
+    "packages": "src/lib"
+  },
+  "scripts": {
+    "build": "gulp build"
+  }
+}

@@ -1,0 +1,29 @@
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+# Package Files #
+*.war
+*.ear
+
+### STS ###
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+nbproject/private/
+build/
+nbbuild/
+nbdist/
+node_modules/
+resource/static/
+.sass-cache/
+stylesheets/
+classes/
