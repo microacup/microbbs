@@ -27,3 +27,4 @@ resource/static/
 .sass-cache/
 stylesheets/
 classes/
+src/main/resources/static/
