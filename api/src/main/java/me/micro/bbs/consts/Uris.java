@@ -6,8 +6,10 @@ package me.micro.bbs.consts;
  * Created by microacup on 2016/10/24.
  */
 public final class Uris {
-    public static final String USERS = "/users";
-    public static final String TEST = "/test";
+    public static final String API_USERS = "/api/users";
+    public static final String API_POSTS = "/api/posts";
+    public static final String API_TEST = "/api/test";
+
     public static final String ID = "/{id}";
     public static final String GENERATE_204 = "/generate_204";
     public static final String AVAILABLE = "/available";

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by microacup on 2016/10/21.
  */
 @RestController
-@RequestMapping(Uris.TEST)
+@RequestMapping(Uris.API_TEST)
 public class TestApi {
 
     // @see https://www.noisyfox.cn/45.html

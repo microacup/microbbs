@@ -39,9 +39,9 @@ dependencies {
 	compile 'org.apache.tomcat:tomcat-jdbc'
 	compile 'org.hibernate:hibernate-validator'
 	compile 'com.zaxxer:HikariCP'
-	compile 'com.fasterxml.jackson.core:jackson-annotations'
-	compile('com.fasterxml.jackson.core:jackson-core')
-	compile('com.fasterxml.jackson.core:jackson-databind')
+	//compile 'com.fasterxml.jackson.core:jackson-annotations'
+	//compile('com.fasterxml.jackson.core:jackson-core')
+	//compile('com.fasterxml.jackson.core:jackson-databind')
 	runtime('mysql:mysql-connector-java')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')

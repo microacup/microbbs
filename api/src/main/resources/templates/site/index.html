@@ -21,7 +21,7 @@
 </section><!--/tags-->
 
 <!--content-->
-<main class="col-xs-12 col-md-9" layout:fragment="content">
+<main layout:fragment="content" id="posts">
     <ul class="list-group">
       <li class="list-group-item" th:each="i: ${#numbers.sequence( 1, 8)}">
         <div class="media-left">
