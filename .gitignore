@@ -23,8 +23,7 @@ build/
 nbbuild/
 nbdist/
 node_modules/
-resource/static/
 .sass-cache/
 stylesheets/
 classes/
-src/main/resources/static/
+api/src/main/resources/static/
