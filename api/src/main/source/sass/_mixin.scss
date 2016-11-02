@@ -1,5 +1,11 @@
+@import "variables";
+
+@mixin text-dark {
+  color: $text-color-dark;
+}
+
 @mixin text-grey {
-  color: #ccc;
+  color: $text-color-grey;
 }
 
 @mixin signle-line-text {

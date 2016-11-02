@@ -9,12 +9,16 @@
   width: 48px;
 }
 
-.post-footer span, .post-author,.post-author-last {
-  @include text-grey;
+.post-footer {
+  a,span {
+    @include text-grey;
+  }
 }
 
 .post-title {
   font-size: 15px;
+  line-height: 2em;
+  @include text-dark;
 }
 
 .post-title, .post-summary {

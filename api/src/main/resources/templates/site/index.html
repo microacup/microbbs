@@ -25,16 +25,18 @@
     <ul class="list-group">
       <li class="list-group-item" th:each="i: ${#numbers.sequence( 1, 8)}">
         <div class="media-left">
-          <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
+          <a href="#">
+            <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
+          </a>
         </div>
         <div class="media-body">
-          <h4 class="post-title">Java 程序员最可能被考到的面试题</h4>
+          <a href="#" class="post-title">Java 程序员最可能被考到的面试题</a>
           <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
           <div class="post-footer">
             <a href="#" class="label label-default tag tag-sm">Spring</a>
             <a href="#" class="label label-default tag tag-sm">技术</a>
-            <span class="post-author">小黑</span>
-            <span class="post-author-last">最后由小明回复于</span>
+            <a href="#" class="post-author">小黑</a>
+            <span class="post-author-last">最后由 <a href="#">小明</a> 回复于</span>
             <span class="post-time-last">1小时14分钟前</span>
           </div>
         </div>
@@ -131,7 +133,6 @@
       </ul>
     </div>
   </section>
-
 </aside>
 
 </body>

@@ -1,0 +1,23 @@
+body {
+  font: 12px/150% '微软雅黑','Helvetica Neue', Helvetica,  Arial, Verdana,FreeSans,Arimo,"Droid Sans",sans-serif !important;
+  color: #666;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  outline: none;
+  text-decoration: none;
+  color: #666;
+}
+
+.clearfix:before, .clearfix:after, .modal-footer:before, .modal-footer:after {
+  content: " ";
+  display: table;
+}
+
+.clearfix:after, .modal-footer:after {
+  clear: both;
+}
