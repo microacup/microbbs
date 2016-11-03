@@ -8,6 +8,9 @@ import me.micro.bbs.enums.PostStatus;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.user.User;
 import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -46,12 +49,12 @@ public class Post {
     @JoinTable(name = "M_POSTS_TAGS",
         joinColumns = {@JoinColumn(name = "post_id", nullable = false, updatable = false)},
         inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false, updatable = false)})
-    //@JsonManagedReference
     private Set<Tag> tags;
 
     // 作者
     @ManyToOne
     @JoinColumn(name="p_author", nullable=false)
+    @CreatedBy
     private User author;
 
     // 最后回复人
@@ -63,14 +66,17 @@ public class Post {
 
     // 创建时间
     @Column(name = "p_createdTime", nullable = false)
+    @CreatedDate
     private Date createdTime;
 
     // 最后更新时间
     @Column(name = "p_updatedTime")
+    @LastModifiedDate
     private Date updatedTime;
 
     // 最后回复时间
     @Column(name = "p_lastReplyTime")
+    @LastModifiedDate
     private Date lastReplyTime;
 
     // 是否允许评论

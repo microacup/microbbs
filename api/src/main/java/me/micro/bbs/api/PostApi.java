@@ -33,7 +33,7 @@ public class PostApi {
     public ResponseEntity<List<Post>> posts(@RequestParam(value = "tags", required = false) String tags) {
         List<Post> posts = Collections.emptyList();
         if (!StringUtils.isBlank(tags)) {
-            String[] strings = tags.split("\\|");
+            String[] strings = tags.split(",");
             List<Long> tagList = new ArrayList<>(strings.length);
             for (String tag : strings) {
                 tagList.add(Long.parseLong(tag));

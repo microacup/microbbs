@@ -4,17 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
-import me.micro.bbs.post.Post;
+import me.micro.bbs.category.Category;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import java.util.List;
+import javax.persistence.*;
 
 /**
  * 标签
@@ -34,7 +26,14 @@ public class Tag {
     @Column(name = "t_title", nullable = false, length = 255)
     private String title;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
-    @JsonBackReference
-    private List<Post> posts;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "M_TAGS_CATES",
+            joinColumns = {@JoinColumn(name = "tag_id")},
+            inverseJoinColumns={@JoinColumn(name = "cate_id")})
+    @JsonBackReference(value = "categoryReference")
+    private Category category;
+
+    /*@ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
+    @JsonBackReference(value = "postReference")
+    private List<Post> posts;*/
 }

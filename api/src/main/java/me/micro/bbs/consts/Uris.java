@@ -8,6 +8,8 @@ package me.micro.bbs.consts;
 public final class Uris {
     public static final String API_USERS = "/api/users";
     public static final String API_POSTS = "/api/posts";
+    public static final String API_CATEGORIES = "/api/categories";
+    public static final String API_CATEGORIES_TAGS = "/api/categories/{categoryId}/tags";
     public static final String API_TEST = "/api/test";
 
     public static final String ID = "/{id}";

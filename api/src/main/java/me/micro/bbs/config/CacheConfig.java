@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import me.micro.bbs.cache.CacheKeyGenerator;
 import me.micro.bbs.cache.JsonRedisTemplate;
 import me.micro.bbs.cache.RedisCacheManager;
+import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.support.PostService;
+import me.micro.bbs.tag.support.TagService;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -34,14 +36,31 @@ public class CacheConfig extends CachingConfigurerSupport {
         TypeFactory typeFactory = TypeFactory.defaultInstance();
 
         // Post Cache
-        JsonRedisTemplate<? extends Object> userTemplete = new JsonRedisTemplate<>(redisConnectionFactory, PostService.CACHE_TYPE);
-        cacheManager.withCache(PostService.CACHE_NAME, userTemplete, this.cacheTimeToLive);
+        JsonRedisTemplate<? extends Object> postTemplate = new JsonRedisTemplate<>(redisConnectionFactory, PostService.CACHE_TYPE);
+        cacheManager.withCache(PostService.CACHE_NAME, postTemplate, this.cacheTimeToLive);
 
         // Post List Cache
-        JavaType userList = typeFactory.constructParametricType(ArrayList.class, PostService.CACHE_TYPE);
-        JsonRedisTemplate<? extends Object>  usersTemplete = new JsonRedisTemplate<>(redisConnectionFactory, userList);
-        cacheManager.withCache(PostService.CACHES_NAME, usersTemplete, this.cacheTimeToLive);
+        JavaType posts = typeFactory.constructParametricType(ArrayList.class, PostService.CACHE_TYPE);
+        JsonRedisTemplate<? extends Object>  postsTemplate = new JsonRedisTemplate<>(redisConnectionFactory, posts);
+        cacheManager.withCache(PostService.CACHES_NAME, postsTemplate, this.cacheTimeToLive);
 
+        // Tag Cache
+        JsonRedisTemplate<? extends Object> tagTemplate = new JsonRedisTemplate<>(redisConnectionFactory, TagService.CACHE_TYPE);
+        cacheManager.withCache(TagService.CACHE_NAME, tagTemplate, this.cacheTimeToLive);
+
+        // Tag List Cache
+        JavaType tags = typeFactory.constructParametricType(ArrayList.class, TagService.CACHE_TYPE);
+        JsonRedisTemplate<? extends Object>  tagsTemplate = new JsonRedisTemplate<>(redisConnectionFactory, tags);
+        cacheManager.withCache(TagService.CACHES_NAME, tagsTemplate, this.cacheTimeToLive);
+
+        // Category Cache
+        JsonRedisTemplate<? extends Object> cateTemplate = new JsonRedisTemplate<>(redisConnectionFactory, CategoryService.CACHE_TYPE);
+        cacheManager.withCache(CategoryService.CACHE_NAME, cateTemplate, this.cacheTimeToLive);
+
+        // Tag List Cache
+        JavaType cates = typeFactory.constructParametricType(ArrayList.class, CategoryService.CACHE_TYPE);
+        JsonRedisTemplate<? extends Object>  catesTemplate = new JsonRedisTemplate<>(redisConnectionFactory, cates);
+        cacheManager.withCache(CategoryService.CACHES_NAME, catesTemplate, this.cacheTimeToLive);
         return cacheManager;
     }
 

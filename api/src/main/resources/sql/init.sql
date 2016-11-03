@@ -29,3 +29,14 @@ INSERT INTO `microbbs`.`m_posts_tags` (`post_id`, `tag_id`) VALUES ('1', '3');
 INSERT INTO `microbbs`.`m_posts_tags` (`post_id`, `tag_id`) VALUES ('2', '1');
 INSERT INTO `microbbs`.`m_posts_tags` (`post_id`, `tag_id`) VALUES ('2', '5');
 INSERT INTO `microbbs`.`m_posts_tags` (`post_id`, `tag_id`) VALUES ('2', '4');
+
+/*category*/
+INSERT INTO `microbbs`.`m_category` (`id`, `c_title`) VALUES ('1', '技术');
+INSERT INTO `microbbs`.`m_category` (`id`, `c_title`) VALUES ('2', '语言');
+
+/*tags_cates*/
+INSERT INTO `microbbs`.`m_tags_cates` (`cate_id`, `tag_id`) VALUES ('1', '1');
+INSERT INTO `microbbs`.`m_tags_cates` (`cate_id`, `tag_id`) VALUES ('1', '2');
+INSERT INTO `microbbs`.`m_tags_cates` (`cate_id`, `tag_id`) VALUES ('1', '3');
+INSERT INTO `microbbs`.`m_tags_cates` (`cate_id`, `tag_id`) VALUES ('2', '4');
+INSERT INTO `microbbs`.`m_tags_cates` (`cate_id`, `tag_id`) VALUES ('2', '5');
