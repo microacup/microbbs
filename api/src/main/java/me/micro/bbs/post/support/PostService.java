@@ -3,6 +3,9 @@ package me.micro.bbs.post.support;
 import me.micro.bbs.post.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -44,6 +47,28 @@ public class PostService {
     public List<Post> findByCategoryId(Long categoryId) {
         List<Post> posts = postRepository.findByCategoryId(categoryId);
         return posts;
+    }
+
+
+    /**
+     * 热门
+     */
+    public Page<Post> hot(int page, int pageSize) {
+        return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC, "topTime", "replyCount", "lastReplyTime", "updatedTime"));
+    }
+
+    /**
+     * 优选
+     */
+    public Page<Post> perfect(int page, int pageSize) {
+        return postRepository.findByPerfectTrueOrderByPerfectTimeDesc(new PageRequest(page, pageSize));
+    }
+
+    /**
+     * 此刻
+     */
+    public Page<Post> findNow(int page, int pageSize) {
+       return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC, "lastReplyTime","updatedTime"));
     }
 
 

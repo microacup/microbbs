@@ -3,8 +3,10 @@ package me.micro.bbs.api;
 import me.micro.bbs.consts.Uris;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.post.support.PostService;
+import me.micro.bbs.setting.Setting;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +59,12 @@ public class PostApi {
         if (post == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return ResponseEntity.ok(post);
+    }
+
+    @GetMapping(Uris.API_POSTS_NOW)
+    public ResponseEntity<Page<Post>> now(@RequestParam(defaultValue = "0") int page) {
+        Page<Post> posts = postService.findNow(page, Setting.PAGE_SIZE);
+        return ResponseEntity.ok(posts);
     }
 
 

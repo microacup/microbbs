@@ -19,6 +19,11 @@ import java.util.Set;
 /**
  * 帖子
  *
+ * 默认顺序（热门、此刻、优选除外）：topTime > lastReplyTime > updatedTime
+ * 此刻顺序：lastReplyTime > updatedTime
+ * 优选顺序：perfect == true && perfectTime
+ * 热门顺序：topTime > replyCount > lastReplyTime > updatedTime
+ *
  * Created by microacup on 2016/11/1.
  */
 @Entity
@@ -53,24 +58,29 @@ public class Post {
 
     // 作者
     @ManyToOne
-    @JoinColumn(name="p_author", nullable=false)
+    @JoinColumn(name="p_author", nullable=false, updatable = false)
     @CreatedBy
     private User author;
 
-    // 最后回复人
-    @Column(name="p_lastAuthor", nullable=false)
+    // 最后回复人ID
+    @Column(name="p_lastAuthor")
     private Long lastAuthor;
 
+    // 最后回复人姓名
     @Column(name = "p_lastAuthorName")
     private String lastAuthorName;
 
+    // 回复数量
+    @Column(name = "p_replyCount")
+    private Long replyCount;
+
     // 创建时间
-    @Column(name = "p_createdTime", nullable = false)
+    @Column(name = "p_createdTime", nullable = false, updatable = false)
     @CreatedDate
     private Date createdTime;
 
-    // 最后更新时间
-    @Column(name = "p_updatedTime")
+    // 最后更新时间, 默认=createdTime
+    @Column(name = "p_updatedTime", nullable = false)
     @LastModifiedDate
     private Date updatedTime;
 
@@ -87,6 +97,22 @@ public class Post {
     @Column(name = "p_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private PostStatus status;
+
+    // 是否优选
+    @Column(name = "p_perfect")
+    private Boolean perfect;
+
+    // 优选时间
+    @Column(name = "p_perfectTime")
+    private Date perfectTime;
+
+    // 是否置顶
+    @Column(name = "p_top")
+    private Boolean top;
+
+    // 置顶时间
+    @Column(name = "p_topTime")
+    private Date topTime;
 
 }
 

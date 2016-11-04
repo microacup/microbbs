@@ -1,6 +1,8 @@
 package me.micro.bbs.post.support;
 
 import me.micro.bbs.post.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +26,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select distinct p from Post p inner join  p.tags t where t.category.id = :category")
     List<Post> findByCategoryId(@Param("category") Long category);
+
+    Page<Post> findByPerfectTrueOrderByPerfectTimeDesc(Pageable pageable);
 }

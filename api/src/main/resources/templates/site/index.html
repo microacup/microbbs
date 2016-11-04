@@ -9,9 +9,9 @@
 <!--tags-->
 <section layout:fragment="tags" class="content-header">
   <ul class="nav nav-pills" role="tablist" th:if="${activeCategory == null}">
-    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'now')}"><a th:href="@{/now}">此刻</a></li>
-    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'perfect')}"><a th:href="@{/perfect}">优选</a></li>
     <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'hot')}"><a th:href="@{/hot}">热门</a></li>
+    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'perfect')}"><a th:href="@{/perfect}">优选</a></li>
+    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'now')}"><a th:href="@{/now}">此刻</a></li>
   </ul>
 
   <ul class="nav nav-pills" role="tablist" >
@@ -25,7 +25,7 @@
     <li th:if="${activeCategory != null}"><a href="#" th:utext="${activeCategory.title}">探索</a></li>
     <li th:if="${activeCategory == null}"><a href="#">探索</a></li>
     <li class="active" th:if="${activeTag != null}" th:utext="${activeTag.title}">此刻</li>
-    <li class="active" th:if="${activeTag == null}">此刻</li>
+    <li class="active" th:if="${activeTag == null}" th:utext="${activedExplorer}">此刻</li>
   </ol>
 </section><!--/tags-->
 
@@ -41,6 +41,9 @@
         </div>
         <div class="media-body">
           <a href="#" class="post-title" th:utext="${post.title}">Title</a>
+          <i class="iconfont icon-zhiding icon-micro"
+             th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }"></i>
+          <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}"></i>
           <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
           <div class="post-footer">
             <a class="label label-default tag tag-sm"
@@ -51,9 +54,9 @@
             <span class="post-time-last" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
           </div>
         </div>
-        <!--<div class="media-right">
-          <span class="badge">14</span>
-        </div>-->
+        <div class="media-right">
+          <span class="badge" th:text="${post.replyCount}">0</span>
+        </div>
       </li>
     </ul>
 </main><!--/content-->
