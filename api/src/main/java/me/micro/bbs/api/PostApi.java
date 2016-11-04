@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,14 +22,13 @@ import java.util.List;
  * Created by microacup on 2016/11/2.
  */
 @RestController
-@RequestMapping(Uris.API_POSTS)
 public class PostApi {
 
     @Autowired
     private PostService postService;
 
-    @GetMapping
-    public ResponseEntity<List<Post>> posts(@RequestParam(value = "tags", required = false) String tags) {
+    @GetMapping(Uris.API_POSTS)
+    public ResponseEntity<List<Post>> postsByTags(@RequestParam(value = "tags", required = false) String tags) {
         List<Post> posts = Collections.emptyList();
         if (!StringUtils.isBlank(tags)) {
             String[] strings = tags.split(",");
@@ -47,8 +45,13 @@ public class PostApi {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping(Uris.API_CATEGORIES_POSTS)
+    public ResponseEntity<List<Post>> postsByCategory(@PathVariable(value = "categoryId") long categoryId) {
+        List<Post> posts = postService.findByCategoryId(categoryId);
+        return ResponseEntity.ok(posts);
+    }
 
-    @GetMapping(Uris.ID)
+    @GetMapping(Uris.API_POSTS + Uris.ID)
     public ResponseEntity<Post> one(@PathVariable("id") long id) {
         Post post = postService.findOne(id);
         if (post == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);

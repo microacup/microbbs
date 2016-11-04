@@ -14,7 +14,9 @@ import java.util.List;
  */
 public interface TagRepository extends JpaRepository<Tag, Long>{
 
-    @Query("select t from Tag t where t.category.id = :categoryId")
+    @Query(value = "select t from Tag t where t.category.id = :categoryId")
+        // nativeQuery时必须返回所有列§3.10.16.1 "Returning Managed Entities from Native Queries" of the JPA spec says:
+        // @Query(value = "select * from M_TAG t where t.t_category = :categoryId", nativeQuery = true)
     List<Tag> findByCategoryId(@Param("categoryId") Long categoryId);
 
 }

@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="site/layout">
+<head>
+  <title th:inline="text">[[#{app.title}]]</title>
+</head>
+<body>
+  <main layout:fragment="content" id="posts" class="col-xs-12 col-md-12">
+    <div class="notfound">
+      <h4>手动404</h4>
+      <p>你似乎来到了没有知识存在的荒原...</p>
+    </div>
+  </main>
+</body>
+</html>

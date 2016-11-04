@@ -8,44 +8,53 @@
 <body>
 <!--tags-->
 <section layout:fragment="tags" class="content-header">
-  <ul class="nav nav-pills" role="tablist">
-    <li role="presentation" class="active"><a href="#">技术 <span class="badge">42</span></a></li>
-    <li role="presentation"><a href="#">考试</a></li>
-    <li role="presentation"><a href="#">培训 <span class="badge">3</span></a></li>
+  <ul class="nav nav-pills" role="tablist" th:if="${activeCategory == null}">
+    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'now')}"><a th:href="@{/now}">此刻</a></li>
+    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'perfect')}"><a th:href="@{/perfect}">优选</a></li>
+    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'hot')}"><a th:href="@{/hot}">热门</a></li>
+  </ul>
+
+  <ul class="nav nav-pills" role="tablist" >
+    <li role="presentation"  th:each="tag: ${tags}" th:class="${tag.id == activeTag.id ? 'active' : ''}">
+      <a th:href="@{'/category/' + ${activeCategory.id} + '/tag/' + ${tag.id}}" th:utext="${tag.title}"></a>
+      <!--<span class="badge">42</span>-->
+    </li>
   </ul>
   <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Layout</a></li>
-    <li class="active">Top Navigation</li>
+    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+    <li th:if="${activeCategory != null}"><a href="#" th:utext="${activeCategory.title}">探索</a></li>
+    <li th:if="${activeCategory == null}"><a href="#">探索</a></li>
+    <li class="active" th:if="${activeTag != null}" th:utext="${activeTag.title}">此刻</li>
+    <li class="active" th:if="${activeTag == null}">此刻</li>
   </ol>
 </section><!--/tags-->
 
 <!--content-->
 <main layout:fragment="content" id="posts">
     <ul class="list-group">
-      <li class="list-group-item" th:each="i: ${#numbers.sequence( 1, 8)}">
+      <!--#numbers.sequence( 1, 8)-->
+      <li class="list-group-item" th:each="post: ${posts}">
         <div class="media-left">
           <a href="#">
             <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
           </a>
         </div>
         <div class="media-body">
-          <a href="#" class="post-title">Java 程序员最可能被考到的面试题</a>
+          <a href="#" class="post-title" th:utext="${post.title}">Title</a>
           <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
           <div class="post-footer">
-            <a href="#" class="label label-default tag tag-sm">Spring</a>
-            <a href="#" class="label label-default tag tag-sm">技术</a>
-            <a href="#" class="post-author">小黑</a>
-            <span class="post-author-last">最后由 <a href="#">小明</a> 回复于</span>
-            <span class="post-time-last">1小时14分钟前</span>
+            <a class="label label-default tag tag-sm"
+               th:href="@{'/category/' + ${t.category.id} + '/tag/' + ${t.id}}"
+               th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
+            <a th:href="@{'/users/' + post.author.id + '/profile'}" class="post-author" th:utext="${post.author.nick}"></a>
+            <span class="post-author-last">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+            <span class="post-time-last" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
           </div>
         </div>
-        <div class="media-right">
+        <!--<div class="media-right">
           <span class="badge">14</span>
-        </div>
+        </div>-->
       </li>
-      <li class="list-group-item">B</li>
-      <li class="list-group-item">C</li>
     </ul>
 </main><!--/content-->
 

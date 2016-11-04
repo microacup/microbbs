@@ -1,7 +1,6 @@
 package me.micro.bbs.category.support;
 
 import me.micro.bbs.category.Category;
-import me.micro.bbs.tag.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,8 @@ import java.util.List;
 @Service
 public class CategoryService {
     public static final String CACHES_NAME = "cache.cates";
-    public static final String CACHE_NAME = "cache.cates";
-    public static final Class<?> CACHE_TYPE = Tag.class;
+    public static final String CACHE_NAME = "cache.cate";
+    public static final Class<?> CACHE_TYPE = Category.class;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -27,6 +26,7 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    @Cacheable(value = CACHE_NAME, keyGenerator = "cacheKeyGenerator")
     public Category findOne(Long id) {
         return categoryRepository.findOne(id);
     }

@@ -20,6 +20,8 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select distinct p from Post p INNER JOIN p.tags t WHERE t.id in :tags")
-    List<Post>  findByTags(@Param("tags") Collection<Long> tags);
+    List<Post> findByTags(@Param("tags") Collection<Long> tags);
 
+    @Query("select distinct p from Post p inner join  p.tags t where t.category.id = :category")
+    List<Post> findByCategoryId(@Param("category") Long category);
 }

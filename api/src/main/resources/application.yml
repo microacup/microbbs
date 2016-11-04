@@ -2,7 +2,8 @@ project:
   artifactId: api
   name: bbs
   description: microbbs
-
+banner:
+  location: banner.txt
 server:
     port: 7000
     contextPath: /bbs

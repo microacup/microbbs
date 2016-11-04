@@ -40,5 +40,11 @@ public class PostService {
         return posts;
     }
 
+    @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
+    public List<Post> findByCategoryId(Long categoryId) {
+        List<Post> posts = postRepository.findByCategoryId(categoryId);
+        return posts;
+    }
+
 
 }

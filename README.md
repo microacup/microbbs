@@ -22,3 +22,11 @@
 
     > compass watch #　监听css
     > gulp minify-css # 避免重复处理其他资源
+    
+## TODO
+
+* [ ] TODO 数据为空的处理。返回引导页
+* [ ] 各种badge数据计算
+* [ ] 优化findByTags 和 findByCategoryId
+* [ ] 分页
+* [ ] posts 根据status过滤

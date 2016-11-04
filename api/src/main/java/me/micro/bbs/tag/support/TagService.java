@@ -23,7 +23,12 @@ public class TagService {
 
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Tag> findByCategory(Long categoryId) {
-       return tagRepository.findByCategoryId(categoryId);
+        return tagRepository.findByCategoryId(categoryId);
+    }
+
+    @Cacheable(value = CACHE_NAME, keyGenerator = "cacheKeyGenerator")
+    public Tag findOne(Long id) {
+        return tagRepository.findOne(id);
     }
 
 }

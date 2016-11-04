@@ -9,4 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Created by microacup on 2016/11/3.
  */
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+
+
+
 }
