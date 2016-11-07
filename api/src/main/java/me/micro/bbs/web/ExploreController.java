@@ -64,7 +64,6 @@ public class ExploreController {
         Page<Post> posts = postService.perfect(page, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("totalPages", posts.getTotalPages());
-
         return "site/index";
     }
 
