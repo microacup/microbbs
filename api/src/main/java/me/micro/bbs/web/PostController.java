@@ -4,13 +4,16 @@ import me.micro.bbs.category.Category;
 import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.post.support.PostService;
+import me.micro.bbs.setting.Setting;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +34,9 @@ public class PostController {
      * @return
      */
     @GetMapping("/category/{categoryId}")
-    public String postsByCategory(@PathVariable("categoryId") long categoryId, Model model) {
+    public String postsByCategory(@PathVariable("categoryId") long categoryId,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  Model model) {
         Category activeCategory = categoryService.findOne(categoryId);
         if (activeCategory == null) return "site/404";
 
@@ -48,8 +53,9 @@ public class PostController {
         model.addAttribute("activeTag", activeTag);
         model.addAttribute("tags", tags);
 
-        List<Post> posts = postService.findByCategoryId(categoryId);
-        model.addAttribute("posts", posts);
+        Page<Post> posts = postService.findByCategoryId(categoryId, page, Setting.PAGE_SIZE);
+        model.addAttribute("posts", posts.getContent());
+        model.addAttribute("totalPages", posts.getTotalPages());
 
         return "site/index";
     }
@@ -71,7 +77,10 @@ public class PostController {
      * @return
      */
     @GetMapping("/category/{categoryId}/tag/{tagId}")
-    public String postsByTag(@PathVariable("categoryId") long categoryId, @PathVariable("tagId") long tagId, Model model) {
+    public String postsByTag(@PathVariable("categoryId") long categoryId,
+                             @PathVariable("tagId") long tagId,
+                             @RequestParam(defaultValue = "0") int page,
+                             Model model) {
         Category activeCategory = categoryService.findOne(categoryId);
         if (activeCategory == null) return "site/404";
 
@@ -89,8 +98,9 @@ public class PostController {
 
         List<Long> tagIds = new ArrayList<>(1);
         tagIds.add(tagId);
-        List<Post> posts = postService.findByTags(tagIds);
+        Page<Post> posts = postService.findByTags(tagIds, page, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts);
+        model.addAttribute("totalPages", posts.getTotalPages());
 
         return "site/index";
     }
@@ -99,7 +109,6 @@ public class PostController {
     public String postByTag(@PathVariable("tagId") long tagId) {
         Tag activeTag = tagService.findOne(tagId);
         if (activeTag == null) return "site/404";
-
 
         return "site/index";
     }

@@ -38,7 +38,7 @@
       <!--#numbers.sequence( 1, 8)-->
       <li class="list-group-item" th:each="post: ${posts}">
         <div class="media-left">
-          <a href="#">
+          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
             <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
           </a>
         </div>
@@ -52,7 +52,7 @@
             <a class="label label-default tag tag-sm"
                th:href="@{'/category/' + ${t.category.id} + '/tag/' + ${t.id}}"
                th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-            <a th:href="@{'/users/' + post.author.id + '/profile'}" class="post-author" th:utext="${post.author.nick}"></a>
+            <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" class="post-author" th:utext="${post.author.nick}"></a>
             <span class="post-author-last">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
             <span class="post-time-last" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
           </div>

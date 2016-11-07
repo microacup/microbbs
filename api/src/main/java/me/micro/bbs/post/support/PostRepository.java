@@ -22,10 +22,10 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select distinct p from Post p INNER JOIN p.tags t WHERE t.id in :tags")
-    List<Post> findByTags(@Param("tags") Collection<Long> tags);
+    Page<Post> findByTags(@Param("tags") Collection<Long> tags, Pageable pageable);
 
     @Query("select distinct p from Post p inner join  p.tags t where t.category.id = :category")
-    List<Post> findByCategoryId(@Param("category") Long category);
+    Page<Post> findByCategoryId(@Param("category") Long category, Pageable pageable);
 
     Page<Post> findByPerfectTrueOrderByPerfectTimeDesc(Pageable pageable);
 }

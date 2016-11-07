@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,26 +29,28 @@ public class PostApi {
     private PostService postService;
 
     @GetMapping(Uris.API_POSTS)
-    public ResponseEntity<List<Post>> postsByTags(@RequestParam(value = "tags", required = false) String tags) {
-        List<Post> posts = Collections.emptyList();
+    public ResponseEntity<Page<Post>> postsByTags(@RequestParam(value = "tags", required = false) String tags,
+                                                  @RequestParam(defaultValue = "0") int page) {
+        Page<Post> posts = null;
         if (!StringUtils.isBlank(tags)) {
             String[] strings = tags.split(",");
             List<Long> tagList = new ArrayList<>(strings.length);
             for (String tag : strings) {
                 tagList.add(Long.parseLong(tag));
             }
-            posts = postService.findByTags(tagList);
+            posts = postService.findByTags(tagList, page, Setting.PAGE_SIZE);
             return ResponseEntity.ok(posts);
         } else {
-            posts = postService.findAll();
+            posts = postService.findAll(page, Setting.PAGE_SIZE);
         }
 
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping(Uris.API_CATEGORIES_POSTS)
-    public ResponseEntity<List<Post>> postsByCategory(@PathVariable(value = "categoryId") long categoryId) {
-        List<Post> posts = postService.findByCategoryId(categoryId);
+    public ResponseEntity<Page<Post>> postsByCategory(@PathVariable(value = "categoryId") long categoryId,
+                                                      @RequestParam(defaultValue = "0") int page) {
+        Page<Post> posts = postService.findByCategoryId(categoryId, page, Setting.PAGE_SIZE);
         return ResponseEntity.ok(posts);
     }
 

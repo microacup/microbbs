@@ -9,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * PostService
@@ -27,9 +26,9 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
-    public List<Post> findAll() {
-        return postRepository.findAll();
+    //@Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
+    public Page<Post> findAll(int page, int pageSize) {
+        return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastReplyTime", "updatedTime"));
     }
 
     @Cacheable(value = CACHE_NAME, keyGenerator = "cacheKeyGenerator")
@@ -37,15 +36,17 @@ public class PostService {
         return postRepository.findOne(id);
     }
 
-    @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
-    public List<Post> findByTags(Collection<Long> tags) {
-        List<Post> posts = postRepository.findByTags(tags);
+    //@Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
+    public Page<Post> findByTags(Collection<Long> tags, int page, int pageSize) {
+        Page<Post> posts = postRepository.findByTags(tags,
+                new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastReplyTime", "updatedTime"));
         return posts;
     }
 
-    @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
-    public List<Post> findByCategoryId(Long categoryId) {
-        List<Post> posts = postRepository.findByCategoryId(categoryId);
+    //@Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
+    public Page<Post> findByCategoryId(Long categoryId, int page, int pageSize) {
+        Page<Post> posts = postRepository.findByCategoryId(categoryId,
+                new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastReplyTime", "updatedTime"));
         return posts;
     }
 
