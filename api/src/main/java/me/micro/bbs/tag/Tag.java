@@ -30,6 +30,9 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "t_code", unique = true, nullable = false, length = 255)
+    private String code;
+
     @Column(name = "t_title", nullable = false, length = 255)
     private String title;
 

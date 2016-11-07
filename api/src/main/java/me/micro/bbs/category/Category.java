@@ -34,6 +34,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "c_code", unique = true, nullable = false, length = 255)
+    private String code;
+
     @Column(name = "c_title", nullable = false, length = 255)
     private String title;
 

@@ -14,7 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * 帖子
@@ -54,7 +54,8 @@ public class Post {
     @JoinTable(name = "M_POSTS_TAGS",
         joinColumns = {@JoinColumn(name = "post_id", nullable = false, updatable = false)},
         inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false, updatable = false)})
-    private Set<Tag> tags;
+    @OrderBy("id")
+    private List<Tag> tags;
 
     // 作者
     @ManyToOne
