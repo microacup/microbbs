@@ -113,6 +113,19 @@ public class PostController {
         return "site/index";
     }
 
+    @GetMapping("/post/{id}")
+    public String post(@PathVariable("id") long id, Model model) {
+        List<Category> categories = categoryService.findAll();
+        if (categories == null) return "site/404";
+        model.addAttribute("categories", categories);
+
+        Post post = postService.findOne(id);
+        if (post == null) return "site/404";
+        model.addAttribute("post", post);
+
+        return "site/post";
+    }
+
     @Autowired
     private CategoryService categoryService;
 

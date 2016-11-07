@@ -6,62 +6,51 @@
   <title th:inline="text">[[#{app.title}]]</title>
 </head>
 <body>
-<!--tags-->
+<!--post header-->
 <section layout:fragment="tags" class="content-header">
-  <ul class="nav nav-pills" role="tablist" th:if="${activeCategory == null}">
-    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'hot')}"><a th:href="@{/hot}">热门</a></li>
-    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'perfect')}"><a th:href="@{/perfect}">优选</a></li>
-    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'now')}"><a th:href="@{/now}">此刻</a></li>
-  </ul>
-
-  <ul class="nav nav-pills" role="tablist" th:if="${activeCategory != null}">
-    <li role="presentation" th:class="${#strings.equals(activeTag.id, '-1') ? 'active' : ''}">
-      <a th:href="@{'/category/' + ${activeCategory.id}}">全部</a>
-    </li>
-    <li role="presentation"  th:each="tag: ${tags}" th:class="${tag.id == activeTag.id ? 'active' : ''}">
-      <a th:href="@{'/category/' + ${activeCategory.id} + '/tag/' + ${tag.id}}" th:utext="${tag.title}"></a>
-      <!--<span class="badge">42</span>-->
-    </li>
-  </ul>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-    <li th:if="${activeCategory != null}"><a href="#" th:utext="${activeCategory.title}">探索</a></li>
-    <li th:if="${activeCategory == null}"><a href="#">探索</a></li>
-    <li class="active" th:if="${activeTag != null}" th:utext="${activeTag.title}">此刻</li>
-    <li class="active" th:if="${activeTag == null}" th:utext="${activedExplorer}">此刻</li>
-  </ol>
-</section><!--/tags-->
+</section><!--/post-->
 
 <!--content-->
 <main layout:fragment="content" id="posts">
-    <ul class="list-group">
-      <!--#numbers.sequence( 1, 8)-->
-      <li class="list-group-item" th:each="post: ${posts}">
-        <div class="media-left">
-          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
-            <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
-          </a>
-        </div>
-        <div class="media-body">
-          <a th:href="@{'/post/' + ${post.id}}" class="post-title" th:utext="${post.title}">Title</a>
-          <i class="iconfont icon-zhiding icon-micro"
-             th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
-          <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
-          <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
-          <div class="post-footer">
-            <a class="label label-default"
-               th:href="@{'/category/' + ${t.category.id} + '/tag/' + ${t.id}}"
-               th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-            <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" class="post-author" th:utext="${post.author.nick}"></a>
-            <span class="post-author-last">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
-            <span class="post-time-last" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
-          </div>
-        </div>
-        <div class="media-right">
-          <span class="badge" th:text="${post.replyCount}">0</span>
-        </div>
-      </li>
-    </ul>
+  <section class="sidebar box box-primary">
+    <div class="box-header with-border">
+      <h3 class="post-title text-lg"  th:utext="${post.title}">title</h3>
+      <i class="iconfont icon-zhiding icon-micro"
+         th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
+      <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
+      <div class="post-footer">
+        <a class="tag tag-sm" th:href="@{'/category/' + ${t.category.id} + '/tag/' + ${t.id}}"
+           th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
+        <span class="post-author">
+          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a> 发布于
+        </span>
+        <span class="post-time" th:utext='${#dates.format(post.createdTime, "yyyy-MM-dd HH:ss:mm")}'>1天前</span>
+        <span class="post-author-last">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+        <span class="post-time-last" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>1小时前</span>
+        <span class="post-read-count"><span th:text="${post.readCount + 1}">A</span> 次阅读</span>
+      </div>
+    </div>
+    <div class="box-body post-content" th:utext="${post.content}">
+      content
+    </div>
+  </section>
+
+  <section class="sidebar box box-danger">
+    <div class="box-header with-border">
+      <h3 class="box-title">热门回帖</h3>
+      <div class="post-footer">
+      </div>
+    </div>
+  </section>
+
+  <section class="sidebar box box-default">
+    <div class="box-header with-border">
+      <h3 class="box-title"><span th:text="${post.replyCount}"></span> 次回帖</h3>
+      <div class="post-footer">
+      </div>
+    </div>
+  </section>
+
 </main><!--/content-->
 
 <aside class="col-xs-12 col-md-3" layout:fragment="sidebar">

@@ -72,8 +72,12 @@ public class Post {
     private String lastAuthorName;
 
     // 回复数量
-    @Column(name = "p_replyCount")
+    @Column(name = "p_replyCount", nullable = false)
     private Long replyCount;
+
+    // 阅读次数
+    @Column(name = "p_readCount", nullable = false)
+    private Long readCount;
 
     // 创建时间
     @Column(name = "p_createdTime", nullable = false, updatable = false)

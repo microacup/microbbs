@@ -18,6 +18,7 @@
 .post-title {
   font-size: 15px;
   line-height: 2em;
+  display: inline;
   @include text-dark;
 }
 
@@ -25,6 +26,12 @@
   @include signle-line-text;
 }
 
+.post-content {
+  font-size: 14px;
+}
+
+.post-author:before,
+.post-read-count:before,
 .post-author-last:before {
   content: '•';
   display: inline-block;
@@ -32,11 +39,21 @@
 }
 
 .post-footer {
-  padding-bottom: 0.3em;
+  padding: 0.3em 0;
   font-size: 12px;
 
   .label {
     font-weight: normal;
     @include border-radius(2px);
+  }
+
+  .tag {
+    font-weight: 600;
+  }
+
+  .tag+.tag:before {
+    content: '•';
+    display: inline-block;
+    padding: 0 5px;
   }
 }
