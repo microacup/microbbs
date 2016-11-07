@@ -44,7 +44,7 @@ public class PostController {
         List<Tag> tags = tagService.findByCategory(activeCategory.getId());
         if(tags.isEmpty()) return "site/404";
 
-        Tag activeTag = tags.get(0);
+        Tag activeTag = getDefaultTag(activeCategory);
         model.addAttribute("activeTag", activeTag);
         model.addAttribute("tags", tags);
 
@@ -52,6 +52,14 @@ public class PostController {
         model.addAttribute("posts", posts);
 
         return "site/index";
+    }
+
+    private Tag getDefaultTag(Category activeCategory) {
+        Tag activeTag = new Tag();
+        activeTag.setId(-1L);
+        activeTag.setTitle("全部");
+        activeTag.setCategory(activeCategory);
+        return activeTag;
     }
 
     /**

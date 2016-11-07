@@ -14,7 +14,10 @@
     <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'now')}"><a th:href="@{/now}">此刻</a></li>
   </ul>
 
-  <ul class="nav nav-pills" role="tablist" >
+  <ul class="nav nav-pills" role="tablist" th:if="${activeCategory != null}">
+    <li role="presentation" th:class="${#strings.equals(activeTag.id, '-1') ? 'active' : ''}">
+      <a th:href="@{'/category/' + ${activeCategory.id}}">全部</a>
+    </li>
     <li role="presentation"  th:each="tag: ${tags}" th:class="${tag.id == activeTag.id ? 'active' : ''}">
       <a th:href="@{'/category/' + ${activeCategory.id} + '/tag/' + ${tag.id}}" th:utext="${tag.title}"></a>
       <!--<span class="badge">42</span>-->
