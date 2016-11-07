@@ -7,7 +7,7 @@
 </head>
 <body>
 <!--post header-->
-<section layout:fragment="tags" class="content-header">
+<section layout:fragment="top" class="post-header">
 </section><!--/post-->
 
 <!--content-->
@@ -58,8 +58,8 @@
   <section class="sidebar box box-widget widget-user">
     <!-- Add the bg color to the header using any of the bg-* classes -->
     <div class="widget-user-header bg-aqua-active text-center">
-      <h3 class="widget-user-username">张小明</h3>
-      <h5 class="widget-user-desc">我的愿望是，世界和平</h5>
+      <h3 class="widget-user-username" th:utext="${post.author.nick}">author</h3>
+      <h5 class="widget-user-desc" th:utext="${post.author.info}">我的愿望是，世界和平</h5>
     </div>
     <div class="widget-user-image">
       <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="img-circle"
@@ -97,7 +97,7 @@
   </section>
 
 
-  <!--相关讨论-->
+  <!--相关话题-->
   <section class="sidebar box box-success">
     <div class="box-header with-border">
       <h3 class="box-title">相关话题</h3>
@@ -109,7 +109,7 @@
         <li class="item"><a href="#">C</a></li>
       </ul>
     </div>
-  </section><!--/相关讨论-->
+  </section><!--/相关话题-->
 
   <!--此刻-->
   <section class="sidebar box box-info">
@@ -125,18 +125,6 @@
     </div>
   </section><!--/此刻-->
 
-  <section class="sidebar box box-danger">
-    <div class="box-header with-border">
-      <h3 class="box-title">热门标签</h3>
-    </div>
-    <div class="box-body no-padding">
-      <ul class="list">
-        <li class="item"><a href="#">A</a></li>
-        <li class="item"><a href="#">B</a></li>
-        <li class="item"><a href="#">C</a></li>
-      </ul>
-    </div>
-  </section>
 </aside>
 
 </body>

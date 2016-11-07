@@ -7,7 +7,7 @@
 </head>
 <body>
 <!--tags-->
-<section layout:fragment="tags" class="content-header">
+<section layout:fragment="top" class="content-header">
   <ul class="nav nav-pills" role="tablist" th:if="${activeCategory == null}">
     <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'hot')}"><a th:href="@{/hot}">热门</a></li>
     <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'perfect')}"><a th:href="@{/perfect}">优选</a></li>
@@ -106,21 +106,6 @@
       <!-- /.row -->
     </div>
   </section>
-
-
-  <!--相关讨论-->
-  <section class="sidebar box box-success">
-    <div class="box-header with-border">
-      <h3 class="box-title">相关话题</h3>
-    </div>
-    <div class="box-body no-padding">
-      <ul class="list">
-        <li class="item"><a href="#">A</a></li>
-        <li class="item"><a href="#">B</a></li>
-        <li class="item"><a href="#">C</a></li>
-      </ul>
-    </div>
-  </section><!--/相关讨论-->
 
   <!--此刻-->
   <section class="sidebar box box-info">

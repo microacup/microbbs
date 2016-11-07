@@ -9,10 +9,8 @@
   width: 48px;
 }
 
-.post-footer {
-  a,span {
-    @include text-grey;
-  }
+.post-header {
+  padding-top: 15px;
 }
 
 .post-title {
@@ -41,6 +39,10 @@
 .post-footer {
   padding: 0.3em 0;
   font-size: 12px;
+
+  a,span {
+    @include text-grey;
+  }
 
   .label {
     font-weight: normal;

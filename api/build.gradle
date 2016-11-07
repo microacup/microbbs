@@ -44,6 +44,9 @@ dependencies {
 	//compile('com.fasterxml.jackson.core:jackson-databind')
 	runtime('mysql:mysql-connector-java')
 
+	//markdwon
+	compile 'org.pegdown:pegdown:1.6.0'
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

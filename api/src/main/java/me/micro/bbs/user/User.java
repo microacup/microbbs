@@ -42,6 +42,10 @@ public class User {
     @Column(name = "u_nick")
     private String nick;
 
+    // 一句话介绍
+    @Column(name = "u_info", length = 255)
+    private String info;
+
     // 密码
     @JsonIgnore
     @Column(name = "u_password",nullable = false)
