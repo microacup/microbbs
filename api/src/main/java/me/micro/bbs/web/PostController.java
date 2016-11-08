@@ -1,5 +1,7 @@
 package me.micro.bbs.web;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import me.micro.bbs.category.Category;
 import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.Post;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Posts
@@ -124,6 +127,27 @@ public class PostController {
         model.addAttribute("post", post);
 
         return "site/post";
+    }
+
+    @GetMapping("/create")
+    public String create(Model model) {
+        List<Category> categories = categoryService.findAll();
+        if (categories == null) return "site/404";
+        model.addAttribute("categories", categories);
+
+        Map<Category, List<Tag>> tags = Maps.newHashMapWithExpectedSize(categories.size());
+        List<Tag> list = tagService.findAll();
+        for (Tag tag : list) {
+            List<Tag> ts = tags.get(tag.getCategory());
+            if (ts == null) {
+                ts = Lists.newArrayList();
+                tags.put(tag.getCategory(), ts);
+            }
+            ts.add(tag);
+        }
+
+        model.addAttribute("tags", tags);
+        return "site/create";
     }
 
     @Autowired

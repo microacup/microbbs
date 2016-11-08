@@ -43,4 +43,22 @@ public class Tag {
     /*@ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
     @JsonBackReference(value = "postReference")
     private List<Post> posts;*/
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof Tag) {
+            return this.id == ((Tag) obj).getId();
+        }
+
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.id != null) {
+            return this.id.hashCode();
+        }
+        return super.hashCode();
+    }
 }

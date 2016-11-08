@@ -12,6 +12,7 @@
   <link rel="stylesheet" th:href="@{/static/lib/bootstrap/dist/css/bootstrap.min.css}">
   <link rel="stylesheet" th:href="@{/static/lib/font-awesome/css/font-awesome.min.css}">
   <link rel="stylesheet" th:href="@{/static/lib/ionicons/css/ionicons.min.css}">
+  <link rel="stylesheet" th:href="@{/static/lib/select2/select2.min.css}"/>
   <link rel="stylesheet" th:href="@{/static/lib/admin-lte/dist/css/AdminLTE.min.css}">
   <link rel="stylesheet" th:href="@{/static/lib/admin-lte/dist/css/skins/skin-green-light.min.css}">
   <link rel="stylesheet" th:href="@{/static/lib/iconfont/iconfont.css}">
@@ -59,11 +60,7 @@
           <ul class="nav navbar-nav">
             <!-- 发表新帖 -->
             <li>
-              <!-- Menu Toggle Button -->
-              <a th:href="@{/create}" class="">
-                <i class="fa fa-edit"></i>
-                <span class="">发表新帖</span>
-              </a>
+              <a th:href="@{/create}" class=""><i class="fa fa-edit"></i> <span class="">发表新帖</span></a>
             </li>
             <!-- Messages: style can be found in dropdown.less-->
             <li class="dropdown messages-menu">
@@ -126,6 +123,12 @@
                 <li class="footer"><a href="#">View all</a></li>
               </ul>
             </li>
+
+            <!--admin-->
+            <li>
+              <a th:href="@{/admin}" class="" title="管理中心"><i class="fa fa-cog"></i></a>
+            </li>
+
             <!-- User Account Menu -->
             <li class="dropdown user user-menu">
               <!-- Menu Toggle Button -->

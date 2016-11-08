@@ -18,3 +18,11 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+@mixin input-border {
+  border: 1px solid #d2d6de;;
+}
+
+@mixin input-border-active {
+  border: 1px solid #3c8dbc;;
+}

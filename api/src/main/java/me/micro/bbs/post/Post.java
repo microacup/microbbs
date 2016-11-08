@@ -119,5 +119,24 @@ public class Post {
     @Column(name = "p_topTime")
     private Date topTime;
 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof Post) {
+            return this.id == ((Post) obj).getId();
+        }
+
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.id != null) {
+            return this.id.hashCode();
+        }
+
+        return super.hashCode();
+    }
 }
 

@@ -7112,26 +7112,25 @@ function wordCount(data) {
   }
   return count;
 }
+  var toolbar = [
+    {name: 'bold', shortcut:'加粗', action: toggleBold},
+    {name: 'italic', shortcut:'斜体',action: toggleItalic},
+    {name: 'code', shortcut:'代码',action: toggleCodeBlock},
+    '|',
 
-var toolbar = [
-  {name: 'bold', action: toggleBold},
-  {name: 'italic', action: toggleItalic},
-  {name: 'code', action: toggleCodeBlock},
-  '|',
+    {name: 'quote', shortcut:'引用',action: toggleBlockquote},
+    {name: 'unordered-list',shortcut:'无序列表', action: toggleUnOrderedList},
+    {name: 'ordered-list', shortcut:'有序列表',action: toggleOrderedList},
+    '|',
 
-  {name: 'quote', action: toggleBlockquote},
-  {name: 'unordered-list', action: toggleUnOrderedList},
-  {name: 'ordered-list', action: toggleOrderedList},
-  '|',
+    {name: 'link', shortcut:'链接',action: drawLink},
+    {name: 'image', shortcut:'图片',action: drawImage},
+    '|',
 
-  {name: 'link', action: drawLink},
-  {name: 'image', action: drawImage},
-  '|',
-
-  // {name: 'info', action: 'http://lab.lepture.com/editor/markdown'},
-  {name: 'preview', action: togglePreview},
-  // {name: 'fullscreen', action: toggleFullScreen}
-];
+    // {name: 'info', action: 'http://lab.lepture.com/editor/markdown'},
+    {name: 'preview',shortcut:'预览', action: togglePreview},
+    // {name: 'fullscreen', action: toggleFullScreen}
+  ];
 
 /**
  * Interface of Editor.
@@ -7247,6 +7246,9 @@ Editor.prototype.createToolbar = function(items) {
       var el;
       if (item.name) {
         el = createIcon(item.name, item);
+        if (item.name === 'preview') {
+          el.innerText = ' 预览';
+        }
       } else if (item === '|') {
         el = createSep();
       } else {

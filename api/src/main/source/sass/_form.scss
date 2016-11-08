@@ -1,3 +1,23 @@
+@import "mixin";
+
 form textarea {
   resize: vertical;
+}
+
+.editor-toolbar {
+  @include input-border;
+
+  .editor-icon-preview {
+    width: auto;
+  }
+}
+
+.CodeMirror {
+  @include input-border;
+  cursor: text;
+}
+
+.CodeMirror-focused {
+  @include input-border-active;
+  box-shadow: none;
 }
