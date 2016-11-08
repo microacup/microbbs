@@ -38,6 +38,7 @@ gulp.task('copy-lib', function () {
     gulp.src('node_modules/font-awesome*/**').pipe(gulp.dest(paths.dest + 'lib'));
     gulp.src('node_modules/jquery/dist*/**').pipe(gulp.dest(paths.dest + 'lib/jquery'));
     gulp.src('node_modules/bootstrap/dist*/**').pipe(gulp.dest(paths.dest + 'lib/bootstrap'));
+    gulp.src('node_modules/bootstrap-table/dist*/**').pipe(gulp.dest(paths.dest + 'lib/bootstrap-table'));
     return gulp.src('node_modules/admin-lte/dist*/**').pipe(gulp.dest(paths.dest + 'lib/admin-lte'));
 });
 

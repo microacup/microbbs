@@ -48,14 +48,18 @@
     font-weight: normal;
     @include border-radius(2px);
   }
+}
 
-  .tag {
-    font-weight: 600;
-  }
+.tag {
+  font-weight: 600;
+}
 
-  .tag+.tag:before {
-    content: '•';
-    display: inline-block;
-    padding: 0 5px;
-  }
+.tag+.tag:before {
+  content: '•';
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.tag-sm {
+  @include text-grey;
 }
