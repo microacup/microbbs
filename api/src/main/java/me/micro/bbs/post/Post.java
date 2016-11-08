@@ -1,6 +1,7 @@
 package me.micro.bbs.post;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,22 +91,26 @@ public class Post {
     @LastModifiedDate
     private Date updatedTime;
 
+    // 被删除时间
+    @Column(name = "p_deletedTime")
+    private Date deletedTime;
+
     // 最后回复时间
     @Column(name = "p_lastReplyTime")
     @LastModifiedDate
     private Date lastReplyTime;
 
     // 是否允许评论
-    @Column(name = "p_reply", nullable = false)
-    private Boolean reply;
+    @Column(name = "p_replyable", nullable = false)
+    private Boolean replyable;
 
-    // 是否删除
+    // 状态
     @Column(name = "p_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private PostStatus status;
 
     // 是否优选
-    @Column(name = "p_perfect")
+    @Column(name = "p_perfect", nullable = false)
     private Boolean perfect;
 
     // 优选时间
@@ -112,7 +118,7 @@ public class Post {
     private Date perfectTime;
 
     // 是否置顶
-    @Column(name = "p_top")
+    @Column(name = "p_top", nullable = false)
     private Boolean top;
 
     // 置顶时间

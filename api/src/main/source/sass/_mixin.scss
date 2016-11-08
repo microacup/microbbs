@@ -26,3 +26,9 @@
 @mixin input-border-active {
   border: 1px solid #3c8dbc;;
 }
+
+@mixin sp {
+  content: '•';
+  display: inline-block;
+  padding: 0 5px;
+}

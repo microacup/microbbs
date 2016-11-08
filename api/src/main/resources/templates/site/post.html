@@ -19,7 +19,7 @@
          th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
       <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
       <div class="post-footer">
-        <a class="tag tag-sm" th:href="@{'/category/' + ${t.category.id} + '/tag/' + ${t.id}}"
+        <a class="tag tag-sm" th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
            th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
         <span class="post-author">
           <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a> 发布于
@@ -46,8 +46,38 @@
   <section class="sidebar box box-default">
     <div class="box-header with-border">
       <h3 class="box-title"><span th:text="${post.replyCount}"></span> 次回帖</h3>
-      <div class="post-footer">
+    </div>
+
+    <div class="box-footer box-comments">
+      <div class="box-comment">
+        <!-- User image -->
+        <img class="img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="User Image">
+
+        <div class="comment-text">
+                      <span class="username">
+                        Maria Gonzales
+                        <span class="text-muted floor"> # 1</span>
+                        <span class="text-muted time"><i class="fa fa-clock-o"></i> 12:05</span>
+                        <span class="pull-right comment-action action-down" title="收藏"><i class="fa fa-heart-o"></i></span>
+                        <span class="pull-right comment-action action-like" title="反对"><i class="fa fa-thumbs-o-down"></i></span>
+                        <span class="pull-right comment-action action-up" title="赞同"><i class="fa fa-thumbs-o-up"></i></span>
+                        <span class="pull-right comment-action action-reply" title="回复此楼"><i class="fa fa-reply"></i></span>
+                      </span><!-- /.username -->
+          It is a long established fact that a reader will be distracted
+          by the readable content of a page when looking at its layout.
+        </div>
+        <!-- /.comment-text -->
       </div>
+    </div>
+    <!-- /.box-footer -->
+    <div class="box-footer">
+      <form action="#" method="post">
+        <img class="img-responsive img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="Alt Text">
+        <!-- .img-push is used to add margin to elements next to floating images -->
+        <div class="img-push">
+          <input type="text" class="form-control input-sm" placeholder="Press enter to post comment">
+        </div>
+      </form>
     </div>
   </section>
 

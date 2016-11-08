@@ -1,19 +1,12 @@
 package me.micro.bbs.tag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import me.micro.bbs.category.Category;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 标签
@@ -38,7 +31,19 @@ public class Tag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "t_category")
+    @JsonIgnore
     private Category category;
+
+    @Transient
+    private Long categoryId;
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Long getCategoryId() {
+        return categoryId == null ?  this.category.getId() : categoryId;
+    }
 
     /*@ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
     @JsonBackReference(value = "postReference")

@@ -1,0 +1,11 @@
+@import "mixin";
+
+.comment-action {
+  padding: 0 5px;
+}
+
+.floor, .box-comment .time {
+  &:before {
+    @include sp;
+  }
+}

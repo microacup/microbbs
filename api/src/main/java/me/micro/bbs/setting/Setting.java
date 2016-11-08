@@ -11,4 +11,6 @@ import org.springframework.stereotype.Service;
 public class Setting {
     public static final int PAGE_SIZE = 10;
 
+    public static final int REPLY_PAGE_SIZE = 20;
+
 }

@@ -55,9 +55,7 @@
 }
 
 .tag+.tag:before {
-  content: '•';
-  display: inline-block;
-  padding: 0 5px;
+  @include sp;
 }
 
 .tag-sm {

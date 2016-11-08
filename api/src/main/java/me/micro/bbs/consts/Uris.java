@@ -17,11 +17,16 @@ public final class Uris {
     /** 所有分类 */
     public static final String API_CATEGORIES = "/api/categories";
 
-    /**按分类找标签*/
+    /** 按分类找标签*/
     public static final String API_CATEGORIES_TAGS = "/api/categories/{categoryId}/tags";
 
-    /**按分类找帖子*/
+    /** 按分类找帖子*/
     public static final String API_CATEGORIES_POSTS = "/api/categories/{categoryId}/posts";
+
+    /** 按照帖子找回复*/
+    public static final String API_POSTS_ID_REPLIES = "/api/posts/{postId}/replies";
+
+
 
     public static final String API_TEST = "/api/test";
 

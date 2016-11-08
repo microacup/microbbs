@@ -50,7 +50,7 @@
           <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
           <div class="post-footer">
             <a class="label label-default"
-               th:href="@{'/category/' + ${t.category.id} + '/tag/' + ${t.id}}"
+               th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
                th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
             <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" class="post-author" th:utext="${post.author.nick}"></a>
             <span class="post-author-last">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
