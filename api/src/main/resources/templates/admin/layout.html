@@ -26,11 +26,11 @@
         <header class="main-header">
 
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <a th:href="@{/admin}" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>L</b>MS</span>
+                <span class="logo-mini"><b>B</b>BS</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>湘江网校</b>管理中心</span>
+                <span class="logo-lg"><b>Micro</b>BBS</span>
             </a>
 
             <!-- Header Navbar -->
@@ -182,36 +182,25 @@
 
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu">
-                    <li class="treeview active">
-                        <a href="#"><i class="fa fa-link"></i> <span>系统管理</span>
-                          <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                          </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="#">机构管理</a></li>
-                            <li><a href="#">分站属性管理</a></li>
-                            <li><a href="#">角色管理</a></li>
-                            <li><a href="#">总平台用户</a></li>
-                            <li><a href="#">系统所有用户</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="treeview">
-                        <a href="#"><i class="fa fa-link"></i> <span>基础课程管理</span>
-                          <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                          </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="#">课程体系管理</a></li>
-                            <li><a href="#">课程管理</a></li>
-                            <li><a href="#">培训对象管理</a></li>
-                            <li><a href="#">单科证书管理</a></li>
-                            <li><a href="#">水平考试证书管理</a></li>
-                        </ul>
-                    </li>
-
+                  <li class="treeview active"> <a href="#"><i class="fa fa-dashboard"></i> <span>统计分析</span></a></li>
+                  <li class="treeview"> <a href="#"><i class="fa fa-info-circle"></i> <span>系统状态</span></a></li>
+                  <li class="treeview"> <a href="#"><i class="fa fa-twitter"></i> <span>帖子管理</span></a></li>
+                  <li class="treeview"> <a href="#"><i class="fa fa-reply-all"></i> <span>回帖管理</span></a></li>
+                  <li class="treeview"> <a href="#"><i class="fa fa-object-group"></i> <span>分类管理</span></a></li>
+                  <li class="treeview"> <a href="#"><i class="fa fa-tags"></i> <span>标签管理</span></a></li>
+                  <li class="treeview"> <a href="#"><i class="fa fa-users"></i> <span>用户管理</span></a></li>
+                  <li class="treeview">
+                    <a href="#"><i class="fa fa-cogs"></i> <span>系统设置</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <li><a href="#">系统开关</a></li>
+                      <li><a href="#">广告</a></li>
+                      <li><a href="#">黑名单</a></li>
+                    </ul>
+                  </li>
                 </ul>
                 <!-- /.sidebar-menu -->
             </section>
@@ -249,7 +238,7 @@
                 版本1.0.0
             </div>
             <!-- Default to the left -->
-            <strong>Copyright &copy; 2016 <a href="#">华夏大地教育网</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; 2016 <a href="#">microbbs</a>.</strong> All rights reserved.
         </footer>
 
         <!-- Control Sidebar -->

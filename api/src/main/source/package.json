@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "admin-lte": "^2.3.6",
+    "admin-lte": "^2.3.7",
     "ionicons":"^2.0.1",
     "font-awesome": "^4.5.0",
     "jquery": "^2.2.3"
