@@ -14,18 +14,23 @@ public final class Uris {
     /** 此刻 */
     public static final String API_POSTS_NOW = "/api/posts/now";
 
+    /** 前5名新帖 */
+    public static final String API_POSTS_NOW_TOP5 = "/api/posts/now/top5";
+
     /** 所有分类 */
     public static final String API_CATEGORIES = "/api/categories";
 
     /** 按分类找标签*/
     public static final String API_CATEGORIES_TAGS = "/api/categories/{categoryId}/tags";
 
+    /** 热门标签 */
+    public static final String API_HOT_TAGS = "/api/tags/hot";
+
     /** 按分类找帖子*/
     public static final String API_CATEGORIES_POSTS = "/api/categories/{categoryId}/posts";
 
     /** 按照帖子找回复*/
     public static final String API_POSTS_ID_REPLIES = "/api/posts/{postId}/replies";
-
 
 
     public static final String API_TEST = "/api/test";

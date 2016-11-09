@@ -94,5 +94,15 @@ public class PostApi {
         return ResponseEntity.ok(posts);
     }
 
+    /**
+     * 前5名新帖
+     *
+     * @return
+     */
+    @GetMapping(Uris.API_POSTS_NOW_TOP5)
+    public ResponseEntity<List<Post>> nowTop5() {
+        return ResponseEntity.ok(postService.findTop5Now());
+    }
+
 
 }

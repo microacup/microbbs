@@ -1,3 +1,5 @@
+@import "mixin";
+
 .sidebar {
   padding-bottom: 0;
 }
@@ -28,4 +30,27 @@
     }
   }
 
+}
+
+.index-nows {
+  .item a {
+    @include one-line-text;
+  }
+
+}
+
+.hot-tags {
+  @include display-flex;
+  @include flex-wrap(wrap);
+  @include align-content(flex-start);
+
+  .label {
+    margin: 0.2em;
+    line-height: 1.5em;
+    font-weight: normal;
+
+    &:focus, &:hover {
+      color: white;
+    }
+  }
 }

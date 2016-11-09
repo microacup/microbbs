@@ -21,7 +21,7 @@
 }
 
 .post-title, .post-summary {
-  @include signle-line-text;
+  @include one-line-text;
 }
 
 .post-content {

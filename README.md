@@ -5,7 +5,7 @@
 ## 架构
 
 * Site 前后端分离, 前端使用React构建, 后端提供Restful API
-* Admin 采用AdminLTE, 模板引擎thymeleaf
+* Admin 采用AdminLTE(去掉了google fonts), 模板引擎thymeleaf
 
 ## Stack
 

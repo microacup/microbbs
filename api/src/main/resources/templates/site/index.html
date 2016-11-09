@@ -64,7 +64,7 @@
     </ul>
 </main><!--/content-->
 
-<aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="siderbar">
+<aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="sidebar">
 
   <section class="sidebar box box-widget widget-user">
     <!-- Add the bg color to the header using any of the bg-* classes -->
@@ -113,10 +113,10 @@
       <h3 class="box-title">此刻</h3>
     </div>
     <div class="box-body no-padding">
-      <ul class="list">
-        <li class="item"><a href="#">A</a></li>
-        <li class="item"><a href="#">B</a></li>
-        <li class="item"><a href="#">C</a></li>
+      <ul class="list index-nows">
+        <template v-for="n in nows">
+          <li class="item"><a target="_blank" :href="_ctx + '/post/' + n.id">{{n.title}}</a></li>
+        </template>
       </ul>
     </div>
   </section><!--/此刻-->
@@ -125,12 +125,10 @@
     <div class="box-header with-border">
       <h3 class="box-title">热门标签</h3>
     </div>
-    <div class="box-body no-padding">
-      <ul class="list">
-        <li class="item"><a href="#">A</a></li>
-        <li class="item"><a href="#">B</a></li>
-        <li class="item"><a href="#">C</a></li>
-      </ul>
+    <div class="box-body hot-tags">
+      <template v-for="ht in hotTags">
+        <a :href="_ctx + '/category/' + ht.categoryId + '/tag/' + ht.id " class="label label-default">{{ht.title}}</a>
+      </template>
     </div>
   </section>
 </aside>
@@ -138,7 +136,46 @@
 <div layout:fragment="scripts">
   <script th:inline="javascript" th type="text/javascript">
     var _ctx = $("meta[name='ctx']").attr("content");
-    // ...
+    var sidebarApp = new Vue({
+      el: '#sidebar',
+      data: {
+        nows: null,
+        hotTags: null
+      },
+      created: function () {
+        this.loadNow();
+        this.loadHotTags();
+      },
+      filters: {
+        moment: function (date) {
+          return moment(date).format('YYYY-MM-DD HH:mm');
+        }
+      },
+      methods: {
+        loadNow: function () {
+          this.$http.get(_ctx + '/api/posts/now/top5').then((response) => {
+            // success callback
+            if(response.status == 200 && response.ok) {
+              this.nows =  response.body;
+            }
+          }, (response) => {
+            // error callback
+            console.log(response);
+          });
+        },
+        loadHotTags: function () {
+          this.$http.get(_ctx + '/api/tags/hot').then((response) => {
+            // success callback
+            if(response.status == 200 && response.ok) {
+              this.hotTags =  response.body;
+            }
+          }, (response) => {
+            // error callback
+            console.log(response);
+          });
+        }
+      }
+    });
 
   </script>
 

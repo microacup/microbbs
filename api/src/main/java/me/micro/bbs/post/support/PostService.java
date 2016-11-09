@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * PostService
@@ -72,5 +73,9 @@ public class PostService {
        return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC, "lastReplyTime","updatedTime"));
     }
 
+    // 查询前5名
+    public List<Post> findTop5Now() {
+        return postRepository.findTop5ByOrderByLastReplyTimeDesc();
+    }
 
 }

@@ -8,7 +8,7 @@
   color: $text-color-grey;
 }
 
-@mixin signle-line-text {
+@mixin one-line-text {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;

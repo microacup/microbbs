@@ -1,6 +1,7 @@
 package me.micro.bbs.api;
 
 import me.micro.bbs.consts.Uris;
+import me.micro.bbs.setting.Setting;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,20 @@ public class TagApi {
     @Autowired
     private TagService tagService;
 
+    // 按分类找标签
     @GetMapping(Uris.API_CATEGORIES_TAGS)
     public ResponseEntity<List<Tag>> tags(@PathVariable("categoryId") long categoryId) {
         List<Tag> tags = tagService.findByCategory(categoryId);
         return ResponseEntity.ok(tags);
     }
+
+    // 热门标签
+    @GetMapping(Uris.API_HOT_TAGS)
+    public ResponseEntity<List<Tag>> hotTags() {
+        List<Tag> tags = tagService.findTopN(Setting.HOT_TAGS);
+        return ResponseEntity.ok(tags);
+    }
+
+
 
 }

@@ -26,6 +26,11 @@ public class TagService {
         return tagRepository.findAll();
     }
 
+    /**
+     * 根据分类找标签
+     * @param categoryId
+     * @return
+     */
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Tag> findByCategory(Long categoryId) {
         return tagRepository.findByCategoryId(categoryId);
@@ -34,6 +39,17 @@ public class TagService {
     @Cacheable(value = CACHE_NAME, keyGenerator = "cacheKeyGenerator")
     public Tag findOne(Long id) {
         return tagRepository.findOne(id);
+    }
+
+    /**
+     * 热门标签
+     *
+     * @param n 数量
+     * @return
+     */
+    @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
+    public List<Tag> findTopN(int n) {
+        return tagRepository.findTopN(n);
     }
 
 }
