@@ -123,7 +123,11 @@ public class Reply {
     }
 
     public Long getPostId() {
-        return this.postId != null ? this.postId : this.post.getId();
+        if (this.post != null) {
+            return this.post.getId();
+        }
+
+        return this.postId;
     }
 
     private void setReplyId(Long replyId) {
@@ -131,7 +135,11 @@ public class Reply {
     }
 
     public Long getReplyId() {
-        return this.replyId != null ? this.replyId : this.reply.getId();
+        if (this.reply != null) {
+            return this.reply.getId();
+        }
+
+        return this.replyId;
     }
 
     @Override

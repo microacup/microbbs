@@ -4,6 +4,7 @@
       layout:decorator="site/layout">
 <head>
   <title th:inline="text">[[#{app.title}]]</title>
+  <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}" />
 </head>
 <body>
 <!--post header-->
@@ -35,39 +36,39 @@
     </div>
   </section>
 
-  <section class="sidebar box box-danger">
+  <!--<section class="sidebar box box-danger">
     <div class="box-header with-border">
       <h3 class="box-title">热门回帖</h3>
       <div class="post-footer">
       </div>
     </div>
-  </section>
+  </section>-->
 
-  <section class="sidebar box box-default">
+  <section class="sidebar box box-default" id="comments">
     <div class="box-header with-border">
       <h3 class="box-title"><span th:text="${post.replyCount}"></span> 次回帖</h3>
     </div>
 
     <div class="box-footer box-comments">
-      <div class="box-comment">
-        <!-- User image -->
-        <img class="img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="User Image">
-
-        <div class="comment-text">
-                      <span class="username">
-                        Maria Gonzales
-                        <span class="text-muted floor"> # 1</span>
-                        <span class="text-muted time"><i class="fa fa-clock-o"></i> 12:05</span>
-                        <span class="pull-right comment-action action-down" title="收藏"><i class="fa fa-heart-o"></i></span>
-                        <span class="pull-right comment-action action-like" title="反对"><i class="fa fa-thumbs-o-down"></i></span>
-                        <span class="pull-right comment-action action-up" title="赞同"><i class="fa fa-thumbs-o-up"></i></span>
-                        <span class="pull-right comment-action action-reply" title="回复此楼"><i class="fa fa-reply"></i></span>
-                      </span><!-- /.username -->
-          It is a long established fact that a reader will be distracted
-          by the readable content of a page when looking at its layout.
+      <template v-for="comment in comments">
+        <div class="box-comment" :id="'floor' + comment.floor">
+          <!-- User image -->
+          <img class="img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="User Image">
+          <div class="comment-text">
+            <div class="username">
+              {{comment.author.nick}}
+              <a class="text-muted floor" :href="'#floor' + comment.floor"> # {{comment.floor}}</a>
+              <span class="text-muted time"><i class="fa fa-clock-o"></i> {{comment.createdTime | moment}}</span>
+              <span class="pull-right comment-action action-down" title="收藏"><i class="fa fa-heart-o"></i></span>
+              <span class="pull-right comment-action action-like" title="反对"><i class="fa fa-thumbs-o-down"></i></span>
+              <span class="pull-right comment-action action-up" title="赞同"><i class="fa fa-thumbs-o-up"></i></span>
+              <span class="pull-right comment-action action-reply" title="回复此楼"><i class="fa fa-reply"></i></span>
+            </div><!-- /.username -->
+            <p>{{comment.content}}</p>
+          </div>
+          <!-- /.comment-text -->
         </div>
-        <!-- /.comment-text -->
-      </div>
+      </template>
     </div>
     <!-- /.box-footer -->
     <div class="box-footer">
@@ -157,5 +158,48 @@
 
 </aside>
 
+<div layout:fragment="scripts">
+  <script src="//cdn.bootcss.com/moment.js/2.15.2/moment-with-locales.min.js"></script>
+  <script src="//cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
+  <script th:inline="javascript" type="text/javascript">
+    $(function () {
+      var _ctx = $("meta[name='ctx']").attr("content");
+      var postId = /*[[${post.id}]]*/;
+      var commentsApp = new Vue({
+        el: '#comments',
+        data: {
+          comments: null,
+          totalComments: 0,
+          totalPages: 0
+        },
+        created: function () {
+           this.loadComments();
+        },
+        filters: {
+          moment: function (date) {
+            return moment(date).format('YYYY-MM-DD HH:mm');
+          }
+        },
+        methods: {
+          loadComments: function () {
+            this.$http.get(_ctx + '/api/posts/' + postId + '/replies').then((response) => {
+              // success callback
+              console.log(response);
+              if(response.status == 200 && response.body) {
+                this.comments =  response.body.content;
+                this.totalComments = response.body.totalComments;
+                this.totalPages = response.body.totalPages;
+              }
+
+            }, (response) => {
+              // error callback
+              console.log(response);
+            });
+          }
+        }
+      });
+    });
+  </script>
+</div>
 </body>
 </html>

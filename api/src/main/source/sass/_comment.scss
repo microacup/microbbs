@@ -4,8 +4,29 @@
   padding: 0 5px;
 }
 
-.floor, .box-comment .time {
-  &:before {
-    @include sp;
+.box-comments {
+  background-color: white;
+}
+
+.box-comment {
+  .comment-text {
+    &>p {
+      font-size: 12px;
+    }
+
+    .username{
+      .floor {
+        color: #00a2d4;
+        &:before {
+          @include sp;
+        }
+      }
+
+      .time {
+        &:before {
+          @include sp;
+        }
+      }
+    }
   }
 }

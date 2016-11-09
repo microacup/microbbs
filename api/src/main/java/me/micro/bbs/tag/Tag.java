@@ -37,12 +37,20 @@ public class Tag {
     @Transient
     private Long categoryId;
 
+    public Category getCategory() {
+        throw new UnsupportedOperationException("请调用getCategoryId");
+    }
+
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
 
     public Long getCategoryId() {
-        return categoryId == null ?  this.category.getId() : categoryId;
+        if (this.category != null) {
+            return this.category.getId();
+        }
+
+        return categoryId;
     }
 
     /*@ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")

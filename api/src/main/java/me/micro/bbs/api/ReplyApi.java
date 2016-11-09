@@ -1,6 +1,7 @@
 package me.micro.bbs.api;
 
 import me.micro.bbs.consts.Uris;
+import me.micro.bbs.post.Post;
 import me.micro.bbs.post.support.PostService;
 import me.micro.bbs.reply.Reply;
 import me.micro.bbs.reply.support.ReplyService;
@@ -23,7 +24,9 @@ public class ReplyApi {
 
     @GetMapping(Uris.API_POSTS_ID_REPLIES)
     public ResponseEntity<Page<Reply>> replies(@PathVariable("postId") long postId, @RequestParam(defaultValue = "0") int page) {
-        Page<Reply> replies = replyService.findReplies(postId, page, Setting.REPLY_PAGE_SIZE);
+        Post post = new Post();
+        post.setId(postId);
+        Page<Reply> replies = replyService.findReplies(post, page, Setting.REPLY_PAGE_SIZE);
         return ResponseEntity.ok(replies);
     }
 

@@ -10,7 +10,9 @@
     "bootstrap-table": "^1.11.0",
     "font-awesome": "^4.5.0",
     "ionicons": "^2.0.1",
-    "jquery": "^2.2.3"
+    "jquery": "^2.2.3",
+    "vue": "^2.0.5",
+    "vue-resource": "^1.0.3"
   },
   "devDependencies": {
     "gulp": "3.9.1",

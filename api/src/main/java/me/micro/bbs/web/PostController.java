@@ -6,6 +6,7 @@ import me.micro.bbs.category.Category;
 import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.post.support.PostService;
+import me.micro.bbs.reply.support.ReplyService;
 import me.micro.bbs.setting.Setting;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
@@ -108,14 +109,13 @@ public class PostController {
         return "site/index";
     }
 
-    @GetMapping("/tags/{tagId}")
-    public String postByTag(@PathVariable("tagId") long tagId) {
-        Tag activeTag = tagService.findOne(tagId);
-        if (activeTag == null) return "site/404";
-
-        return "site/index";
-    }
-
+    /**
+     * 帖子详情
+     *
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/post/{id}")
     public String post(@PathVariable("id") long id, Model model) {
         List<Category> categories = categoryService.findAll();
@@ -125,7 +125,6 @@ public class PostController {
         Post post = postService.findOne(id);
         if (post == null) return "site/404";
         model.addAttribute("post", post);
-
         return "site/post";
     }
 
@@ -138,10 +137,11 @@ public class PostController {
         Map<Category, List<Tag>> tags = Maps.newHashMapWithExpectedSize(categories.size());
         List<Tag> list = tagService.findAll();
         for (Tag tag : list) {
-            List<Tag> ts = tags.get(tag.getCategory());
+            Category category = categoryService.findOne(tag.getCategoryId());
+            List<Tag> ts = tags.get(category);
             if (ts == null) {
                 ts = Lists.newArrayList();
-                tags.put(tag.getCategory(), ts);
+                tags.put(category, ts);
             }
             ts.add(tag);
         }
@@ -158,4 +158,7 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private ReplyService replyService;
 }

@@ -21,9 +21,7 @@ public class ReplyService {
     private ReplyRepository replyRepository;
 
     // 按照帖子找回复
-    public Page<Reply> findReplies(Long postId, int page, int pageSize) {
-        Post post = new Post();
-        post.setId(postId);
+    public Page<Reply> findReplies(Post post, int page, int pageSize) {
         Page<Reply> replies = replyRepository.findByPostAndStatus(post,
                 PostStatus.actived,
                 new PageRequest(page, pageSize, Sort.Direction.ASC, "floor"));
