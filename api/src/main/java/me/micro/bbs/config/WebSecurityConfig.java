@@ -33,7 +33,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         HstsHeaderWriter writer = new HstsHeaderWriter(false);
         writer.setRequestMatcher(AnyRequestMatcher.INSTANCE);
         headers.contentTypeOptions().and().xssProtection()
-                .and().cacheControl().and().addHeaderWriter(writer).frameOptions();
+                .and().cacheControl()
+                .and().addHeaderWriter(writer).frameOptions();
     }
 
 }

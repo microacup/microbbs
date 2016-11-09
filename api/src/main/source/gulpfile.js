@@ -48,6 +48,19 @@ gulp.task('compress', function() {
         .pipe(gulp.dest(paths.dest));
 });
 
+gulp.task('compress-js', function() {
+    // gulp compress-js --src lib/editor/editor.js
+    if(gulp.env._&&gulp.env._.length>0) {
+        var _src = gulp.env.src;
+        console.log(_src);
+        return gulp.src(_src)
+            .pipe(uglify())
+            .pipe(gulp.dest('../resources/static/compress/'));
+    } else {
+        console.log('请输入源文件路径');
+    }
+});
+
 //
 //gulp.task('concatjs', function() {
 //	  return gulp.src('public/dist/js/*.js')

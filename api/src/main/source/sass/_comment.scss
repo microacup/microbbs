@@ -10,11 +10,9 @@
 
 .box-comment {
   .comment-text {
-    &>p {
-      font-size: 12px;
-    }
-
     .username{
+      line-height: 2em;
+
       .floor {
         color: #00a2d4;
         &:before {

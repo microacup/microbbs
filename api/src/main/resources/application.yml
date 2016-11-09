@@ -24,10 +24,25 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.MySQLDialect
       ddl_auto: update
-  mvc:
-    static-path-pattern: /static/**
+  #mvc:
+    #static-path-pattern: /static/**
+  resources:
+    chain:
+      html-application-cache: true
+      enabled: true
+      cache: true
+      gzipped: true
+      strategy:
+        content:
+          enabled: true
+          paths: /**
 
 security:
+  headers:
+    cache: true
+    xss: true
+    enable-csrf: false
+  ignored: /static/**
   user:
     password: 111111
   basic:
