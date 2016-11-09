@@ -28,6 +28,13 @@ public class PostApi {
     @Autowired
     private PostService postService;
 
+    /**
+     * 按照标签找帖子
+     *
+     * @param tags
+     * @param page
+     * @return
+     */
     @GetMapping(Uris.API_POSTS)
     public ResponseEntity<Page<Post>> postsByTags(@RequestParam(value = "tags", required = false) String tags,
                                                   @RequestParam(defaultValue = "0") int page) {
@@ -47,6 +54,13 @@ public class PostApi {
         return ResponseEntity.ok(posts);
     }
 
+    /**
+     * 按照分类找帖子
+     *
+     * @param categoryId
+     * @param page
+     * @return
+     */
     @GetMapping(Uris.API_CATEGORIES_POSTS)
     public ResponseEntity<Page<Post>> postsByCategory(@PathVariable(value = "categoryId") long categoryId,
                                                       @RequestParam(defaultValue = "0") int page) {
@@ -54,6 +68,12 @@ public class PostApi {
         return ResponseEntity.ok(posts);
     }
 
+    /**
+     * 帖子详情
+     *
+     * @param id
+     * @return
+     */
     @GetMapping(Uris.API_POSTS + Uris.ID)
     public ResponseEntity<Post> one(@PathVariable("id") long id) {
         Post post = postService.findOne(id);
@@ -62,6 +82,12 @@ public class PostApi {
         return ResponseEntity.ok(post);
     }
 
+    /**
+     * 此刻
+     *
+     * @param page
+     * @return
+     */
     @GetMapping(Uris.API_POSTS_NOW)
     public ResponseEntity<Page<Post>> now(@RequestParam(defaultValue = "0") int page) {
         Page<Post> posts = postService.findNow(page, Setting.PAGE_SIZE);

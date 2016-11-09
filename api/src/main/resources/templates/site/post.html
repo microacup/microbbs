@@ -4,7 +4,6 @@
       layout:decorator="site/layout">
 <head>
   <title th:inline="text">[[#{app.title}]]</title>
-  <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}" />
   <link rel="stylesheet" th:href="@{/static/lib/editor/editor.css}" />
   <style type="text/css">
     .box-do-comments .CodeMirror {
@@ -60,6 +59,9 @@
   <section class="box box-default" id="comments">
     <div class="box-header with-border">
       <h3 class="box-title"><span th:text="${post.replyCount}"></span> 次回帖</h3>
+      <div class="box-tools">
+        <button type="button" title="折叠/展开" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
     </div>
 
     <div class="box-footer box-comments">
@@ -109,14 +111,14 @@
 
   <section class="sidebar box box-widget widget-user">
     <!-- Add the bg color to the header using any of the bg-* classes -->
-    <div class="widget-user-header bg-aqua-active text-center">
+    <div class="widget-user-header avatar-bg text-center">
       <h3 class="widget-user-username" th:utext="${post.author.nick}">author</h3>
       <h5 class="widget-user-desc" th:utext="${post.author.info}">我的愿望是，世界和平</h5>
+      <div class="widget-user-image">
+        <img th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" data-adaptive-background class="img-circle" alt="User Image" />
+      </div>
     </div>
-    <div class="widget-user-image">
-      <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="img-circle"
-           alt="User Image">
-    </div>
+
     <div class="box-footer">
       <div class="row">
         <div class="col-sm-4 border-right">
@@ -187,7 +189,6 @@
   <script type="text/javascript" th:src="@{/static/lib/editor/editor.js}"></script>
   <script type="text/javascript" th:src="@{/static/lib/editor/ext.js}"></script>
   <script src="//cdn.bootcss.com/moment.js/2.15.2/moment-with-locales.min.js"></script>
-  <script src="//cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
   <script th:inline="javascript" type="text/javascript">
     $(function () {
       var editor = new Editor({element: $("#reply-content")[0], status: []});

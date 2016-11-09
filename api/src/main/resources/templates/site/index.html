@@ -64,17 +64,17 @@
     </ul>
 </main><!--/content-->
 
-<aside class="col-xs-12 col-md-3" layout:fragment="sidebar">
+<aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="siderbar">
 
   <section class="sidebar box box-widget widget-user">
     <!-- Add the bg color to the header using any of the bg-* classes -->
-    <div class="widget-user-header bg-aqua-active text-center">
+    <div class="widget-user-header avatar-bg text-center">
       <h3 class="widget-user-username">张小明</h3>
       <h5 class="widget-user-desc">我的愿望是，世界和平</h5>
-    </div>
-    <div class="widget-user-image">
-      <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="img-circle"
-           alt="User Image">
+      <div class="widget-user-image">
+        <img th:src="@{/static/lib/admin-lte/dist/img/user7-128x128.jpg}" data-adaptive-background class="img-circle"
+             alt="User Image">
+      </div>
     </div>
     <div class="box-footer">
       <div class="row">
@@ -135,5 +135,13 @@
   </section>
 </aside>
 
+<div layout:fragment="scripts">
+  <script th:inline="javascript" th type="text/javascript">
+    var _ctx = $("meta[name='ctx']").attr("content");
+    // ...
+
+  </script>
+
+</div>
 </body>
 </html>

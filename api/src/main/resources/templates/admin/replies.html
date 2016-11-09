@@ -3,16 +3,16 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="admin/layout">
 <head>
-  <title>帖子管理</title>
+  <title>回帖管理</title>
   <!-- DataTables -->
-  <link href="//cdn.bootcss.com/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/static/lib/bootstrap-table/dist/bootstrap-table.min.css}">
 </head>
 <body>
 <section layout:fragment="content" class="content">
   <!-- Your Page Content Here -->
   <div class="box">
     <div class="box-header">
-      <h3 class="box-title">帖子管理</h3>
+      <h3 class="box-title">回帖管理</h3>
     </div>
     <!-- /.box-header -->
     <div id="toolbar" class="btn-group">
@@ -22,15 +22,12 @@
       <button id="btn-post-perfect" class="btn btn-success" >
         优选
       </button>
-      <button id="btn-post-disable" class="btn btn-warning">
-        禁止回复
-      </button>
       <button id="btn-post-remove" class="btn btn-danger" >
         删除
       </button>
     </div>
     <div class="box-body">
-      <table id="posts"
+      <table id="replies"
              class="table table-no-bordered table-striped bbs-table"
              data-show-export="true"
              data-detail-view="false"
@@ -45,17 +42,19 @@
              data-pagination="true"
              data-page-size="10"
              data-page-list="[10, 25, 50, 100, ALL]"
+             data-url="/bbs/api/replies"
              data-toggle="table">
         <thead>
         <tr>
           <th data-checkbox="true"></th>
           <th data-field="id" data-sortable="true">ID</th>
           <th data-field="title">标题</th>
-          <th data-field="author">作者</th>
-          <th data-field="createTime" data-sortable="true">发帖时间</th>
-          <th data-field="replyCount" data-sortable="true">回帖数</th>
-          <th data-field="lastReplyAuthor">最后回复人</th>
+          <th data-field="author">回帖人</th>
+          <th data-field="createdTime" data-sortable="true">回帖时间</th>
           <th data-field="lastReplyTime" data-sortable="true">最后回复时间</th>
+          <th data-field="up" data-sortable="true">赞同</th>
+          <th data-field="down" data-sortable="true">反对</th>
+          <th data-field="up" data-sortable="true">赞同</th>
           <th data-field="status" data-sortable="true">状态</th>
         </tr>
         </thead>
@@ -89,8 +88,10 @@
 </section>
 
 <div layout:fragment="scripts">
-  <script src="//cdn.bootcss.com/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
-  <script src="//cdn.bootcss.com/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+  <script th:src="@{/static/lib/bootstrap-table/dist/bootstrap-table.min.js}"></script>
+  <script th:src="@{/static/lib/bootstrap-table/dist/locale/bootstrap-table-zh-CN.min.js}"></script>
+  <script>
+  </script>
 </div>
 </body>
 </html>
