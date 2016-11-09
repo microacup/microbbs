@@ -41,6 +41,12 @@
     <div class="box-body post-content" th:utext="${post.content}">
       content
     </div>
+
+    <div class="box-footer">
+      <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> 分享</button>
+      <button type="button" class="btn btn-default btn-xs"><i class="fa fa-bookmark"></i> 收藏</button>
+      <a href="#do-comments" type="button" class="btn btn-default btn-xs pull-right"><i class="fa fa-reply"></i> 回复</a>
+    </div>
   </section>
 
   <!--<section class="sidebar box box-danger">
@@ -66,10 +72,10 @@
               {{comment.author.nick}}
               <a class="text-muted floor" :href="'#floor' + comment.floor"> # {{comment.floor}}</a>
               <span class="text-muted time"><i class="fa fa-clock-o"></i> {{comment.createdTime | moment}}</span>
-              <span class="pull-right comment-action action-down" title="收藏"><i class="fa fa-heart-o"></i></span>
-              <span class="pull-right comment-action action-like" title="反对"><i class="fa fa-thumbs-o-down"></i></span>
-              <span class="pull-right comment-action action-up" title="赞同"><i class="fa fa-thumbs-o-up"></i></span>
-              <span class="pull-right comment-action action-reply" title="回复此楼"><i class="fa fa-reply"></i></span>
+              <a class="pull-right comment-action action-down" title="收藏"><i class="fa fa-bookmark"></i></a>
+              <a class="pull-right comment-action action-like" title="反对"><i class="fa fa-thumbs-o-down"></i></a>
+              <a class="pull-right comment-action action-up" title="赞同"><i class="fa fa-thumbs-o-up"></i></a>
+              <a href="#do-comments" class="pull-right comment-action action-reply" title="回复此楼"><i class="fa fa-reply"></i></a>
             </div><!-- /.username -->
             <p>{{comment.content}}</p>
           </div>
@@ -79,7 +85,7 @@
     </div>
   </section>
 
-  <section class="box box-default box-do-comments">
+  <section class="box box-default box-do-comments" id="do-comments">
     <div class="box-header with-border">
       <h3 class="box-title">发表回复</h3>
     </div>
@@ -92,7 +98,7 @@
           <div class="form-group">
             <textarea name="reply-content" id="reply-content" rows="3" class="form-control" placeholder="在此输入回复内容，支持Markdown语法哦~"></textarea>
           </div>
-          <button type="button" onclick="" class="btn btn-info btn-sm btn-flat">回复</button>
+          <button type="button" onclick="" class="btn btn-info btn-sm btn-flat">提交回复</button>
         </div>
       </form>
     </div>
@@ -208,7 +214,6 @@
           loadComments: function () {
             this.$http.get(_ctx + '/api/posts/' + postId + '/replies').then((response) => {
               // success callback
-              console.log(response);
               if(response.status == 200 && response.ok) {
                 this.comments =  response.body.content;
                 this.totalComments = response.body.totalComments;
