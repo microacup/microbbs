@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 帖子
+ * 话题
  *
  * Created by microacup on 2016/11/2.
  */

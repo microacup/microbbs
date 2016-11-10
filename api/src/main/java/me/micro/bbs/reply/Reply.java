@@ -40,7 +40,7 @@ public class Reply {
     @Type(type = "text")
     private String content;
 
-    // 所属帖子
+    // 所属话题
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="r_post", nullable=false, updatable = false)
     @JsonBackReference("postReplyReference")
@@ -51,7 +51,7 @@ public class Reply {
     @JoinColumn(name="r_author", nullable=false, updatable = false)
     private User author;
 
-    // 被回复的回帖
+    // 被回复的回复
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="r_reply", updatable = false)
     @JsonBackReference

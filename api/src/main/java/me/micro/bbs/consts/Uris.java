@@ -8,13 +8,13 @@ package me.micro.bbs.consts;
 public final class Uris {
     public static final String API_USERS = "/api/users";
 
-    /** 帖子列表（按N标签过滤）*/
+    /** 话题列表（按N标签过滤）*/
     public static final String API_POSTS = "/api/posts";
 
     /** 此刻 */
     public static final String API_POSTS_NOW = "/api/posts/now";
 
-    /** 前5名新帖 */
+    /** 前5名新话题 */
     public static final String API_POSTS_NOW_TOP5 = "/api/posts/now/top5";
 
     /** 前5名相关话题 */
@@ -29,10 +29,10 @@ public final class Uris {
     /** 热门标签 */
     public static final String API_HOT_TAGS = "/api/tags/hot";
 
-    /** 按分类找帖子*/
+    /** 按分类找话题*/
     public static final String API_CATEGORIES_POSTS = "/api/categories/{categoryId}/posts";
 
-    /** 按照帖子找回复*/
+    /** 按照话题找回复*/
     public static final String API_POSTS_ID_REPLIES = "/api/posts/{postId}/replies";
 
 

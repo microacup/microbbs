@@ -53,7 +53,7 @@ public class TagService {
     }
 
 
-    // 查找帖子对应的标签
+    // 查找话题对应的标签
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Tag> findByPostId(long postId) {
         return tagRepository.findByPostId(postId);

@@ -31,7 +31,7 @@ import java.util.Map;
 public class PostController {
 
     /**
-     * 按分类展示帖子
+     * 按分类展示话题
      *
      * @param categoryId
      * @param model
@@ -73,7 +73,7 @@ public class PostController {
     }
 
     /**
-     * 按照分类下的标签展示帖子
+     * 按照分类下的标签展示话题
      *
      * @param categoryId
      * @param tagId
@@ -110,7 +110,7 @@ public class PostController {
     }
 
     /**
-     * 帖子详情
+     * 话题详情
      *
      * @param id
      * @param model

@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="admin/layout">
 <head>
-  <title>回帖管理</title>
+  <title>回复管理</title>
   <!-- DataTables -->
   <link rel="stylesheet" th:href="@{/static/lib/bootstrap-table/dist/bootstrap-table.min.css}">
 </head>
@@ -12,7 +12,7 @@
   <!-- Your Page Content Here -->
   <div class="box">
     <div class="box-header">
-      <h3 class="box-title">回帖管理</h3>
+      <h3 class="box-title">回复管理</h3>
     </div>
     <!-- /.box-header -->
     <div id="toolbar" class="btn-group">
@@ -49,8 +49,8 @@
           <th data-checkbox="true"></th>
           <th data-field="id" data-sortable="true">ID</th>
           <th data-field="title">标题</th>
-          <th data-field="author">回帖人</th>
-          <th data-field="createdTime" data-sortable="true">回帖时间</th>
+          <th data-field="author">回复人</th>
+          <th data-field="createdTime" data-sortable="true">回复时间</th>
           <th data-field="lastReplyTime" data-sortable="true">最后回复时间</th>
           <th data-field="up" data-sortable="true">赞同</th>
           <th data-field="down" data-sortable="true">反对</th>
@@ -67,8 +67,8 @@
             <a th:text="${post.title}" th:href="@{'/post/' + ${post.id}}" target="_blank">标题</a>
           </td>
           <td><a class="author" href="#" th:text="${post.author.nick}">作者</a></td>
-          <td class="time" th:text='${#dates.format(post.createdTime, "yyyy-MM-dd HH:ss:mm")}'>发帖时间</td>
-          <td th:text="${post.replyCount}">回帖数</td>
+          <td class="time" th:text='${#dates.format(post.createdTime, "yyyy-MM-dd HH:ss:mm")}'>发表时间</td>
+          <td th:text="${post.replyCount}">回复数</td>
           <td>
               <a class="author" href="#" th:text="${post.lastAuthorName}">lastAuthorName</a>
           </td>

@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 帖子
+ * 话题
  *
  * 默认顺序（热门、此刻、优选除外）：topTime > lastReplyTime > updatedTime
  * 此刻顺序：lastReplyTime > updatedTime

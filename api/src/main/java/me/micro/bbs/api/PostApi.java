@@ -29,7 +29,7 @@ public class PostApi {
     private PostService postService;
 
     /**
-     * 按照标签找帖子
+     * 按照标签找话题
      *
      * @param tags
      * @param page
@@ -55,7 +55,7 @@ public class PostApi {
     }
 
     /**
-     * 按照分类找帖子
+     * 按照分类找话题
      *
      * @param categoryId
      * @param page
@@ -69,7 +69,7 @@ public class PostApi {
     }
 
     /**
-     * 帖子详情
+     * 话题详情
      *
      * @param id
      * @return
@@ -95,7 +95,7 @@ public class PostApi {
     }
 
     /**
-     * 前5名新帖
+     * 前5名新话题
      *
      * @return
      */

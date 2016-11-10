@@ -23,7 +23,7 @@ public class ReplyService {
     @Autowired
     private ReplyRepository replyRepository;
 
-    // 按照帖子找回复
+    // 按照话题找回复
     public Page<Reply> findReplies(Post post, int page, int pageSize) {
         Page<Reply> replies = replyRepository.findByPostAndStatus(post,
                 PostStatus.actived,

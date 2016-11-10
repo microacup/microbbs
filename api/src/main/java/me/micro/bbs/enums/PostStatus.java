@@ -1,7 +1,7 @@
 package me.micro.bbs.enums;
 
 /**
- * 帖子状态
+ * 话题状态
  *
  * Created by microacup on 2016/11/2.
  */
