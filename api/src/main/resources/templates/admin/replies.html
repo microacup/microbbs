@@ -10,87 +10,165 @@
 <body>
 <section layout:fragment="content" class="content">
   <!-- Your Page Content Here -->
-  <div class="box">
-    <div class="box-header">
-      <h3 class="box-title">回复管理</h3>
-    </div>
-    <!-- /.box-header -->
-    <div id="toolbar" class="btn-group">
-      <button id="btn-post-top" class="btn btn-info">
-        置顶
-      </button>
-      <button id="btn-post-perfect" class="btn btn-success" >
-        优选
-      </button>
-      <button id="btn-post-remove" class="btn btn-danger" >
-        删除
-      </button>
-    </div>
-    <div class="box-body">
-      <table id="replies"
-             class="table table-no-bordered table-striped bbs-table"
-             data-show-export="true"
-             data-detail-view="false"
-             data-id-field="id"
-             data-toolbar="#toolbar"
-             data-search="true"
-             data-show-refresh="true"
-             data-detail-formatter="detailFormatter"
-             data-show-toggle="false"
-             data-show-footer="false"
-             data-side-pagination="client"
-             data-pagination="true"
-             data-page-size="10"
-             data-page-list="[10, 25, 50, 100, ALL]"
-             data-url="/bbs/api/replies"
-             data-toggle="table">
-        <thead>
-        <tr>
-          <th data-checkbox="true"></th>
-          <th data-field="id" data-sortable="true">ID</th>
-          <th data-field="title">标题</th>
-          <th data-field="author">回复人</th>
-          <th data-field="createdTime" data-sortable="true">回复时间</th>
-          <th data-field="lastReplyTime" data-sortable="true">最后回复时间</th>
-          <th data-field="up" data-sortable="true">赞同</th>
-          <th data-field="down" data-sortable="true">反对</th>
-          <th data-field="up" data-sortable="true">赞同</th>
-          <th data-field="status" data-sortable="true">状态</th>
-        </tr>
-        </thead>
-        <tbody>
+  <div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#tab_1" data-toggle="tab">按帖子</a></li>
+      <li><a href="#tab_2" data-toggle="tab">按时间</a></li>
+      <li><a href="#tab_3" data-toggle="tab">热门回复</a></li>
+      <li><a href="#tab_3" data-toggle="tab">热门收藏</a></li>
+      <li><a href="#tab_3" data-toggle="tab">黑名单</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab_1">
+        <div id="toolbar-posts" class="btn-group" data-toggle="buttons">
+          <label class="btn btn-default active">
+            <input id="btn-post-all" type="radio" name="options" id="option1" autocomplete="off" checked> 全部
+          </label>
+          <label class="btn btn-default">
+            <input id="btn-post-filter"  type="radio" name="options" id="option2" autocomplete="off"> 仅看有回复的
+          </label>
+        </div>
 
-        <tr th:each="post: ${posts}">
-          <td></td>
-          <td th:text="${post.id}">ID</td>
-          <td>
-            <a th:text="${post.title}" th:href="@{'/post/' + ${post.id}}" target="_blank">标题</a>
-          </td>
-          <td><a class="author" href="#" th:text="${post.author.nick}">作者</a></td>
-          <td class="time" th:text='${#dates.format(post.createdTime, "yyyy-MM-dd HH:ss:mm")}'>发表时间</td>
-          <td th:text="${post.replyCount}">回复数</td>
-          <td>
+        <table id="posts"
+               class="table table-no-bordered table-striped bbs-table"
+               data-show-export="true"
+               data-detail-view="false"
+               data-id-field="id"
+               data-toolbar="#toolbar-posts"
+               data-search="true"
+               data-show-refresh="true"
+               data-detail-formatter="detailFormatter"
+               data-show-toggle="false"
+               data-show-footer="false"
+               data-side-pagination="client"
+               data-pagination="true"
+               data-page-size="10"
+               data-page-list="[10, 25, 50, 100, ALL]"
+               data-toggle="table">
+          <thead>
+          <tr>
+            <th data-field="id" data-sortable="true">ID</th>
+            <th data-field="title">标题</th>
+            <th data-field="author" data-sortable="true">作者</th>
+            <th data-field="createTime" data-sortable="true">发表时间</th>
+            <th data-field="replyCount" data-sortable="true">回复数</th>
+            <th data-field="lastReplyAuthor" data-sortable="true">最后回复人</th>
+            <th data-field="lastReplyTime" data-sortable="true">最后回复时间</th>
+            <th data-field="status" data-sortable="true">状态</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <tr th:each="post: ${posts}">
+            <td th:text="${post.id}">ID</td>
+            <td>
+              <a th:text="${post.title}" th:href="@{'/post/' + ${post.id}}" target="_blank">标题</a>
+            </td>
+            <td><a class="author" href="#" th:text="${post.author.nick}">作者</a></td>
+            <td class="time" th:text='${#dates.format(post.createdTime, "yyyy-MM-dd HH:ss:mm")}'>发表时间</td>
+            <td th:text="${post.replyCount}">回复数</td>
+            <td>
               <a class="author" href="#" th:text="${post.lastAuthorName}">lastAuthorName</a>
-          </td>
-          <td><span class="time" th:text='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'></span></td>
-          <td>
-            <span th:text="${post.status.title}">状态</span>
-            <i class="iconfont icon-zhiding icon-micro" th:if="${post.top}" title="置顶"></i>
-            <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+            </td>
+            <td><span class="time" th:text='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'></span></td>
+            <td>
+              <span th:text="${post.status.title}">状态</span>
+              <i class="iconfont icon-zhiding icon-micro" th:if="${post.top}" title="置顶"></i>
+              <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
+            </td>
+            <td><a href="#">管理</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <!-- /.box-body -->
+    <!-- /.tab-content -->
   </div>
+
+
+  <!--回复列表-->
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">回复管理</h3>
+      </div>
+      <!-- /.box-header -->
+      <div id="toolbar" class="btn-group">
+        <button id="btn-post-top" class="btn btn-info">
+          置顶
+        </button>
+        <button id="btn-post-perfect" class="btn btn-success" >
+          优选
+        </button>
+        <button id="btn-post-remove" class="btn btn-danger" >
+          删除
+        </button>
+      </div>
+      <div class="box-body">
+        <table id="replies"
+               class="table table-no-bordered table-striped bbs-table"
+               data-show-export="true"
+               data-detail-view="false"
+               data-id-field="id"
+               data-toolbar="#toolbar"
+               data-search="true"
+               data-show-refresh="true"
+               data-detail-formatter="detailFormatter"
+               data-show-toggle="false"
+               data-show-footer="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-page-size="10"
+               data-page-list="[10, 25, 50, 100, ALL]"
+               data-ajax="loadComments"
+               data-toggle="table">
+          <thead>
+          <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-sortable="true">ID</th>
+            <th data-field="floor">楼层</th>
+            <th data-field="content" data-formatter="contentFormatter">内容</th>
+            <th data-field="author.nick" >回复人</th>
+            <th data-field="createdTime" data-sortable="true" data-formatter="timeFormatter">回复时间</th>
+            <th data-field="upCount" data-sortable="true">赞同</th>
+            <th data-field="downCount" data-sortable="true">反对</th>
+            <th data-sortable="true">状态</th>
+          </tr>
+          </thead>
+        </table>
+      </div>
+      <!-- /.box-body -->
+    </div>
+  <template>
+  </template>
   <!-- /.box -->
 </section>
 
 <div layout:fragment="scripts">
   <script th:src="@{/static/lib/bootstrap-table/dist/bootstrap-table.min.js}"></script>
   <script th:src="@{/static/lib/bootstrap-table/dist/locale/bootstrap-table-zh-CN.min.js}"></script>
-  <script>
+  <script src="//cdn.bootcss.com/moment.js/2.15.2/moment-with-locales.min.js"></script>
+
+  <script type="text/javascript">
+    function loadComments (params) {
+      var postId = '1';
+
+      $.get(ms.Urls.replies.format({ctx:_ctx, postId:postId})
+              ,function (result) {
+                  params.success({
+                      total: result.totalElements,
+                      rows:  result.content
+                  });
+              });
+    }
+    
+    function contentFormatter(value) {
+      return value.length > 30 ? (value.slice(0, 30) + '...') : value;
+    }
+
+    function timeFormatter(value) {
+      return moment(value).format('YYYY-MM-DD HH:mm');
+    }
   </script>
 </div>
 </body>

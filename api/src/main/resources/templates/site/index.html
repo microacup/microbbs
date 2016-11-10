@@ -135,7 +135,6 @@
 
 <div layout:fragment="scripts">
   <script th:inline="javascript" th type="text/javascript">
-    var _ctx = $("meta[name='ctx']").attr("content");
     var sidebarApp = new Vue({
       el: '#sidebar',
       data: {
@@ -153,7 +152,7 @@
       },
       methods: {
         loadNow: function () {
-          this.$http.get(_ctx + '/api/posts/now/top5').then((response) => {
+          this.$http.get(ms.Urls.posts_now_top5.format({ctx:_ctx})).then((response) => {
             // success callback
             if(response.status == 200 && response.ok) {
               this.nows =  response.body;
@@ -164,7 +163,7 @@
           });
         },
         loadHotTags: function () {
-          this.$http.get(_ctx + '/api/tags/hot').then((response) => {
+          this.$http.get(ms.Urls.tags_hot.format({ctx:_ctx})).then((response) => {
             // success callback
             if(response.status == 200 && response.ok) {
               this.hotTags =  response.body;

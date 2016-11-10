@@ -54,12 +54,12 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
             this.request = request;
         }
 
-        public String navClass(String active, String current) {
+        public String adminNavClass(String active, String current) {
             if (active.equals(current)) {
-                return "active";
+                return "treeview active";
             }
             else {
-                return "";
+                return "treeview";
             }
         }
 

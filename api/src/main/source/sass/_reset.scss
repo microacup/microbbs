@@ -21,3 +21,11 @@ a:active {
 .clearfix:after, .modal-footer:after {
   clear: both;
 }
+
+.btn, .btn.active, .btn:active, .btn.active:active,.btn.focus,.btn.focus:active {
+  &.focus,
+  &:focus{
+    outline: none;
+    outline-offset: 0;
+  }
+}

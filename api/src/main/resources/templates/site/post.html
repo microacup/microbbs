@@ -192,7 +192,6 @@
   <script th:inline="javascript" type="text/javascript">
       var editor = new Editor({element: $("#reply-content")[0], status: []});
       editor.render();
-      var _ctx = $("meta[name='ctx']").attr("content");
       var postId = /*[[${post.id}]]*/;
       var commentsApp = new Vue({
         el: '#comments',
@@ -211,7 +210,7 @@
         },
         methods: {
           loadComments: function () {
-            this.$http.get(_ctx + '/api/posts/' + postId + '/replies').then((response) => {
+            this.$http.get(ms.Urls.replies.format({ctx:_ctx, postId:postId})).then((response) => {
               // success callback
               if(response.status == 200 && response.ok) {
                 this.comments =  response.body.content;
@@ -244,7 +243,7 @@
         },
         methods: {
           loadNow: function () {
-            this.$http.get(_ctx + '/api/posts/now/top5').then((response) => {
+            this.$http.get(ms.Urls.posts_now_top5.format({ctx: _ctx})).then((response) => {
               // success callback
               if(response.status == 200 && response.ok) {
                 this.nows =  response.body;
@@ -255,7 +254,7 @@
             });
           },
           loadRelated: function () {
-            this.$http.get(_ctx + '/api/posts/' + postId + '/related/top5').then((response) => {
+            this.$http.get(ms.Urls.posts_related_top5.format({ctx:_ctx, postId:postId})).then((response) => {
               // success callback
               if(response.status == 200 && response.ok) {
                 this.rps =  response.body;

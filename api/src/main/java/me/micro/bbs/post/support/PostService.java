@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class PostService {
     public static final String CACHES_NAME = "cache.posts";
-    public static final String CACHES_REALTIME_NAME = "cache.realtime.posts";
+    public static final String CACHES_REALTIME_NAME = "cache.posts.realtime";
     public static final String CACHE_NAME = "cache.post";
     public static final Class<?> CACHE_TYPE = Post.class;
 
@@ -33,7 +33,6 @@ public class PostService {
     @Autowired
     private TagService tagService;
 
-    //@Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public Page<Post> findAll(int page, int pageSize) {
         return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastReplyTime", "updatedTime"));
     }
@@ -43,14 +42,12 @@ public class PostService {
         return postRepository.findOne(id);
     }
 
-    //@Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public Page<Post> findByTags(Collection<Long> tags, int page, int pageSize) {
         Page<Post> posts = postRepository.findByTags(tags,
                 new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastReplyTime", "updatedTime"));
         return posts;
     }
 
-    //@Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public Page<Post> findByCategoryId(Long categoryId, int page, int pageSize) {
         Page<Post> posts = postRepository.findByCategoryId(categoryId,
                 new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastReplyTime", "updatedTime"));

@@ -8,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Layout</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}" />
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -185,14 +186,14 @@
 
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu">
-                  <li class="treeview active"> <a href="#"><i class="fa fa-dashboard"></i> <span>统计分析</span></a></li>
-                  <li class="treeview"> <a href="#"><i class="fa fa-info-circle"></i> <span>系统状态</span></a></li>
-                  <li class="treeview"> <a th:href="@{/admin/posts}"><i class="fa fa-twitter"></i> <span>话题管理</span></a></li>
-                  <li class="treeview"> <a href="#"><i class="fa fa-reply-all"></i> <span>回复管理</span></a></li>
-                  <li class="treeview"> <a href="#"><i class="fa fa-object-group"></i> <span>分类管理</span></a></li>
-                  <li class="treeview"> <a href="#"><i class="fa fa-tags"></i> <span>标签管理</span></a></li>
-                  <li class="treeview"> <a href="#"><i class="fa fa-users"></i> <span>用户管理</span></a></li>
-                  <li class="treeview">
+                  <li th:class="${@uih.tagClass(actived?:'report', 'report')}"> <a href="#"><i class="fa fa-dashboard"></i> <span>统计分析</span></a></li>
+                  <li th:class="${@uih.tagClass(actived?:'', 'info')}"> <a href="#"><i class="fa fa-info-circle"></i> <span>系统状态</span></a></li>
+                  <li th:class="${@uih.tagClass(actived?:'', 'posts')}"> <a th:href="@{/admin/posts}"><i class="fa fa-twitter"></i> <span>话题管理</span></a></li>
+                  <li th:class="${@uih.tagClass(actived?:'', 'replies')}"> <a th:href="@{/admin/replies}"><i class="fa fa-reply-all"></i> <span>回复管理</span></a></li>
+                  <li th:class="${@uih.tagClass(actived?:'', '')}"> <a href="#"><i class="fa fa-object-group"></i> <span>分类管理</span></a></li>
+                  <li th:class="${@uih.tagClass(actived?:'', 'categories')}"> <a href="#"><i class="fa fa-tags"></i> <span>标签管理</span></a></li>
+                  <li th:class="${@uih.tagClass(actived?:'', 'users')}"> <a href="#"><i class="fa fa-users"></i> <span>用户管理</span></a></li>
+                  <li th:class="${@uih.tagClass(actived?:'', 'settings')}">
                     <a href="#"><i class="fa fa-cogs"></i> <span>系统设置</span>
                       <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
