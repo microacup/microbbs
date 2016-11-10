@@ -104,5 +104,15 @@ public class PostApi {
         return ResponseEntity.ok(postService.findTop5Now());
     }
 
+    /**
+     * 相关话题Top5
+     *
+     * @return
+     */
+    @GetMapping(Uris.API_POSTS_RELATED_TOP5)
+    public ResponseEntity<List<Post>> relatedPostsTop5(@PathVariable("postId") long postId) {
+        List<Post> posts = postService.findTop5RelatedPosts(postId);
+        return ResponseEntity.ok(posts);
+    }
 
 }

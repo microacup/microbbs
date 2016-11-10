@@ -7,6 +7,7 @@ import me.micro.bbs.cache.JsonRedisTemplate;
 import me.micro.bbs.cache.RedisCacheManager;
 import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.support.PostService;
+import me.micro.bbs.reply.support.ReplyService;
 import me.micro.bbs.tag.support.TagService;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -28,7 +29,10 @@ import java.util.ArrayList;
 @EnableCaching(proxyTargetClass = true)
 public class CacheConfig extends CachingConfigurerSupport {
 
-    protected Long cacheTimeToLive = 300L; // s
+    private static final Long cacheTimeToLive = 300L; // s
+
+    private static final Long cacheTimeToLiveShort = 60L; // s
+
 
     @Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
@@ -37,30 +41,42 @@ public class CacheConfig extends CachingConfigurerSupport {
 
         // Post Cache
         JsonRedisTemplate<? extends Object> postTemplate = new JsonRedisTemplate<>(redisConnectionFactory, PostService.CACHE_TYPE);
-        cacheManager.withCache(PostService.CACHE_NAME, postTemplate, this.cacheTimeToLive);
+        cacheManager.withCache(PostService.CACHE_NAME, postTemplate, cacheTimeToLive);
 
         // Post List Cache
         JavaType posts = typeFactory.constructParametricType(ArrayList.class, PostService.CACHE_TYPE);
         JsonRedisTemplate<? extends Object>  postsTemplate = new JsonRedisTemplate<>(redisConnectionFactory, posts);
-        cacheManager.withCache(PostService.CACHES_NAME, postsTemplate, this.cacheTimeToLive);
+        cacheManager.withCache(PostService.CACHES_NAME, postsTemplate, cacheTimeToLive);
+
+        JsonRedisTemplate<? extends Object>  realtimePosts = new JsonRedisTemplate<>(redisConnectionFactory, posts);
+        cacheManager.withCache(PostService.CACHES_REALTIME_NAME, realtimePosts, cacheTimeToLiveShort);
 
         // Tag Cache
         JsonRedisTemplate<? extends Object> tagTemplate = new JsonRedisTemplate<>(redisConnectionFactory, TagService.CACHE_TYPE);
-        cacheManager.withCache(TagService.CACHE_NAME, tagTemplate, this.cacheTimeToLive);
+        cacheManager.withCache(TagService.CACHE_NAME, tagTemplate, cacheTimeToLive);
 
         // Tag List Cache
         JavaType tags = typeFactory.constructParametricType(ArrayList.class, TagService.CACHE_TYPE);
         JsonRedisTemplate<? extends Object>  tagsTemplate = new JsonRedisTemplate<>(redisConnectionFactory, tags);
-        cacheManager.withCache(TagService.CACHES_NAME, tagsTemplate, this.cacheTimeToLive);
+        cacheManager.withCache(TagService.CACHES_NAME, tagsTemplate, cacheTimeToLive);
 
         // Category Cache
         JsonRedisTemplate<? extends Object> cateTemplate = new JsonRedisTemplate<>(redisConnectionFactory, CategoryService.CACHE_TYPE);
-        cacheManager.withCache(CategoryService.CACHE_NAME, cateTemplate, this.cacheTimeToLive);
+        cacheManager.withCache(CategoryService.CACHE_NAME, cateTemplate, cacheTimeToLive);
 
-        // Tag List Cache
+        // Category List Cache
         JavaType cates = typeFactory.constructParametricType(ArrayList.class, CategoryService.CACHE_TYPE);
         JsonRedisTemplate<? extends Object>  catesTemplate = new JsonRedisTemplate<>(redisConnectionFactory, cates);
-        cacheManager.withCache(CategoryService.CACHES_NAME, catesTemplate, this.cacheTimeToLive);
+        cacheManager.withCache(CategoryService.CACHES_NAME, catesTemplate, cacheTimeToLive);
+
+        // Reply Cache
+        JsonRedisTemplate<? extends Object> replyTemplate = new JsonRedisTemplate<>(redisConnectionFactory, ReplyService.CACHE_TYPE);
+        cacheManager.withCache(ReplyService.CACHE_NAME, replyTemplate, cacheTimeToLive);
+
+        // Reply List Cache
+        JavaType replies = typeFactory.constructParametricType(ArrayList.class, ReplyService.CACHE_TYPE);
+        JsonRedisTemplate<? extends Object>  repliesTemplate = new JsonRedisTemplate<>(redisConnectionFactory, replies);
+        cacheManager.withCache(ReplyService.CACHES_NAME, repliesTemplate, cacheTimeToLive);
         return cacheManager;
     }
 

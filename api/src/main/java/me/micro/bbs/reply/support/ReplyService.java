@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ReplyService {
+    public static final String CACHES_NAME = "cache.replies";
+    public static final String CACHE_NAME = "cache.reply";
+    public static final Class<?> CACHE_TYPE = Reply.class;
 
     @Autowired
     private ReplyRepository replyRepository;

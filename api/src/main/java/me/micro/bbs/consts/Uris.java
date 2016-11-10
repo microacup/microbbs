@@ -17,6 +17,9 @@ public final class Uris {
     /** 前5名新帖 */
     public static final String API_POSTS_NOW_TOP5 = "/api/posts/now/top5";
 
+    /** 前5名相关话题 */
+    public static final String API_POSTS_RELATED_TOP5 = "/api/posts/{postId}/related/top5";
+
     /** 所有分类 */
     public static final String API_CATEGORIES = "/api/categories";
 

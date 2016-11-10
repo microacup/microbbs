@@ -23,4 +23,7 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
             nativeQuery = true)
     List<Tag> findTopN(@Param("n") int n);
 
+    @Query(value = "select t.* from m_tag t ,m_posts_tags pt where t.id = pt.tag_id and pt.post_id = :postId", nativeQuery = true)
+    List<Tag> findByPostId(@Param("postId") Long postId);
+
 }

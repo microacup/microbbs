@@ -19,7 +19,7 @@
 
 <!--content-->
 <main layout:fragment="content" id="posts">
-  <section class="sidebar box box-primary">
+  <section class="box box-primary">
     <div class="box-header with-border">
       <h3 class="post-title text-lg"  th:utext="${post.title}">title</h3>
       <i class="iconfont icon-zhiding icon-micro"
@@ -48,7 +48,7 @@
     </div>
   </section>
 
-  <!--<section class="sidebar box box-danger">
+  <!--<section class="box box-danger">
     <div class="box-header with-border">
       <h3 class="box-title">热门回帖</h3>
       <div class="post-footer">
@@ -100,14 +100,14 @@
           <div class="form-group">
             <textarea name="reply-content" id="reply-content" rows="3" class="form-control" placeholder="在此输入回复内容，支持Markdown语法哦~"></textarea>
           </div>
-          <button type="button" onclick="" class="btn btn-info btn-sm btn-flat">提交回复</button>
+          <button type="button" onclick="" class="btn btn-info btn-sm btn-flat pull-right">提交回复</button>
         </div>
       </form>
     </div>
   </section>
 </main><!--/content-->
 
-<aside class="col-xs-12 col-md-3" layout:fragment="sidebar">
+<aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="sidebar">
 
   <section class="sidebar box box-widget widget-user">
     <!-- Add the bg color to the header using any of the bg-* classes -->
@@ -157,10 +157,10 @@
       <h3 class="box-title">相关话题</h3>
     </div>
     <div class="box-body no-padding">
-      <ul class="list">
-        <li class="item"><a href="#">A</a></li>
-        <li class="item"><a href="#">B</a></li>
-        <li class="item"><a href="#">C</a></li>
+      <ul class="list index-nows">
+        <template v-for="rp in rps">
+          <li class="item"><a target="_blank" :href="_ctx + '/post/' + rp.id">{{rp.title}}</a></li>
+        </template>
       </ul>
     </div>
   </section><!--/相关话题-->
@@ -171,10 +171,10 @@
       <h3 class="box-title">此刻</h3>
     </div>
     <div class="box-body no-padding">
-      <ul class="list">
-        <li class="item"><a href="#">A</a></li>
-        <li class="item"><a href="#">B</a></li>
-        <li class="item"><a href="#">C</a></li>
+      <ul class="list index-nows">
+        <template v-for="n in nows">
+          <li class="item"><a target="_blank" :href="_ctx + '/post/' + n.id">{{n.title}}</a></li>
+        </template>
       </ul>
     </div>
   </section><!--/此刻-->
@@ -190,10 +190,8 @@
   <script type="text/javascript" th:src="@{/static/lib/editor/ext.js}"></script>
   <script src="//cdn.bootcss.com/moment.js/2.15.2/moment-with-locales.min.js"></script>
   <script th:inline="javascript" type="text/javascript">
-    $(function () {
       var editor = new Editor({element: $("#reply-content")[0], status: []});
       editor.render();
-
       var _ctx = $("meta[name='ctx']").attr("content");
       var postId = /*[[${post.id}]]*/;
       var commentsApp = new Vue({
@@ -228,7 +226,47 @@
           }
         }
       });
-    });
+
+      var sidebarApp = new Vue({
+        el: '#sidebar',
+        data: {
+          nows: null,
+          rps: null
+        },
+        created: function () {
+          this.loadNow();
+          this.loadRelated();
+        },
+        filters: {
+          moment: function (date) {
+            return moment(date).format('YYYY-MM-DD HH:mm');
+          }
+        },
+        methods: {
+          loadNow: function () {
+            this.$http.get(_ctx + '/api/posts/now/top5').then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                this.nows =  response.body;
+              }
+            }, (response) => {
+              // error callback
+              console.log(response);
+            });
+          },
+          loadRelated: function () {
+            this.$http.get(_ctx + '/api/posts/' + postId + '/related/top5').then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                this.rps =  response.body;
+              }
+            }, (response) => {
+              // error callback
+              console.log(response);
+            });
+          }
+        }
+      });
   </script>
 </div>
 </body>
