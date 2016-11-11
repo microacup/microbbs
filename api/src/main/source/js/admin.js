@@ -1,8 +1,11 @@
 'use strict';
 
+// 上下文地址
+var _ctx = $("meta[name='ctx']").attr("content");
 var ms = {
     Urls: {
-        replies: '{ctx}/api/posts/{postId}/replies'
+        posts: _ctx + '/api/posts',
+        replies:  _ctx + '/api/posts/{postId}/replies'
     }
 }
 
@@ -47,5 +50,9 @@ var formatString = function (str, replacements) {
     });
 };
 
-// 上下文地址
-var _ctx = $("meta[name='ctx']").attr("content");
+
+// 格式化时间
+function timeFormatter(value) {
+    if (!value) return '-';
+    return moment(value).format('YYYY-MM-DD HH:mm');
+}

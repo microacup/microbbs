@@ -1,5 +1,8 @@
 package me.micro.bbs.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * 话题状态
  *
@@ -19,5 +22,25 @@ public enum PostStatus {
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public String toString() {
+        return this.title;
+    }
+
+    @JsonCreator
+    public static PostStatus forTitle(String title) {
+        for (PostStatus status : PostStatus.values()) {
+            if (status.title.equals(title)) {
+                return status;
+            }
+        }
+        return disabled;
+    }
+
+    @JsonValue
+    public String toValue() {
+        return this.title;
     }
 }

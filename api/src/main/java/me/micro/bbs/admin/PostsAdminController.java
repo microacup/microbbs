@@ -1,9 +1,7 @@
 package me.micro.bbs.admin;
 
-import me.micro.bbs.post.Post;
 import me.micro.bbs.post.support.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +21,6 @@ public class PostsAdminController {
     public String index(@RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size, Model model) {
         model.addAttribute("actived", "posts");
-
-        Page<Post> posts = postService.findAll(page, size);
-        model.addAttribute("posts", posts);
 
         return "admin/posts";
     }

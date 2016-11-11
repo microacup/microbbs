@@ -4,8 +4,6 @@
       layout:decorator="admin/layout">
 <head>
   <title>话题管理</title>
-  <!-- DataTables -->
-  <link href="//cdn.bootcss.com/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet">
 </head>
 <body>
 <section layout:fragment="content" class="content">
@@ -16,16 +14,16 @@
     </div>
     <!-- /.box-header -->
     <div id="toolbar" class="btn-group">
-      <button id="btn-post-top" class="btn btn-info">
+      <button id="btn-post-top" class="btn btn-default">
         置顶
       </button>
-      <button id="btn-post-perfect" class="btn btn-success" >
+      <button id="btn-post-perfect" class="btn btn-default" >
         优选
       </button>
-      <button id="btn-post-disable" class="btn btn-warning">
+      <button id="btn-post-disable" class="btn btn-default">
         禁止回复
       </button>
-      <button id="btn-post-remove" class="btn btn-danger" >
+      <button id="btn-post-remove" class="btn btn-default" >
         删除
       </button>
     </div>
@@ -33,15 +31,16 @@
       <table id="posts"
              class="table table-no-bordered table-striped bbs-table"
              data-show-export="true"
-             data-detail-view="false"
+             data-detail-view="true"
              data-id-field="id"
              data-toolbar="#toolbar"
              data-search="true"
              data-show-refresh="true"
-             data-detail-formatter="detailFormatter"
+             data-detail-formatter="postFormatter"
              data-show-toggle="false"
              data-show-footer="false"
-             data-side-pagination="client"
+             data-side-pagination="server"
+             data-ajax="loadPosts"
              data-pagination="true"
              data-page-size="10"
              data-page-list="[10, 25, 50, 100, ALL]"
@@ -51,36 +50,14 @@
           <th data-checkbox="true"></th>
           <th data-field="id" data-sortable="true">ID</th>
           <th data-field="title">标题</th>
-          <th data-field="author" data-sortable="true">作者</th>
-          <th data-field="createTime" data-sortable="true">发表时间</th>
+          <th data-field="author.nick" data-sortable="true">作者</th>
+          <th data-field="createdTime" data-sortable="true" data-formatter="timeFormatter">发表时间</th>
           <th data-field="replyCount" data-sortable="true">回复数</th>
-          <th data-field="lastReplyAuthor" data-sortable="true">最后回复人</th>
-          <th data-field="lastReplyTime" data-sortable="true">最后回复时间</th>
-          <th data-field="status" data-sortable="true">状态</th>
+          <th data-field="lastAuthorName" data-sortable="true">最后回复人</th>
+          <th data-field="lastReplyTime" data-sortable="true" data-formatter="timeFormatter">最后回复时间</th>
+          <th data-sortable="true" data-formatter="postStatusFormatter">状态</th>
         </tr>
         </thead>
-        <tbody>
-
-        <tr th:each="post: ${posts}">
-          <td></td>
-          <td th:text="${post.id}">ID</td>
-          <td>
-            <a th:text="${post.title}" th:href="@{'/post/' + ${post.id}}" target="_blank">标题</a>
-          </td>
-          <td><a class="author" href="#" th:text="${post.author.nick}">作者</a></td>
-          <td class="time" th:text='${#dates.format(post.createdTime, "yyyy-MM-dd HH:ss:mm")}'>发表时间</td>
-          <td th:text="${post.replyCount}">回复数</td>
-          <td>
-              <a class="author" href="#" th:text="${post.lastAuthorName}">lastAuthorName</a>
-          </td>
-          <td><span class="time" th:text='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'></span></td>
-          <td>
-            <span th:text="${post.status.title}">状态</span>
-            <i class="iconfont icon-zhiding icon-micro" th:if="${post.top}" title="置顶"></i>
-            <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
-          </td>
-        </tr>
-        </tbody>
       </table>
     </div>
     <!-- /.box-body -->
@@ -89,8 +66,50 @@
 </section>
 
 <div layout:fragment="scripts">
-  <script src="//cdn.bootcss.com/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
-  <script src="//cdn.bootcss.com/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+  <script type="text/javascript">
+    function loadPosts (params) {
+      $.get(ms.Urls.posts ,function (result) {
+                params.success({
+                  total: result.totalElements,
+                  rows:  result.content
+                });
+              });
+    }
+
+
+    function postFormatter(index, row) {
+      var html = [];
+      html.push('<p><b>作者ID:</b> ' + row.author.id + '</p>');
+      html.push('<p><b>最后更新时间:</b> ' + timeFormatter(row.updatedTime) + '</p>');
+      html.push('<p><b>优选:</b> ' + (row.perfect ? '是':'否') + '</p>');
+      if (row.perfect) {
+        html.push('<p><b>优选时间:</b> ' + timeFormatter(row.perfectTime) + '</p>');
+      }
+      html.push('<p><b>置顶:</b> ' + (row.top ? '是':'否') + '</p>');
+      if(row.top) {
+        html.push('<p><b>置顶时间:</b> ' + timeFormatter(row.topTime) + '</p>');
+      }
+      html.push('<p><b>状态:</b> ' + row.status + '</p>');
+
+      return html.join('');
+    }
+
+    function postStatusFormatter(value, row, index) {
+      var html = [];
+      html.push('<span>' + row.status + '</span>');
+      if (row.top) {
+        html.push('<i class="iconfont icon-micro icon-zhiding" title="置顶"></i>');
+      }
+      if(row.perfect) {
+        html.push('<i class="iconfont icon-micro icon-youxuan" title="优选"></i>');
+      }
+      if (!row.replyable) {
+        html.push('<i class="iconfont icon-micro icon-disabled" title="禁止回复"></i>');
+      }
+
+      return html.join('');
+    }
+  </script>
 </div>
 </body>
 </html>

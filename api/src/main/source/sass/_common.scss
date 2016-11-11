@@ -8,7 +8,12 @@
 }
 
 .icon-micro {
+  color: #EB5424;
   margin-left: 3px;
+
+  &.icon-cai {
+    color: #00a65a;
+  }
 }
 
 .text-lg {
