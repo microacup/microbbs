@@ -1,12 +1,10 @@
 package me.micro.bbs.web;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import me.micro.bbs.category.Category;
 import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.Post;
+import me.micro.bbs.post.PostForm;
 import me.micro.bbs.post.support.PostService;
-import me.micro.bbs.reply.support.ReplyService;
 import me.micro.bbs.setting.Setting;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
@@ -14,13 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Posts
@@ -128,26 +129,32 @@ public class PostController {
         return "site/post";
     }
 
+    // 新增Post
     @GetMapping("/create")
     public String create(Model model) {
         List<Category> categories = categoryService.findAll();
         if (categories == null) return "site/404";
+
         model.addAttribute("categories", categories);
-
-        Map<Category, List<Tag>> tags = Maps.newHashMapWithExpectedSize(categories.size());
-        List<Tag> list = tagService.findAll();
-        for (Tag tag : list) {
-            Category category = categoryService.findOne(tag.getCategoryId());
-            List<Tag> ts = tags.get(category);
-            if (ts == null) {
-                ts = Lists.newArrayList();
-                tags.put(category, ts);
-            }
-            ts.add(tag);
-        }
-
-        model.addAttribute("tags", tags);
+        model.addAttribute("tags", tagService.getTagsMap());
+        model.addAttribute("postForm", new PostForm());
         return "site/create";
+    }
+
+    /**
+     * 新增Post
+     *
+     * @param principal
+     * @param postForm
+     * @param bindingResult
+     * @param model
+     * @return
+     */
+    @PostMapping("/post/create")
+    public String createPost(Principal principal, @Valid PostForm postForm, BindingResult bindingResult, Model model) {
+        String name = principal.getName();
+        Post post = postService.addPost(postForm, name);
+        return "redirect:/post/" + post.getId();
     }
 
     @Autowired
@@ -158,7 +165,4 @@ public class PostController {
 
     @Autowired
     private PostService postService;
-
-    @Autowired
-    private ReplyService replyService;
 }

@@ -52,13 +52,15 @@
             <a class="label label-default"
                th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
                th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-            <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" class="post-author" th:utext="${post.author.nick}"></a>
-            <span class="post-author-last">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
-            <span class="post-time-last" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
+            <span class="post-author" th:unless="${post.lastAuthorName}">
+              <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a> 发布于
+            </span>
+            <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+            <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
           </div>
         </div>
         <div class="media-right">
-          <span class="badge" th:text="${post.replyCount}">0</span>
+          <span class="badge" th:if="${post.replyCount > 0}" th:text="${post.replyCount}">0</span>
         </div>
       </li>
     </ul>

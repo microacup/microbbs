@@ -1,6 +1,7 @@
 package me.micro.bbs.post;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
@@ -20,10 +21,10 @@ import java.util.List;
 /**
  * 话题
  *
- * 默认顺序（热门、此刻、优选除外）：topTime > lastReplyTime > updatedTime
- * 此刻顺序：lastReplyTime > updatedTime
- * 优选顺序：perfect == true && perfectTime
- * 热门顺序：topTime > replyCount > lastReplyTime > updatedTime
+ * 默认顺序（热门、此刻、优选除外）：topTime > lastTime
+ * 此刻顺序：lastTime
+ * 优选顺序：perfect == true && perfectTime > lastTime
+ * 热门顺序：topTime > replyCount > lastTime
  *
  * Created by microacup on 2016/11/1.
  */
@@ -42,13 +43,20 @@ public class Post {
     @Column(name = "p_title", nullable = false, length = 255)
     private String title;
 
-    // 内容
+    // 原始内容,不缓存
     @Column(name = "p_content", nullable = false)
     @Type(type = "text")
+    @JsonIgnore
     private String content;
 
+    // 解析后的内容
+    @Column(name = "p_renderedContent", nullable = false)
+    @Type(type = "text")
+    private String renderedContent;
+
     // 摘要
-    @Column(name = "p_summary", length = 255)
+    @Column(name = "p_summary")
+    @Type(type = "text")
     private String summary;
 
     // 标签
@@ -75,21 +83,25 @@ public class Post {
 
     // 回复数量
     @Column(name = "p_replyCount", nullable = false)
-    private Long replyCount;
+    private Long replyCount = 0L;
 
     // 阅读次数
     @Column(name = "p_readCount", nullable = false)
-    private Long readCount;
+    private Long readCount = 0L;
 
     // 创建时间
     @Column(name = "p_createdTime", nullable = false, updatable = false)
     @CreatedDate
     private Date createdTime;
 
-    // 最后更新时间, 默认=createdTime
+    // 更新时间, 默认=createdTime
     @Column(name = "p_updatedTime", nullable = false)
-    @LastModifiedDate
     private Date updatedTime;
+
+    // 最后更新/回复时间，默认=createdTime
+    @Column(name = "p_lastTime", nullable = false)
+    @LastModifiedDate
+    private Date lastTime;
 
     // 被删除时间
     @Column(name = "p_deletedTime")
@@ -97,7 +109,6 @@ public class Post {
 
     // 最后回复时间
     @Column(name = "p_lastReplyTime")
-    @LastModifiedDate
     private Date lastReplyTime;
 
     // 是否允许评论
@@ -111,7 +122,7 @@ public class Post {
 
     // 是否优选
     @Column(name = "p_perfect", nullable = false)
-    private Boolean perfect;
+    private Boolean perfect = false;
 
     // 优选时间
     @Column(name = "p_perfectTime")
@@ -119,7 +130,7 @@ public class Post {
 
     // 是否置顶
     @Column(name = "p_top", nullable = false)
-    private Boolean top;
+    private Boolean top = false;
 
     // 置顶时间
     @Column(name = "p_topTime")

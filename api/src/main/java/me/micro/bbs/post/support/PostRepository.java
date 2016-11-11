@@ -29,7 +29,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select distinct p from Post p inner join  p.tags t where t.category.id = :category")
     Page<Post> findByCategoryId(@Param("category") Long category, Pageable pageable);
 
-    Page<Post> findByPerfectTrueOrderByPerfectTimeDesc(Pageable pageable);
+    Page<Post> findByPerfectTrue(Pageable pageable);
 
     List<Post> findTop5ByOrderByLastReplyTimeDesc();
 

@@ -1,11 +1,16 @@
 package me.micro.bbs.tag.support;
 
+import com.google.common.collect.Lists;
+import me.micro.bbs.category.Category;
+import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.tag.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TagService
@@ -20,6 +25,9 @@ public class TagService {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Tag> findAll() {
@@ -57,6 +65,21 @@ public class TagService {
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Tag> findByPostId(long postId) {
         return tagRepository.findByPostId(postId);
+    }
+
+    public Map<Category, List<Tag>> getTagsMap() {
+        Map<Category, List<Tag>> tags = new HashMap<>();
+        List<Tag> list = this.findAll();
+        for (Tag tag : list) {
+            Category category = categoryService.findOne(tag.getCategoryId());
+            List<Tag> ts = tags.get(category);
+            if (ts == null) {
+                ts = Lists.newArrayList();
+                tags.put(category, ts);
+            }
+            ts.add(tag);
+        }
+        return tags;
     }
 
 }

@@ -26,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().rememberMe()
                 .and().formLogin()
                 .and().logout()
-                .and().csrf().disable();
+                .and().csrf();
     }
 
     private static void configureHeaders(HeadersConfigurer<?> headers) throws Exception {

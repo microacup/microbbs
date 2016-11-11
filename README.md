@@ -13,7 +13,7 @@
 * `Spring Boot` 全家桶
 * `Mysql`
 
-##　运行
+## 运行
 
     > gulp build
     > gradle clean bootRun
@@ -31,3 +31,4 @@
 * [x] 分页
 * [ ] posts 根据status过滤
 * [ ] 编辑器内容localStorage
+* [ ] 表单重复提交
