@@ -70,7 +70,7 @@
             <td>
               <a class="author" href="#" th:text="${post.lastAuthorName}">lastAuthorName</a>
             </td>
-            <td><span class="time" th:text='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'></span></td>
+            <td><span class="time" th:if="${post.lastReplyTime}" th:text='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>-</span></td>
             <td>
               <span th:text="${post.status.title}">状态</span>
               <i class="iconfont icon-micro icon-zhiding" th:if="${post.top}" title="置顶"></i>

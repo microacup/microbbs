@@ -191,9 +191,9 @@
                   <li th:class="${@uih.adminNavClass(actived?:'', 'info')}"> <a href="#"><i class="fa fa-info-circle"></i> <span>系统状态</span></a></li>
                   <li th:class="${@uih.adminNavClass(actived?:'', 'posts')}"> <a th:href="@{/admin/posts}"><i class="fa fa-twitter"></i> <span>话题管理</span></a></li>
                   <li th:class="${@uih.adminNavClass(actived?:'', 'replies')}"> <a th:href="@{/admin/replies}"><i class="fa fa-reply-all"></i> <span>回复管理</span></a></li>
-                  <li th:class="${@uih.adminNavClass(actived?:'', 'categories')}"> <a href="#"><i class="fa fa-object-group"></i> <span>分类管理</span></a></li>
-                  <li th:class="${@uih.adminNavClass(actived?:'', 'tags')}"> <a href="#"><i class="fa fa-tags"></i> <span>标签管理</span></a></li>
-                  <li th:class="${@uih.adminNavClass(actived?:'', 'users')}"> <a href="#"><i class="fa fa-users"></i> <span>用户管理</span></a></li>
+                  <li th:class="${@uih.adminNavClass(actived?:'', 'categories')}"> <a th:href="@{/admin/categories}"><i class="fa fa-object-group"></i> <span>分类管理</span></a></li>
+                  <li th:class="${@uih.adminNavClass(actived?:'', 'tags')}"> <a th:href="@{/admin/tags}"><i class="fa fa-tags"></i> <span>标签管理</span></a></li>
+                  <li th:class="${@uih.adminNavClass(actived?:'', 'users')}"> <a th:href="@{/admin/users}"><i class="fa fa-users"></i> <span>用户管理</span></a></li>
                   <li th:class="${@uih.adminNavClass(actived?:'', 'settings')}">
                     <a href="#"><i class="fa fa-cogs"></i> <span>系统设置</span>
                       <span class="pull-right-container">

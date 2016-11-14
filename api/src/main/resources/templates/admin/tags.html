@@ -1,0 +1,161 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+  <title>标签管理</title>
+</head>
+<body>
+<section layout:fragment="content" class="content">
+  <div class="box">
+    <div class="box-header">
+      <h3 class="box-title">标签管理</h3>
+    </div>
+    <!-- /.box-header -->
+    <div id="toolbar" class="btn-group">
+      <button id="btn-add" class="btn btn-default" data-toggle="modal" data-target="#addModal"> 新增 </button>
+      <button id="btn-edit" class="btn btn-default" data-toggle="modal" data-target="#editModal"> 修改 </button>
+      <button id="btn-remove" class="btn btn-default" data-toggle="modal" data-target="#deleteModal"> 删除 </button>
+    </div>
+    <div class="box-body">
+      <table id="categories"
+             class="table table-no-bordered table-striped bbs-table"
+             data-show-export="true"
+             data-id-field="id"
+             data-toolbar="#toolbar"
+             data-search="true"
+             data-show-refresh="true"
+             data-detail-view="false"
+             data-detail-formatter="categoryFormatter"
+             data-show-toggle="false"
+             data-show-footer="false"
+             data-side-pagination="client"
+             data-ajax="loadCategories"
+             data-pagination="true"
+             data-toggle="table">
+        <thead>
+        <tr>
+          <th data-checkbox="true"></th>
+          <th data-field="id" data-sortable="true">ID</th>
+          <th data-field="title" data-sortable="true">标题</th>
+          <th data-field="code" data-sortable="true">代码</th>
+          <th data-field="categoryId" data-sortable="true">所属分类ID</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+    <!-- /.box-body -->
+  </div>
+  <!-- /.box -->
+
+  <!--新增-->
+  <div class="modal fade" id="addModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">新增标签</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" id="add-form">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="c-code" class="col-sm-2 control-label">代码：</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="c-code" placeholder="请输入代码（必填）">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="c-title" class="col-sm-2 control-label">标题：</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="c-title" placeholder="请输入标题（必填）">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary">新增</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--编辑-->
+  <div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">修改标签</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" id="edit-form">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="e-code" class="col-sm-2 control-label">代码：</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="e-code" placeholder="请输入代码（必填）">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="e-title" class="col-sm-2 control-label">标题：</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="e-title" placeholder="请输入标题（必填）">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary">更新</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--删除-->
+  <div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">删除标签</h4>
+        </div>
+        <div class="modal-body">
+          <form  role="form" id="delete-form">
+            <div class="form-group">
+              <div class="box-body">
+                <label for="d-code" class="control-label">输入代码来确认要删除的标签：</label>
+                <input type="text" class="form-control" id="d-code" placeholder="请输入要删除的代码（必填）">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-danger">删除</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</section>
+
+<div layout:fragment="scripts">
+  <script type="text/javascript">
+    function loadCategories (params) {
+      $.get(ms.Urls.tags ,function (result) {
+                params.success({
+                  data:  result
+                });
+      });
+    }
+
+  </script>
+</div>
+</body>
+</html>

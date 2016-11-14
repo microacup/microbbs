@@ -83,14 +83,14 @@ public class PostService {
     // 查询前5名
     @Cacheable(value = CACHES_REALTIME_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Post> findTop5Now() {
-        return postRepository.findTop5ByOrderByLastReplyTimeDesc();
+        return postRepository.findTop5ByOrderByLastTimeDesc();
     }
 
     // 相关话题
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Post> findTop5RelatedPosts(Long postId) {
         List<Tag> tags = tagService.findByPostId(postId);
-        List<Post> posts = postRepository.findTop5DistinctByIdNotAndTagsInOrderByUpdatedTimeDesc(postId, tags);
+        List<Post> posts = postRepository.findTop5DistinctByIdNotAndTagsInOrderByLastTimeDesc(postId, tags);
         return posts;
     }
 

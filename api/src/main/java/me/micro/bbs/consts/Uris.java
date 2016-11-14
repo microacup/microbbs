@@ -35,6 +35,12 @@ public final class Uris {
     /** 按照话题找回复*/
     public static final String API_POSTS_ID_REPLIES = "/api/posts/{postId}/replies";
 
+    /** 所有分类*/
+    public static final String API_ADMIN_CATEGORIES = "/api/admin/categories";
+
+    /** 所有标签*/
+    public static final String API_ADMIN_TAGS = "/api/admin/tags";
+
 
     public static final String API_TEST = "/api/test";
 

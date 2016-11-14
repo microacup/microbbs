@@ -31,8 +31,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByPerfectTrue(Pageable pageable);
 
-    List<Post> findTop5ByOrderByLastReplyTimeDesc();
+    List<Post> findTop5ByOrderByLastTimeDesc();
 
-    List<Post> findTop5DistinctByIdNotAndTagsInOrderByUpdatedTimeDesc(Long id, Collection<Tag> tags);
+    List<Post> findTop5DistinctByIdNotAndTagsInOrderByLastTimeDesc(Long id, Collection<Tag> tags);
 
 }

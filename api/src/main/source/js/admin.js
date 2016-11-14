@@ -5,7 +5,9 @@ var _ctx = $("meta[name='ctx']").attr("content");
 var ms = {
     Urls: {
         posts: _ctx + '/api/posts',
-        replies:  _ctx + '/api/posts/{postId}/replies'
+        replies:  _ctx + '/api/posts/{postId}/replies',
+        categories: _ctx + '/api/admin/categories',
+        tags: _ctx + '/api/admin/tags'
     }
 }
 
@@ -56,3 +58,7 @@ function timeFormatter(value) {
     if (!value) return '-';
     return moment(value).format('YYYY-MM-DD HH:mm');
 }
+
+var error = function(msg) {
+    console.log(msg);
+};

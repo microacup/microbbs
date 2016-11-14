@@ -14,3 +14,21 @@
 .navbar-nav {
   font-size: 14px;
 }
+
+@media (min-width: 768px) {
+  nav .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  nav .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  nav .container {
+    width: 100%;
+  }
+}

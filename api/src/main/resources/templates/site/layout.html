@@ -45,19 +45,32 @@
             <li th:class="${activedExplorer != null ? 'active' : ''}">
               <a th:href="@{/explore}">探索</a>
             </li>
-            <li th:each="category : ${categories}" th:class="${activeCategory!= null && category.id == activeCategory.id ? 'active' : ''}">
+
+            <li th:if="${#lists.size(categories) > 5}" th:each="a : ${#numbers.sequence(0,4)}" th:object="${categories.get(a)}" th:class="${activeCategory!= null && categories.get(a).id == activeCategory.id ? 'active' : ''}">
+              <a th:href="@{'/category/' + *{id}}" th:utext="*{title }"></a>
+            </li>
+            <li th:if="${#lists.size(categories) > 5}" class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">其他 <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li th:each="x : ${#numbers.sequence(5, (#lists.size(categories) - 1))}" th:object="${categories.get(x)}" th:class="${activeCategory!= null && categories.get(x).id == activeCategory.id ? 'active' : ''}">
+                  <a th:href="@{'/category/' + *{id}}" th:utext="*{title }"></a>
+                </li>
+              </ul>
+            </li>
+
+            <li th:if="${#lists.size(categories) <= 5}" th:each="category : ${categories}" th:class="${activeCategory!= null && category.id == activeCategory.id ? 'active' : ''}">
               <a th:href="@{'/category/' + ${category.id}}" th:utext="${category.title }"></a>
             </li>
           </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
               <input type="text" class="form-control" id="navbar-search-input" placeholder="搜索本站...">
             </div>
           </form>
-        </div>
-        <!-- /.navbar-collapse -->
-        <!-- Navbar Right Menu -->
-        <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
             <!-- 发表新话题 -->
             <li>
