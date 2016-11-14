@@ -6960,7 +6960,7 @@ function drawLink(editor) {
 function drawImage(editor) {
   var cm = editor.codemirror;
   var stat = getState(cm);
-  _replaceSelection(cm, stat.image, '![', '](http://)');
+  _replaceSelection(cm, stat.image, '![](http://用真实图片地址替换这里', ')');
 }
 
 
@@ -7124,12 +7124,13 @@ function wordCount(data) {
     '|',
 
     {name: 'link', shortcut:'链接',action: drawLink},
-    {name: 'image', shortcut:'图片',action: drawImage},
+    {name: 'image', shortcut:'在线图片',innerText:'在线图片', action: drawImage},
+    {name: 'imageex', shortcut:'本地图片',innerText:'本地图片', className:'editor-icon-image'},
     '|',
 
     // {name: 'info', action: 'http://lab.lepture.com/editor/markdown'},
-    {name: 'preview',shortcut:'预览', action: togglePreview},
-    // {name: 'fullscreen', action: toggleFullScreen}
+    {name: 'preview',shortcut:'预览',innerText:'预览', action: togglePreview},
+    {name: 'fullscreen', action: toggleFullScreen}
   ];
 
 /**
@@ -7246,8 +7247,8 @@ Editor.prototype.createToolbar = function(items) {
       var el;
       if (item.name) {
         el = createIcon(item.name, item);
-        if (item.name === 'preview') {
-          el.innerText = ' 预览';
+        if (item.innerText) {
+          el.innerText = item.innerText;
         }
       } else if (item === '|') {
         el = createSep();

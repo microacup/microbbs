@@ -7,7 +7,7 @@ form textarea {
 .editor-toolbar {
   @include input-border;
 
-  .editor-icon-preview {
+  .editor-icon-preview ,.editor-icon-image{
     width: auto;
   }
 }

@@ -36,7 +36,7 @@
       '<div class="modal-content">' +
       '<div class="modal-header">' +
       '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-      '<div id="editorToolImageTitle">添加链接</div></div>' +
+      '<div id="editorToolLinkTitle">添加链接</div></div>' +
       '<div class="modal-body">' +
       '<form>' +
       '<div class="form-group">' +
@@ -75,6 +75,58 @@
   };
 
   ToolLink.prototype.bind = function (editor) {
+    this.editor = editor;
+    this.$win.modal('show');
+  };
+
+  // 在线图片
+  var ToolOnlineImage = function () {
+    var self = this;
+    this.$win = $([
+      '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editorToolImageTitle" aria-hidden="true" style="display: none;">' +
+      '<div class="modal-dialog" role="document">' +
+      '<div class="modal-content">' +
+      '<div class="modal-header">' +
+      '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+      '<div id="editorToolOnlineImageTitle">在线图片</div></div>' +
+      '<div class="modal-body">' +
+      '<form>' +
+      '<div class="form-group">' +
+      '<label>标题</label>' +
+      '<input type="text" name="title" placeholder="标题" class="form-control">' +
+      '</div>' +
+      '<div class="form-group">' +
+      '<label>图片地址</label>' +
+      '<input type="text" name="link" value="http://" class="form-control" placeholder="图片地址：例如http://www.abc.com/image.jpg">' +
+      '</div>' +
+      '</form>' +
+      '</div>' +
+      '<div class="modal-footer">' +
+      '<button class="btn btn-primary" role="save">确定</button>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>'
+    ].join('')).appendTo($body);
+
+    this.$win.on('click', '[role=save]', function () {
+      self.$win.find('form').submit();
+    }).on('submit', 'form', function () {
+      var $el = $(this);
+      var title = $el.find('[name=title]').val();
+      var link = $el.find('[name=link]').val();
+
+      self.$win.modal('hide');
+      self.editor.push(' ![' + title + '](' + link + ')');
+
+      $el.find('[name=title]').val('');
+      $el.find('[name=link]').val('http://');
+
+      return false;
+    });
+  };
+
+  ToolOnlineImage.prototype.bind = function (editor) {
     this.editor = editor;
     this.$win.modal('show');
   };
@@ -239,10 +291,14 @@
   };
 
   var toolImage = new ToolImage();
+  var toolOnlineImage = new ToolOnlineImage();
   var toolLink = new ToolLink();
 
-  replaceTool('image', function (editor) {
+  replaceTool('imageex', function (editor) {
     toolImage.bind(editor);
+  });
+  replaceTool('image', function (editor) {
+    toolOnlineImage.bind(editor);
   });
   replaceTool('link', function (editor) {
     toolLink.bind(editor);
