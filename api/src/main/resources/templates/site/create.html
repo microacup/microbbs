@@ -5,6 +5,7 @@
 <head>
   <title th:inline="text">[[#{app.title}]]</title>
   <link rel="stylesheet" th:href="@{/static/lib/editor/editor.css}" />
+  <!--<link rel="stylesheet" href="//cdn.staticfile.org/webuploader/0.1.5/webuploader.css"/>-->
 </head>
 <body>
 <!--post header-->
@@ -68,6 +69,7 @@
 
 <div layout:fragment="scripts">
   <script type="text/javascript" src="//cdn.bootcss.com/layer/2.4/layer.min.js"></script>
+  <!--<script src="//cdn.staticfile.org/webuploader/0.1.5/webuploader.withoutimage.min.js"></script>-->
   <script type="text/javascript" th:src="@{/static/lib/webuploader/webuploader.withoutimage.js}"></script>
   <!--<script src="//cdn.bootcss.com/markdown-it/8.1.0/markdown-it.min.js"></script>-->
   <script type="text/javascript" src="//cdn.bootcss.com/markdown-it/3.0.3/markdown-it.min.js"></script>
