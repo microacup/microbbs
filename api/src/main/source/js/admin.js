@@ -7,6 +7,7 @@ var ms = {
         posts: _ctx + '/api/posts',
         replies:  _ctx + '/api/posts/{postId}/replies',
         categories: _ctx + '/api/admin/categories',
+        categories_edit: _ctx + '/api/admin/categories/{id}',
         tags: _ctx + '/api/admin/tags'
     }
 }
@@ -59,6 +60,6 @@ function timeFormatter(value) {
     return moment(value).format('YYYY-MM-DD HH:mm');
 }
 
-var error = function(msg) {
+function error(msg) {
     console.log(msg);
-};
+}

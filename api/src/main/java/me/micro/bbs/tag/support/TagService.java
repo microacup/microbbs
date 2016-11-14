@@ -44,6 +44,11 @@ public class TagService {
         return tagRepository.findByCategoryId(categoryId);
     }
 
+    // 是否存在此分类下的标签
+    public Long countByCategoryId(Long categoryId) {
+        return tagRepository.countByCategoryId(categoryId);
+    }
+
     @Cacheable(value = CACHE_NAME, keyGenerator = "cacheKeyGenerator")
     public Tag findOne(Long id) {
         return tagRepository.findOne(id);

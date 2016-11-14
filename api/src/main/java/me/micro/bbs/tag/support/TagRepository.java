@@ -19,6 +19,9 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
         // @Query(value = "select * from M_TAG t where t.t_category = :categoryId", nativeQuery = true)
     List<Tag> findByCategoryId(@Param("categoryId") Long categoryId);
 
+    @Query(value = "select count(1) from m_tag t where t.t_category = :categoryId", nativeQuery = true)
+    Long countByCategoryId(@Param("categoryId") Long categoryId);
+
     @Query(value = "SELECT t.* from m_posts_tags pt, m_tag t where pt.tag_id = t.id GROUP BY tag_id ORDER BY COUNT(pt.tag_id) DESC LIMIT :n",
             nativeQuery = true)
     List<Tag> findTopN(@Param("n") int n);

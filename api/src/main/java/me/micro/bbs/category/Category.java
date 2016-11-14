@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,9 +41,9 @@ public class Category {
     @Column(name = "c_title", nullable = false, length = 255)
     private String title;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonBackReference
-    private List<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
 
 
     @Override

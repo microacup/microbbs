@@ -60,7 +60,7 @@ public class Post {
     private String summary;
 
     // 标签
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "M_POSTS_TAGS",
         joinColumns = {@JoinColumn(name = "post_id", nullable = false, updatable = false)},
         inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false, updatable = false)})

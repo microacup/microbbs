@@ -3,8 +3,11 @@ package me.micro.bbs.api.admin;
 import me.micro.bbs.category.Category;
 import me.micro.bbs.category.CategoryForm;
 import me.micro.bbs.category.support.CategoryService;
+import me.micro.bbs.client.Result;
 import me.micro.bbs.consts.Uris;
+import me.micro.bbs.tag.support.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,9 @@ public class CategoryAdminApi {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private TagService tagService;
+
     @GetMapping
     public ResponseEntity<List<Category>> categories() {
         List<Category> categories = categoryService.findAll();
@@ -48,9 +54,15 @@ public class CategoryAdminApi {
     }
 
     @DeleteMapping(Uris.ID)
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+    public Result<?> delete(@PathVariable("id") long id) {
+        // 检查是否有tags关联
+        Long count = tagService.countByCategoryId(id);
+        if (count != null && count > 0) {
+            return new Result(HttpStatus.NOT_ACCEPTABLE.value()).setMsg("已经关联了标签，不能删除");
+        }
+
         categoryService.deleteCategory(id);
-        return ResponseEntity.ok(null);
+        return Result.ok(null);
     }
 
 }

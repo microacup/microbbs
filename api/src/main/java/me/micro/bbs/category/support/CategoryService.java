@@ -5,6 +5,7 @@ import me.micro.bbs.category.CategoryForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,14 +51,24 @@ public class CategoryService {
         return saved;
     }
 
-    @CacheEvict(value = CACHES_NAME, allEntries = true)
+    @Caching (evict = {
+            @CacheEvict(value = CACHES_NAME, allEntries = true),
+            @CacheEvict(value = CACHE_NAME, allEntries = true)
+    })
     public Category updateCategory(Category category, CategoryForm categoryForm) {
+        if (category.getCode().equals(categoryForm.getCode()) && category.getTitle().equals(categoryForm.getTitle())) {
+            return category;
+        }
+
         formAdpater.updateCategory(category, categoryForm);
         Category saved = categoryRepository.save(category);
         return saved;
     }
 
-    @CacheEvict(value = CACHES_NAME, allEntries = true)
+    @Caching (evict = {
+            @CacheEvict(value = CACHES_NAME, allEntries = true),
+            @CacheEvict(value = CACHE_NAME)
+    })
     public void deleteCategory(long id) {
         categoryRepository.delete(id);
     }
