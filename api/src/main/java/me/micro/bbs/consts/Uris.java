@@ -47,6 +47,9 @@ public final class Uris {
     /** 所有标签*/
     public static final String API_ADMIN_TAGS = "/api/admin/tags";
 
+    /** 按照话题找回复*/
+    public static final String API_ADMIN_POSTS_ID_REPLIES = "/api/admin/posts/{postId}/replies";
+
     // 测试API
     public static final String API_TEST = "/api/test";
 

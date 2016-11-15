@@ -5,7 +5,7 @@ var _ctx = $("meta[name='ctx']").attr("content");
 var ms = {
     Urls: {
         posts: _ctx + '/api/posts',
-        replies:  _ctx + '/api/posts/{postId}/replies',
+        replies:  _ctx + '/api/admin/posts/{postId}/replies',
         categories: _ctx + '/api/admin/categories',
         categories_edit: _ctx + '/api/admin/categories/{id}',
         tags: _ctx + '/api/admin/tags'

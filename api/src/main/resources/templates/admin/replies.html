@@ -121,17 +121,17 @@
                data-show-footer="false"
                data-pagination="true"
                data-side-pagination="server"
-               data-page-size="10"
-               data-page-list="[10, 25, 50, 100, ALL]"
+               data-page-size="20"
+               data-page-list="[20, 50, 100, ALL]"
                data-ajax="loadComments"
                data-toggle="table">
           <thead>
           <tr>
             <th data-checkbox="true"></th>
             <th data-field="id" data-sortable="true">ID</th>
-            <th data-field="floor">楼层</th>
-            <th data-field="content" data-formatter="contentFormatter">内容摘要</th>
-            <th data-field="author.nick" >回复人</th>
+            <th data-field="floor" data-sortable="true">楼层</th>
+            <th data-field="renderedContent" data-formatter="contentFormatter">内容摘要</th>
+            <th data-field="author.nick" data-sortable="true" >回复人</th>
             <th data-field="createdTime" data-sortable="true" data-formatter="timeFormatter">回复时间</th>
             <th data-field="upCount" data-sortable="true">赞同</th>
             <th data-field="downCount" data-sortable="true">反对</th>
@@ -156,7 +156,7 @@
               ,function (result) {
                   params.success({
                       total: result.totalElements,
-                      rows:  result.content.reverse()
+                      rows:  result.content
                   });
               });
     }
@@ -168,7 +168,7 @@
     function replyFormatter(index, row) {
       var html = [];
       html.push('<p><b>回复人ID:</b> ' + row.author.id + '</p>');
-      html.push('<p><b>内容:</b> ' + row.content + '</p>');
+      html.push('<p><b>内容:</b> ' + row.renderedContent + '</p>');
       html.push('<p><b>优选:</b> ' + (row.perfect ? '是':'否') + '</p>');
       if (row.perfect) {
         html.push('<p><b>优选时间:</b> ' + timeFormatter(row.perfectTime) + '</p>');

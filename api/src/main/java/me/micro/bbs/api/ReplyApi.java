@@ -2,13 +2,13 @@ package me.micro.bbs.api;
 
 import me.micro.bbs.client.Result;
 import me.micro.bbs.post.Post;
-import me.micro.bbs.post.support.PostService;
 import me.micro.bbs.reply.Reply;
 import me.micro.bbs.reply.ReplyForm;
 import me.micro.bbs.reply.support.ReplyService;
 import me.micro.bbs.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +53,7 @@ public class ReplyApi {
     @PostMapping(API_REPLIES)
     public Result<Reply> createReply(Principal principal, @Valid @RequestBody ReplyForm replyForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            return new Result<Reply>(HttpStatus.NOT_ACCEPTABLE.value()).setMsg("评论失败");
         }
 
         String name = principal.getName();
@@ -62,8 +63,5 @@ public class ReplyApi {
 
     @Autowired
     private ReplyService replyService;
-
-    @Autowired
-    private PostService postService;
 
 }

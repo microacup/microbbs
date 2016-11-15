@@ -48,6 +48,13 @@ public class ReplyService {
         return replies;
     }
 
+    // 按照话题找回复
+    public Page<Reply> findAllReplies(Post post, int page, int pageSize) {
+        Page<Reply> replies = replyRepository.findByPost(post,
+                new PageRequest(page, pageSize, Sort.Direction.DESC, "floor"));
+        return replies;
+    }
+
     // 回复的回复
     public Page<Reply> findRepliesByReplyAndStatus(Long replyId, int page, int pageSize) {
         Reply reply = new Reply();

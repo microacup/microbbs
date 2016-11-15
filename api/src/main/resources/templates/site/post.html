@@ -45,7 +45,8 @@
   <!--<section class="box box-danger">
     <div class="box-header with-border">
       <h3 class="box-title">热门回复</h3>
-      <div class="post-footer">
+      <div class="box-tools">
+        <button type="button" title="折叠/展开" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
       </div>
     </div>
   </section>-->
@@ -54,8 +55,12 @@
     <div class="box-header with-border">
       <h3 class="box-title"><template>{{totalComments}}</template> 次回复</h3>
       <div class="box-tools">
-        <button type="button" title="折叠/展开" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+        <ul id="pagination-comments" class="pagination pagination-sm inline"></ul>
       </div>
+    </div>
+
+    <div class="box-body">
+
     </div>
 
     <div class="box-footer box-comments">
@@ -189,7 +194,13 @@
       editor.render();
       var postId = /*[[${post.id}]]*/;
 
-      $('#submit-comment').click(function (e) {
+      $('#submit-comment').click(submitComment);
+      $(document).keydown(function(e){
+        if(e.ctrlKey && e.which == 13 ) {
+          submitComment(e);
+        }
+      });
+      function submitComment (e) {
         // 发表评论
         var _csrf = $('#comment-csrf').val();
         var _content = editor.codemirror.getValue();
@@ -211,14 +222,15 @@
             console.log(_e);
           }
         })
-      });
+      }
 
       var commentsApp = new Vue({
         el: '#comments',
         data: {
           comments: null,
           totalComments: 0,
-          totalPages: 0
+          totalPages: 1,
+          currentPage: 1
         },
         created: function () {
            this.loadComments();
@@ -236,14 +248,53 @@
                 this.comments =  response.body.content;
                 this.totalComments = response.body.totalElements;
                 this.totalPages = response.body.totalPages;
-              }
 
+                // 分页
+                var defaultOption = {
+                  hideOnlyOnePage: true,
+                  initiateStartPageClick: false,
+                  first: '«',
+                  prev:'←',
+                  next:'→',
+                  last:'»',
+                  disabledClass: 'disabled hidden',
+                  startPage: this.currentPage,
+                  totalPages: this.totalPages || 1,
+                  visiblePages: 3,
+                  onPageClick: function (event, page) {
+                    commentsApp.currentPage = page;
+                    commentsApp.nextPage();
+                  }
+                };
+                $('#pagination-comments').twbsPagination(defaultOption);
+
+              } else {
+                console.log(response);
+                error(response.statusText || '数据错误');
+              }
             }, (response) => {
               // error callback
               console.log(response);
             });
+          },
+          nextPage: function() {
+            var _url = ms.Urls.replies.format({ctx:_ctx, postId:postId});
+            this.$http.get(_url + '?page=' + this.currentPage).then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                this.comments =  response.body.content;
+                this.totalComments = response.body.totalElements;
+                this.totalPages = response.body.totalPages;
+              } else {
+                console.log(response);
+                error(response.statusText || '数据错误');
+              }
+            }, (response) => {
+                // error callback
+                console.log(response);
+              });
+            }
           }
-        }
       });
 
       var sidebarApp = new Vue({
