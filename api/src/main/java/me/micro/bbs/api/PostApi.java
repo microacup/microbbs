@@ -37,7 +37,7 @@ public class PostApi {
      */
     @GetMapping(Uris.API_POSTS)
     public ResponseEntity<Page<Post>> postsByTags(@RequestParam(value = "tags", required = false) String tags,
-                                                  @RequestParam(defaultValue = "0") int page) {
+                                                  @RequestParam(defaultValue = "1") int page) {
         Page<Post> posts = null;
         if (!StringUtils.isBlank(tags)) {
             String[] strings = tags.split(",");
@@ -45,10 +45,10 @@ public class PostApi {
             for (String tag : strings) {
                 tagList.add(Long.parseLong(tag));
             }
-            posts = postService.findByTags(tagList, page, Setting.PAGE_SIZE);
+            posts = postService.findByTags(tagList, page - 1, Setting.PAGE_SIZE);
             return ResponseEntity.ok(posts);
         } else {
-            posts = postService.findAll(page, Setting.PAGE_SIZE);
+            posts = postService.findAll(page - 1, Setting.PAGE_SIZE);
         }
 
         return ResponseEntity.ok(posts);
@@ -63,8 +63,8 @@ public class PostApi {
      */
     @GetMapping(Uris.API_CATEGORIES_POSTS)
     public ResponseEntity<Page<Post>> postsByCategory(@PathVariable(value = "categoryId") long categoryId,
-                                                      @RequestParam(defaultValue = "0") int page) {
-        Page<Post> posts = postService.findByCategoryId(categoryId, page, Setting.PAGE_SIZE);
+                                                      @RequestParam(defaultValue = "1") int page) {
+        Page<Post> posts = postService.findByCategoryId(categoryId, page - 1, Setting.PAGE_SIZE);
         return ResponseEntity.ok(posts);
     }
 
@@ -89,8 +89,8 @@ public class PostApi {
      * @return
      */
     @GetMapping(Uris.API_POSTS_NOW)
-    public ResponseEntity<Page<Post>> now(@RequestParam(defaultValue = "0") int page) {
-        Page<Post> posts = postService.findNow(page, Setting.PAGE_SIZE);
+    public ResponseEntity<Page<Post>> now(@RequestParam(defaultValue = "1") int page) {
+        Page<Post> posts = postService.findNow(page - 1, Setting.PAGE_SIZE);
         return ResponseEntity.ok(posts);
     }
 

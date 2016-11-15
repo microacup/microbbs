@@ -41,7 +41,7 @@ public class PostController {
      */
     @GetMapping("/category/{categoryId}")
     public String postsByCategory(@PathVariable("categoryId") long categoryId,
-                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "1") int page,
                                   Model model) {
         Category activeCategory = categoryService.findOne(categoryId);
         if (activeCategory == null) return "site/404";
@@ -59,9 +59,10 @@ public class PostController {
         model.addAttribute("activeTag", activeTag);
         model.addAttribute("tags", tags);
 
-        Page<Post> posts = postService.findByCategoryId(categoryId, page, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.findByCategoryId(categoryId, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("totalPages", posts.getTotalPages());
+        model.addAttribute("currentPage", page);
 
         return "site/index";
     }
@@ -85,7 +86,7 @@ public class PostController {
     @GetMapping("/category/{categoryId}/tag/{tagId}")
     public String postsByTag(@PathVariable("categoryId") long categoryId,
                              @PathVariable("tagId") long tagId,
-                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "1") int page,
                              Model model) {
         Category activeCategory = categoryService.findOne(categoryId);
         if (activeCategory == null) return "site/404";
@@ -104,9 +105,10 @@ public class PostController {
 
         List<Long> tagIds = new ArrayList<>(1);
         tagIds.add(tagId);
-        Page<Post> posts = postService.findByTags(tagIds, page, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.findByTags(tagIds, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", posts.getTotalPages());
+        model.addAttribute("currentPage", page);
 
         return "site/index";
     }

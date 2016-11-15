@@ -7,6 +7,45 @@
 </head>
 <body>
 <!--tags-->
+<main layout:fragment="content" id="posts">
+  <ul class="list-group">
+    <!--#numbers.sequence( 1, 8)-->
+    <li class="list-group-item" th:each="post: ${posts}">
+      <div class="media-left">
+        <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
+          <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
+        </a>
+      </div>
+      <div class="media-body">
+        <a th:href="@{'/post/' + ${post.id}}" class="post-title" th:utext="${post.title}">Title</a>
+        <i class="iconfont icon-zhiding icon-micro"
+           th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
+        <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
+        <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
+        <div class="post-footer">
+          <a class="label label-default"
+             th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
+             th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
+          <span class="post-author" th:unless="${post.lastAuthorName}">
+              <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a> 发布于
+            </span>
+          <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+          <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
+        </div>
+      </div>
+      <div class="media-right">
+        <span class="badge" th:if="${post.replyCount > 0}" th:text="${post.replyCount}">0</span>
+      </div>
+    </li>
+  </ul>
+
+  <!--分页-->
+  <div class="text-center" th:if="${totalPages > 1}">
+    <ul id="pagination-posts" class="pagination-sm"></ul>
+  </div>
+</main><!--/content-->
+
+<!--content-->
 <section layout:fragment="top" class="content-header">
   <ul class="nav nav-pills" role="tablist" th:if="${activeCategory == null}">
     <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'hot')}"><a th:href="@{/hot}">热门</a></li>
@@ -31,40 +70,6 @@
     <li class="active" th:if="${activeTag == null}" th:utext="${activedExplorer}">此刻</li>
   </ol>
 </section><!--/tags-->
-
-<!--content-->
-<main layout:fragment="content" id="posts">
-    <ul class="list-group">
-      <!--#numbers.sequence( 1, 8)-->
-      <li class="list-group-item" th:each="post: ${posts}">
-        <div class="media-left">
-          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
-            <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
-          </a>
-        </div>
-        <div class="media-body">
-          <a th:href="@{'/post/' + ${post.id}}" class="post-title" th:utext="${post.title}">Title</a>
-          <i class="iconfont icon-zhiding icon-micro"
-             th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
-          <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
-          <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
-          <div class="post-footer">
-            <a class="label label-default"
-               th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
-               th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-            <span class="post-author" th:unless="${post.lastAuthorName}">
-              <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a> 发布于
-            </span>
-            <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
-            <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
-          </div>
-        </div>
-        <div class="media-right">
-          <span class="badge" th:if="${post.replyCount > 0}" th:text="${post.replyCount}">0</span>
-        </div>
-      </li>
-    </ul>
-</main><!--/content-->
 
 <aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="sidebar">
 
@@ -137,6 +142,25 @@
 
 <div layout:fragment="scripts">
   <script th:inline="javascript" th type="text/javascript">
+    var totalPages = /*[[${totalPages}]]*/;
+    var currentPage = /*[[${currentPage}]]*/;
+
+    $('#pagination-posts').twbsPagination({
+      hideOnlyOnePage: true,
+      initiateStartPageClick: false,
+      first: '«',
+      prev:'←',
+      next:'→',
+      last:'»',
+      disabledClass: 'disabled hidden',
+      startPage: currentPage,
+      totalPages: totalPages,
+      visiblePages: 5,
+      onPageClick: function (event, page) {
+        top.location.href = top.location.pathname + '?page=' + page;
+      }
+    });
+
     var sidebarApp = new Vue({
       el: '#sidebar',
       data: {

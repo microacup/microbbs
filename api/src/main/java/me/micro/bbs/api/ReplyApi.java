@@ -35,17 +35,17 @@ public class ReplyApi {
 
     // 帖子的回复
     @GetMapping(API_POSTS_ID_REPLIES)
-    public ResponseEntity<Page<Reply>> replies(@PathVariable("postId") long postId, @RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<Page<Reply>> replies(@PathVariable("postId") long postId, @RequestParam(defaultValue = "1") int page) {
         Post post = new Post();
         post.setId(postId);
-        Page<Reply> replies = replyService.findReplies(post, page, Setting.REPLY_PAGE_SIZE);
+        Page<Reply> replies = replyService.findReplies(post, page - 1, Setting.REPLY_PAGE_SIZE);
         return ResponseEntity.ok(replies);
     }
 
     // 回复的回复
     @GetMapping(API_REPLIES_REPLY_ID_REPLIES)
-    public ResponseEntity<Page<Reply>> repliesByReply(@PathVariable("replyId") long replyId, @RequestParam(defaultValue = "0") int page) {
-        Page<Reply> replies = replyService.findRepliesByReplyAndStatus(replyId, page, Setting.REPLY_PAGE_SIZE);
+    public ResponseEntity<Page<Reply>> repliesByReply(@PathVariable("replyId") long replyId, @RequestParam(defaultValue = "1") int page) {
+        Page<Reply> replies = replyService.findRepliesByReplyAndStatus(replyId, page - 1, Setting.REPLY_PAGE_SIZE);
         return ResponseEntity.ok(replies);
     }
 

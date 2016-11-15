@@ -25,44 +25,47 @@ public class ExploreController {
 
     // 热门
     @GetMapping("/hot")
-    public String hot(@RequestParam(defaultValue = "0") int page, Model model) {
+    public String hot(@RequestParam(defaultValue = "1") int page, Model model) {
         List<Category> categories = categoryService.findAll();
         if (categories.isEmpty()) return "site/404";
         model.addAttribute("categories", categories);
         model.addAttribute("actived", "hot");
         model.addAttribute("activedExplorer", "热门");
 
-        Page<Post> posts = postService.hot(page, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.hot(page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts.getContent());
+        model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", posts.getTotalPages());
 
         return "site/index";
     }
 
     @GetMapping("/now")
-    public String now(@RequestParam(defaultValue = "0") int page, Model model) {
+    public String now(@RequestParam(defaultValue = "1") int page, Model model) {
         List<Category> categories = categoryService.findAll();
         if (categories.isEmpty()) return "site/404";
         model.addAttribute("categories", categories);
         model.addAttribute("actived", "now");
         model.addAttribute("activedExplorer", "此刻");
 
-        Page<Post> posts = postService.findNow(page, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.findNow(page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts.getContent());
+        model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", posts.getTotalPages());
         return "site/index";
     }
 
     @GetMapping("/perfect")
-    public String perfect(@RequestParam(defaultValue = "0") int page, Model model) {
+    public String perfect(@RequestParam(defaultValue = "1") int page, Model model) {
         List<Category> categories = categoryService.findAll();
         if (categories.isEmpty()) return "site/404";
         model.addAttribute("categories", categories);
         model.addAttribute("actived", "perfect");
         model.addAttribute("activedExplorer", "优选");
 
-        Page<Post> posts = postService.perfect(page, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.perfect(page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts.getContent());
+        model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", posts.getTotalPages());
         return "site/index";
     }
