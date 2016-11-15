@@ -1,6 +1,7 @@
 package me.micro.bbs.reply;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
@@ -38,7 +39,12 @@ public class Reply {
     // 回复内容
     @Column(name = "r_content", nullable = false)
     @Type(type = "text")
+    @JsonIgnore
     private String content;
+
+    @Column(name = "r_renderedContent", nullable = false)
+    @Type(type = "text")
+    private String renderedContent;
 
     // 所属话题
     @ManyToOne(fetch = FetchType.LAZY)
@@ -78,7 +84,7 @@ public class Reply {
 
     // 是否被采纳
     @Column(name = "r_adopt", nullable = false)
-    private Boolean adopt;
+    private Boolean adopt = false;
 
     // 被采纳时间
     @Column(name = "r_adoptTime")
@@ -86,7 +92,7 @@ public class Reply {
 
     // 是否优选
     @Column(name = "r_perfect", nullable = false)
-    private Boolean perfect;
+    private Boolean perfect = false;
 
     // 优选时间
     @Column(name = "r_perfectTime")
@@ -94,7 +100,7 @@ public class Reply {
 
     // 是否置顶
     @Column(name = "r_top", nullable = false)
-    private Boolean top;
+    private Boolean top = false;
 
     // 来自... Android客户端...
     @Column(name = "r_from")
@@ -105,12 +111,12 @@ public class Reply {
     private Date topTime;
 
     // 赞同
-    @Column(name = "r_upCount")
-    private Long upCount;
+    @Column(name = "r_upCount", nullable = false)
+    private Long upCount = 0L;
 
     // 反对
-    @Column(name = "r_downCount")
-    private Long downCount;
+    @Column(name = "r_downCount", nullable = false)
+    private Long downCount = 0L;
 
     @Transient
     private Long postId;

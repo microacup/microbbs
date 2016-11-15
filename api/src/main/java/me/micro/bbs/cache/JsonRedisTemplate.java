@@ -3,6 +3,7 @@ package me.micro.bbs.cache;
 import com.fasterxml.jackson.databind.JavaType;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -26,7 +27,7 @@ public class JsonRedisTemplate<V> extends RedisTemplate<String, V> {
 
     private void init(RedisConnectionFactory connectionFactory, Jackson2JsonRedisSerializer jsonRedisSerializer) {
         RedisSerializer<String> stringSerializer = new StringRedisSerializer();
-        setKeySerializer(stringSerializer);
+        setKeySerializer(new GenericJackson2JsonRedisSerializer());
         setHashKeySerializer(stringSerializer);
         setHashValueSerializer(stringSerializer);
         setValueSerializer(jsonRedisSerializer);

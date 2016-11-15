@@ -1,5 +1,6 @@
 package me.micro.bbs.post.support;
 
+import me.micro.bbs.markdown.ContentRenderer;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.post.PostForm;
 import me.micro.bbs.user.support.UserRepository;
@@ -14,7 +15,7 @@ import java.util.Date;
  * Created by microacup on 2016/11/11.
  */
 @Service
-public class PostFormAdapter {
+class PostFormAdapter {
     private static final int SUMMARY_LENGTH = 140;
 
     @Autowired
@@ -24,11 +25,9 @@ public class PostFormAdapter {
     private PostSummary postSummary;
 
     @Autowired
-    private PostContentRenderer renderer;
+    private ContentRenderer renderer;
 
     public Post createPostFromPostForm(PostForm postForm, String username) {
-        String content = postForm.getContent();
-
         Post post = new Post();
         post.setTitle(postForm.getTitle());
         post.setCreatedTime(new Date());

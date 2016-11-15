@@ -10,6 +10,8 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}" />
+  <link rel="icon" th:href="@{/static/images/favicon.ico}" type="image/x-icon" />
+  <link rel="shortcut icon" th:href="@{/static/images/favicon.ico}" type="image/x-icon" />
   <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
   <link rel="stylesheet" href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css">
@@ -17,7 +19,7 @@
   <link th:href="@{/static/lib/admin-lte/dist/css/AdminLTE.min.css}" rel="stylesheet">
   <link href="//cdn.bootcss.com/admin-lte/2.3.8/css/skins/skin-green-light.min.css" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/static/lib/iconfont/iconfont.css}">
-  <link rel="stylesheet" th:href="@{/static/css/app.css}" media="screen, projection" type="text/css" />
+  <link rel="stylesheet" th:href="@{/static/css/app.css}"/>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

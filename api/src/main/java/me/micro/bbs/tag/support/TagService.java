@@ -49,7 +49,7 @@ public class TagService {
         return tagRepository.countByCategoryId(categoryId);
     }
 
-    @Cacheable(value = CACHE_NAME, keyGenerator = "cacheKeyGenerator")
+    @Cacheable(value = CACHE_NAME, key = "#id")
     public Tag findOne(Long id) {
         return tagRepository.findOne(id);
     }

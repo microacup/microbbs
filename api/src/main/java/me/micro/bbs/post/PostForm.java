@@ -31,9 +31,6 @@ public class PostForm {
     private List<Tag> tags;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdTime;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedTime;
 
     private boolean replyable = true;
@@ -51,7 +48,6 @@ public class PostForm {
         content = post.getContent();
         summary = post.getSummary();
         tags = post.getTags();
-        createdTime = post.getCreatedTime();
         updatedTime = post.getUpdatedTime();
         replyable = post.getReplyable();
     }

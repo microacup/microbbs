@@ -41,7 +41,7 @@ public class PostService {
         return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
     }
 
-    @Cacheable(value = CACHE_NAME, keyGenerator = "cacheKeyGenerator")
+    @Cacheable(value = CACHE_NAME, key = "#id")
     public Post findOne(Long id) {
         return postRepository.findOne(id);
     }

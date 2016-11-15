@@ -5,6 +5,7 @@ import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.post.PostForm;
 import me.micro.bbs.post.support.PostService;
+import me.micro.bbs.reply.support.ReplyService;
 import me.micro.bbs.setting.Setting;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
@@ -165,4 +166,7 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private ReplyService replyService;
 }

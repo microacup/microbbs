@@ -1,6 +1,5 @@
-package me.micro.bbs.post.support;
+package me.micro.bbs.markdown;
 
-import me.micro.bbs.markdown.MarkdownService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -9,11 +8,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-class PostContentRenderer {
+public class ContentRenderer {
     private MarkdownService markdownService;
 
     @Autowired
-    public PostContentRenderer(@Qualifier("pegdown") MarkdownService markdownService) {
+    public ContentRenderer(@Qualifier("pegdown") MarkdownService markdownService) {
         this.markdownService = markdownService;
     }
 

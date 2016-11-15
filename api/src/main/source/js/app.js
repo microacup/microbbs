@@ -1,10 +1,15 @@
 'use strict';
 
+// 功能开始
+var _ctx = $("meta[name='ctx']").attr("content");
+
+
 var ms = {
     Urls: {
         posts_related_top5: '{ctx}/api/posts/{postId}/related/top5',
         posts_now_top5: '{ctx}/api/posts/now/top5',
         replies: '{ctx}/api/posts/{postId}/replies',
+        do_reply: _ctx + '/api/replies',
         tags_hot: '{ctx}/api/tags/hot'
     }
 }
@@ -50,10 +55,6 @@ var formatString = function (str, replacements) {
     });
 };
 
-
-// 功能开始
-var _ctx = $("meta[name='ctx']").attr("content");
-
 $(function () {
     // 提取主色
     $.adaptiveBackground.run({
@@ -61,3 +62,7 @@ $(function () {
         normalizeTextColor: true
     });
 });
+
+function error(msg) {
+    console.log(msg);
+}

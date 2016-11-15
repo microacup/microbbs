@@ -52,7 +52,7 @@
 
   <section class="box box-default" id="comments">
     <div class="box-header with-border">
-      <h3 class="box-title"><span th:text="${post.replyCount}"></span> 次回复</h3>
+      <h3 class="box-title"><template>{{totalComments}}</template> 次回复</h3>
       <div class="box-tools">
         <button type="button" title="折叠/展开" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
       </div>
@@ -73,7 +73,7 @@
               <a class="pull-right comment-action action-up" title="赞同"><i class="fa fa-thumbs-o-up"></i></a>
               <a href="#do-comments" class="pull-right comment-action action-reply" title="回复此楼"><i class="fa fa-reply"></i></a>
             </div><!-- /.username -->
-            <p>{{comment.content}}</p>
+            <div class="comment-content" v-html="comment.renderedContent"></div>
           </div>
           <!-- /.comment-text -->
         </div>
@@ -88,13 +88,14 @@
     <!-- /.box-footer -->
     <div class="box-footer">
       <form action="#" method="post">
+        <input id="comment-csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <img class="img-responsive img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="Alt Text">
         <!-- .img-push is used to add margin to elements next to floating images -->
         <div class="img-push">
           <div class="form-group">
             <textarea name="reply-content" id="reply-content" rows="3" class="form-control" placeholder="在此输入回复内容，支持Markdown语法哦~"></textarea>
           </div>
-          <button type="button" onclick="" class="btn btn-info btn-sm btn-flat pull-right">提交回复</button>
+          <button type="button" id="submit-comment" class="btn btn-info btn-sm btn-flat pull-right">提交回复</button>
         </div>
       </form>
     </div>
@@ -187,6 +188,31 @@
       var editor = new Editor({element: $("#reply-content")[0], status: []});
       editor.render();
       var postId = /*[[${post.id}]]*/;
+
+      $('#submit-comment').click(function (e) {
+        // 发表评论
+        var _csrf = $('#comment-csrf').val();
+        var _content = editor.codemirror.getValue();
+        var jsonData = {content: _content, postId:postId};
+
+        $.ajax(ms.Urls.do_reply+'?_csrf=' + _csrf, {
+          type: 'POST',
+          contentType: "application/json;charset=utf-8",
+          dataType : 'json',
+          data: JSON.stringify(jsonData),
+          success: function (result) {
+            commentsApp.comments.push(result.data);
+            commentsApp.totalComments += 1;
+            // 清空
+            editor.codemirror.setValue('');
+          },
+          error:function(xhr, status, _e) {
+            error(_e ||xhr.responseJSON.message|| '服务暂时遇到了一个问题');
+            console.log(_e);
+          }
+        })
+      });
+
       var commentsApp = new Vue({
         el: '#comments',
         data: {
@@ -208,7 +234,7 @@
               // success callback
               if(response.status == 200 && response.ok) {
                 this.comments =  response.body.content;
-                this.totalComments = response.body.totalComments;
+                this.totalComments = response.body.totalElements;
                 this.totalPages = response.body.totalPages;
               }
 

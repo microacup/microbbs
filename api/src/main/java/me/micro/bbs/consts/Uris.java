@@ -35,13 +35,19 @@ public final class Uris {
     /** 按照话题找回复*/
     public static final String API_POSTS_ID_REPLIES = "/api/posts/{postId}/replies";
 
+    // 回复
+    public static final String API_REPLIES = "/api/replies";
+
+    // 回复的回复
+    public static final String API_REPLIES_REPLY_ID_REPLIES = "/api/replies/{replyId}/replies";
+
     /** 所有分类*/
     public static final String API_ADMIN_CATEGORIES = "/api/admin/categories";
 
     /** 所有标签*/
     public static final String API_ADMIN_TAGS = "/api/admin/tags";
 
-
+    // 测试API
     public static final String API_TEST = "/api/test";
 
     public static final String ID = "/{id}";

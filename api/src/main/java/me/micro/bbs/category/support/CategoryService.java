@@ -32,7 +32,7 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    @Cacheable(value = CACHE_NAME, keyGenerator = "cacheKeyGenerator")
+    @Cacheable(value = CACHE_NAME, key = "#id")
     public Category findOne(Long id) {
         return categoryRepository.findOne(id);
     }

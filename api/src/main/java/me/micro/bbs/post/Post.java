@@ -81,9 +81,13 @@ public class Post {
     @Column(name = "p_lastAuthorName")
     private String lastAuthorName;
 
-    // 回复数量
+    // 回复数量(实际，不含被删除)
     @Column(name = "p_replyCount", nullable = false)
     private Long replyCount = 0L;
+
+    // 楼层高度（含被删除）
+    @Column(name = "p_floorCount", nullable = false)
+    private Long floorCount = 0L;
 
     // 阅读次数
     @Column(name = "p_readCount", nullable = false)
