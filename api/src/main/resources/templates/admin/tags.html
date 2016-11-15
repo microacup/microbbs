@@ -32,14 +32,16 @@
              data-side-pagination="client"
              data-ajax="loadCategories"
              data-pagination="true"
+             data-filter-control="true"
+             data-filter-show-clear="true"
              data-toggle="table">
         <thead>
         <tr>
           <th data-checkbox="true"></th>
           <th data-field="id" data-sortable="true">ID</th>
-          <th data-field="title" data-sortable="true">标题</th>
-          <th data-field="code" data-sortable="true">代码</th>
-          <th data-field="categoryId" data-sortable="true">所属分类ID</th>
+          <th data-field="title" data-sortable="true" data-filter-control="input">标题</th>
+          <th data-field="code" data-sortable="true" data-filter-control="input">代码</th>
+          <th data-field="categoryId" data-sortable="true" data-filter-control="select">所属分类ID</th>
         </tr>
         </thead>
       </table>
@@ -146,6 +148,7 @@
 </section>
 
 <div layout:fragment="scripts">
+  <script src="//cdn.bootcss.com/bootstrap-table/1.10.1/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
   <script type="text/javascript">
     function loadCategories (params) {
       $.get(ms.Urls.tags ,function (result) {

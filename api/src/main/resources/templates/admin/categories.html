@@ -148,6 +148,13 @@
 
 <div layout:fragment="scripts">
   <script type="text/javascript">
+    var options = {
+      filterValues:{
+
+      }
+    };
+
+
     function loadCategories (params) {
       $.get(ms.Urls.categories ,function (result) {
                 params.success({
