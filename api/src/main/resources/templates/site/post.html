@@ -5,6 +5,7 @@
 <head>
   <title th:inline="text">[[#{app.title}]]</title>
   <link rel="stylesheet" th:href="@{/static/lib/editor/editor.css}" />
+  <link rel="stylesheet" th:href="@{/static/lib/At.js/dist/css/jquery.atwho.min.css}" />
 </head>
 <body>
 <!--post header-->
@@ -23,7 +24,7 @@
         <a class="tag tag-sm" th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
            th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
         <span class="post-author">
-          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a> 发布于
+          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" class="author-name"  th:utext="${post.author.nick}">user</a> 发布于
         </span>
         <span class="post-time" th:utext='${#dates.format(post.createdTime, "yyyy-MM-dd HH:mm:ss")}'>1天前</span>
         <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
@@ -70,7 +71,7 @@
           <img class="img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="User Image">
           <div class="comment-text">
             <div class="username">
-              {{comment.author.nick}}
+              <span class="reply-author">{{comment.author.nick}}</span>
               <a class="text-muted floor" :href="'#floor' + comment.floor"> # {{comment.floor}}</a>
               <span class="text-muted time"><i class="fa fa-clock-o"></i> {{comment.createdTime | moment}}</span>
               <a class="pull-right comment-action action-down" title="收藏"><i class="fa fa-bookmark"></i></a>
@@ -189,13 +190,18 @@
   <script type="text/javascript" th:src="@{/static/lib/editor/editor.js}"></script>
   <script type="text/javascript" th:src="@{/static/lib/editor/ext.js}"></script>
   <script src="//cdn.bootcss.com/moment.js/2.15.2/moment-with-locales.min.js"></script>
+  <script th:src="@{/static/lib/Caret.js/dist/jquery.caret.min.js}"></script>
+  <script th:src="@{/static/lib/At.js/dist/js/jquery.atwho.min.js}"></script>
   <script th:inline="javascript" type="text/javascript">
+      var postId = /*[[${post.id}]]*/;
       var editor = new Editor({element: $("#reply-content")[0], status: []});
       editor.render();
-      var postId = /*[[${post.id}]]*/;
+
+      var author = $('.author-name').text();
 
       $('#submit-comment').click(submitComment);
-      $(document).keydown(function(e){
+      var $input = $(editor.codemirror.display.input);
+      $input.keydown(function(e){
         if(e.ctrlKey && e.which == 13 ) {
           submitComment(e);
         }
@@ -245,9 +251,17 @@
             this.$http.get(ms.Urls.replies.format({ctx:_ctx, postId:postId})).then((response) => {
               // success callback
               if(response.status == 200 && response.ok) {
-                this.comments =  response.body.content;
-                this.totalComments = response.body.totalElements;
-                this.totalPages = response.body.totalPages;
+                this.comments =  response.body.content || [];
+                this.totalComments = response.body.totalElements || 1;
+                this.totalPages = response.body.totalPages || 1;
+
+                var names = [author];
+                for(var i = this.comments.length; i--;) {
+                  names.push(this.comments[i].author.nick);
+                }
+                $.unique(names);
+                ating(names);
+
 
                 // 分页
                 var defaultOption = {
@@ -287,6 +301,14 @@
                 this.comments =  response.body.content;
                 this.totalComments = response.body.totalElements;
                 this.totalPages = response.body.totalPages;
+
+                // at
+                var names = [author];
+                for(var i = this.comments.length; i--;) {
+                  names.push(this.comments[i].author.nick);
+                }
+                $.unique(names);
+                ating(names);
               } else {
                 console.log(response);
                 error(response.statusText || '数据错误');
@@ -339,6 +361,26 @@
           }
         }
       });
+      
+      function ating(who) {
+        // at.js 配置
+        var codeMirrorGoLineUp = CodeMirror.commands.goLineUp;
+        var codeMirrorGoLineDown = CodeMirror.commands.goLineDown;
+        var codeMirrorNewlineAndIndent = CodeMirror.commands.newlineAndIndent;
+        $input.atwho({
+          at: '@',
+          data: who
+        }).on('shown.atwho', function () {
+          CodeMirror.commands.goLineUp = $.noop;
+          CodeMirror.commands.goLineDown = $.noop;
+          CodeMirror.commands.newlineAndIndent = $.noop;
+        }).on('hidden.atwho', function () {
+          CodeMirror.commands.goLineUp = codeMirrorGoLineUp;
+          CodeMirror.commands.goLineDown = codeMirrorGoLineDown;
+          CodeMirror.commands.newlineAndIndent = codeMirrorNewlineAndIndent;
+        });
+        // END at.js 配置
+      }
   </script>
 </div>
 </body>

@@ -49,7 +49,8 @@ public class ReplyFormAdpater {
         }
 
         reply.setContent(replyForm.getContent());
-        reply.setRenderedContent(renderer.render(replyForm.getContent()));
+        String renderedContent = renderer.render(replyForm.getContent());
+        reply.setRenderedContent(renderedContent);
         return reply;
     }
 
