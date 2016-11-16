@@ -38,7 +38,7 @@ public class Tag {
     private Long categoryId;
 
     public Category getCategory() {
-        throw new UnsupportedOperationException("请调用getCategoryId");
+        throw new UnsupportedOperationException("请调用getCategoryId"); // 为什么 thymeleaf admin/tags 会调用此方法？@see 开发问题1
     }
 
     public void setCategoryId(Long categoryId) {

@@ -3,6 +3,8 @@ package me.micro.bbs.tag.support;
 import com.google.common.collect.Lists;
 import me.micro.bbs.category.Category;
 import me.micro.bbs.category.support.CategoryService;
+import me.micro.bbs.exception.MicroException;
+import me.micro.bbs.post.support.PostRepository;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.TagForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.Map;
  * Created by microacup on 2016/11/3.
  */
 @Service
+@Transactional
 public class TagService {
     public static final String CACHES_NAME = "cache.tags";
     public static final String CACHE_NAME = "cache.tag";
@@ -31,6 +35,9 @@ public class TagService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Tag> findAll() {
@@ -125,9 +132,13 @@ public class TagService {
 
     @Caching(evict = {
             @CacheEvict(value = CACHES_NAME, allEntries = true),
-            @CacheEvict(value = CACHE_NAME, key = "#one.id")
+            @CacheEvict(value = CACHE_NAME, key = "#id")
     })
-    public void delete(Long id) {
+    public void delete(Long id) throws MicroException {
+        Long count = postRepository.countByTagId(id);
+        if (count > 0) {
+            throw new MicroException("删除失败，改标签下还有" + count + "个话题");
+        }
         tagRepository.delete(id);
     }
 

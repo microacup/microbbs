@@ -252,7 +252,7 @@
               // success callback
               if(response.status == 200 && response.ok) {
                 this.comments =  response.body.content || [];
-                this.totalComments = response.body.totalElements || 1;
+                this.totalComments = response.body.totalElements;
                 this.totalPages = response.body.totalPages || 1;
 
                 var names = [author];

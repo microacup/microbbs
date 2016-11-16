@@ -53,4 +53,8 @@ public class Result<T> {
     public static <T> Result<T> ok(T data) {
         return new Result<T>().setData(data);
     }
+
+    public static <T> Result<T> error(int status, String msg) {
+        return new Result<T>(status).setMsg(msg);
+    }
 }

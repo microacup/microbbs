@@ -2,6 +2,7 @@ package me.micro.bbs.api.admin;
 
 import me.micro.bbs.client.Result;
 import me.micro.bbs.consts.Uris;
+import me.micro.bbs.exception.MicroException;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.TagForm;
 import me.micro.bbs.tag.support.TagService;
@@ -73,6 +74,12 @@ public class TagAdminApi {
 
     @DeleteMapping(Uris.ID)
     public Result<?> delete(@PathVariable("id") long id) {
+        try {
+            tagService.delete(id);
+        } catch (MicroException e) {
+            return new Result<>(HttpStatus.NOT_ACCEPTABLE.value()).setMsg(e.getMessage());
+        }
+
         return Result.ok(null);
     }
 

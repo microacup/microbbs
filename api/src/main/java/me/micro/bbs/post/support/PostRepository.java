@@ -35,4 +35,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findTop5DistinctByIdNotAndTagsInOrderByLastTimeDesc(Long id, Collection<Tag> tags);
 
+    // 某标签下的话题数量
+    @Query(value = "select count(1) from m_posts_tags where tag_id = :tagId", nativeQuery = true)
+    Long countByTagId(@Param("tagId") Long tagId);
 }

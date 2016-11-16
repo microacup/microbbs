@@ -81,7 +81,7 @@
                 <label for="e-category" class="col-sm-2 control-label">分类：</label>
                 <div class="col-sm-10">
                   <select id="c-category" name="category"  class="form-control">
-                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.id + ' - ' + c.title + ' - ' + c.code}">option 1</option>
+                    <option th:each="centry : ${categories}" th:value="${centry.key}" th:text="${centry.key + ' - ' + centry.value.title + ' - ' + centry.value.code}">option 1</option>
                   </select>
                 </div>
               </div>
@@ -124,7 +124,7 @@
                 <label for="e-category" class="col-sm-2 control-label">分类：</label>
                 <div class="col-sm-10">
                   <select id="e-category" name="category" class="form-control">
-                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.id + ' - ' + c.title + ' - ' + c.code}">option 1</option>
+                    <option th:each="centry : ${categories}" th:value="${centry.key}" th:text="${centry.key + ' - ' + centry.value.title + ' - ' + centry.value.code}">option 1</option>
                   </select>
                 </div>
               </div>
@@ -170,11 +170,6 @@
   <script src="//cdn.bootcss.com/bootstrap-table/1.10.1/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
   <script th:inline="javascript"  type="text/javascript">
     var categories = /*[[${categories}]]*/
-    var categoriesaMap = {};
-    for(var i = categories.length; i--;) {
-      var c = categories[i];
-      categoriesaMap[c.id] = c;
-    }
 
     function loadCategories (params) {
       $.get(ms.Urls.tags ,function (result) {
@@ -185,8 +180,8 @@
     }
 
     function categoryFormatter(value, row, index) {
-      var _c = categoriesaMap[value];
-      return _c.id + ' - ' + _c.title + ' - ' + _c.code;
+      var _c = categories[value];
+      return value + ' - ' + _c.title + ' - ' + _c.code;
     }
 
     var $table = $('#tags-table');

@@ -144,12 +144,12 @@ public class ContentRenderer {
         return ret;
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         String str = "abc@abc.com @小明 @张小黑  hahhahs";
 
         Set<String> userNames = getUserNames(str);
 
         System.out.println(userNames);
-    }
+    }*/
 
 }
