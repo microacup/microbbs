@@ -47,8 +47,10 @@ public class ContentRenderer {
         Set<String> nickNames = getUserNames(markdownText);
         for (final String nickName : nickNames) {
             User user = userRepository.findByNick(nickName);
-            markdownText = markdownText.replace('@' + nickName, "@<a href='" + contextPath
-                    + "/users/" + user.getId() + "/profile'>" + nickName + "</a>");
+            if(user != null) {
+                markdownText = markdownText.replace('@' + nickName, "@<a href='" + contextPath
+                        + "/users/" + user.getId() + "/profile'>" + nickName + "</a>");
+            }
         }
         return markdownText;
     }
@@ -101,6 +103,7 @@ public class ContentRenderer {
         }
 
         String copy = text.trim();
+        copy = copy.replaceAll("\\n", " ");
         copy = copy.replaceAll("```.+?```",  " "); // pre 单行
         copy = copy.replaceAll("^```[\\s\\S]+?^```", " ");  // ``` 里面的是 pre 标签内容
         copy = copy.replaceAll("`[\\s\\S]+?`", " "); // 同一行中，`some code` 中内容也不该被解析
