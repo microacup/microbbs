@@ -25,9 +25,9 @@
         <span class="post-author">
           <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a> 发布于
         </span>
-        <span class="post-time" th:utext='${#dates.format(post.createdTime, "yyyy-MM-dd HH:ss:mm")}'>1天前</span>
+        <span class="post-time" th:utext='${#dates.format(post.createdTime, "yyyy-MM-dd HH:mm:ss")}'>1天前</span>
         <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
-        <span class="post-time-last" th:if="${post.lastReplyTime}" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>1小时前</span>
+        <span class="post-time-last" th:if="${post.lastReplyTime}" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:mm:ss")}'>1小时前</span>
         <span class="post-read-count"><span th:text="${post.readCount + 1}">A</span> 次阅读</span>
       </div>
     </div>

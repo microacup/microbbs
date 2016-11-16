@@ -30,7 +30,7 @@
               <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a> 发布于
             </span>
           <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
-          <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:ss:mm")}'>1小时14分钟前</span>
+          <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:mm:ss")}'>1小时14分钟前</span>
         </div>
       </div>
       <div class="media-right">
