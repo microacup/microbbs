@@ -262,12 +262,14 @@
                   totalPages: this.totalPages || 1,
                   visiblePages: 3,
                   onPageClick: function (event, page) {
-                    commentsApp.currentPage = page;
-                    commentsApp.nextPage();
+                    if(commentsApp.currentPage !== page) {
+                      commentsApp.currentPage = page;
+                      commentsApp.nextPage();
+                    }
                   }
                 };
+                // TODO 解决调用两次问题
                 $('#pagination-comments').twbsPagination(defaultOption);
-
               } else {
                 console.log(response);
                 error(response.statusText || '数据错误');
