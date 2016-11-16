@@ -4,8 +4,11 @@ import com.google.common.collect.Lists;
 import me.micro.bbs.category.Category;
 import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.tag.Tag;
+import me.micro.bbs.tag.TagForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -85,6 +88,47 @@ public class TagService {
             ts.add(tag);
         }
         return tags;
+    }
+
+
+    @CacheEvict(value = CACHES_NAME, allEntries = true)
+    public Tag addTag(TagForm tagForm) {
+        Category category = categoryService.findOne(tagForm.getCategoryId());
+        if (category == null) {
+            return null;
+        }
+
+        Tag tag = new Tag();
+        tag.setCode(tagForm.getCode());
+        tag.setTitle(tagForm.getTitle());
+        tag.setCategory(category);
+        tagRepository.save(tag);
+        return tag;
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = CACHES_NAME, allEntries = true),
+            @CacheEvict(value = CACHE_NAME, key = "#one.id")
+    })
+    public Tag update(Tag one, TagForm tagForm) {
+        Category category = categoryService.findOne(tagForm.getCategoryId());
+        if (category == null) {
+            return null;
+        }
+
+        one.setCode(tagForm.getCode());
+        one.setTitle(tagForm.getTitle());
+        one.setCategory(category);
+        tagRepository.save(one);
+        return one;
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = CACHES_NAME, allEntries = true),
+            @CacheEvict(value = CACHE_NAME, key = "#one.id")
+    })
+    public void delete(Long id) {
+        tagRepository.delete(id);
     }
 
 }

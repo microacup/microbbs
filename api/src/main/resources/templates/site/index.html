@@ -153,8 +153,8 @@
       next:'→',
       last:'»',
       disabledClass: 'disabled hidden',
-      startPage: currentPage,
-      totalPages: totalPages,
+      startPage: currentPage || 1,
+      totalPages: totalPages || 1,
       visiblePages: 5,
       onPageClick: function (event, page) {
         top.location.href = top.location.pathname + '?page=' + page;

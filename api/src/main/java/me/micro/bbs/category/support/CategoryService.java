@@ -53,7 +53,7 @@ public class CategoryService {
 
     @Caching (evict = {
             @CacheEvict(value = CACHES_NAME, allEntries = true),
-            @CacheEvict(value = CACHE_NAME, allEntries = true)
+            @CacheEvict(value = CACHE_NAME, key="#category.id")
     })
     public Category updateCategory(Category category, CategoryForm categoryForm) {
         if (category.getCode().equals(categoryForm.getCode()) && category.getTitle().equals(categoryForm.getTitle())) {

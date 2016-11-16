@@ -8,7 +8,8 @@ var ms = {
         replies:  _ctx + '/api/admin/posts/{postId}/replies',
         categories: _ctx + '/api/admin/categories',
         categories_edit: _ctx + '/api/admin/categories/{id}',
-        tags: _ctx + '/api/admin/tags'
+        tags: _ctx + '/api/admin/tags',
+        tags_edit: _ctx + '/api/admin/tags/{id}'
     }
 }
 
