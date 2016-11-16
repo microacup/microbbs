@@ -57,7 +57,7 @@ public class ReplyFormAdpater {
         Post post = reply.getPost();
         post.setLastReplyTime(reply.getCreatedTime());
         post.setLastTime(reply.getCreatedTime());
-        post.setLastAuthorName(reply.getAuthor().getName());
+        post.setLastAuthorName(reply.getAuthor().getNick());
         post.setLastAuthor(reply.getAuthor().getId());
         post.setFloorCount(reply.getFloor());
         post.setReplyCount(post.getReplyCount() + 1);
