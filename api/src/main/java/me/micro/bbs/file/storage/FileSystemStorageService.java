@@ -37,8 +37,7 @@ public class FileSystemStorageService implements StorageService {
             }
 
             // 生成唯一名字
-            String type = file.getContentType();
-            String suffix = "." + type.split("/")[1];
+            String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
             String fileName = ShortUUID.uuid() + suffix;
             Files.copy(file.getInputStream(), load(prefix + fileName), REPLACE_EXISTING);
             return fileName;

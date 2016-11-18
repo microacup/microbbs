@@ -64,5 +64,6 @@ $(function () {
 });
 
 function error(msg) {
+    alert(msg);
     console.log(msg);
 }
