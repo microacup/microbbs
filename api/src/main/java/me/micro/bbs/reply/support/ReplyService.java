@@ -51,7 +51,7 @@ public class ReplyService {
     // 按照话题找回复
     public Page<Reply> findAllReplies(Post post, int page, int pageSize) {
         Page<Reply> replies = replyRepository.findByPost(post,
-                new PageRequest(page, pageSize, Sort.Direction.DESC, "floor"));
+                new PageRequest(page, pageSize, Sort.Direction.DESC, "topTime", "adoptTime", "perfectTime", "floor"));
         return replies;
     }
 

@@ -37,7 +37,9 @@ public class PostApi {
      */
     @GetMapping(Uris.API_POSTS)
     public ResponseEntity<Page<Post>> postsByTags(@RequestParam(value = "tags", required = false) String tags,
+                                                  @RequestParam(defaultValue = "0") int pageSize,
                                                   @RequestParam(defaultValue = "1") int page) {
+        pageSize = pageSize == 0 ? Setting.PAGE_SIZE : pageSize;
         Page<Post> posts = null;
         if (!StringUtils.isBlank(tags)) {
             String[] strings = tags.split(",");
@@ -45,10 +47,10 @@ public class PostApi {
             for (String tag : strings) {
                 tagList.add(Long.parseLong(tag));
             }
-            posts = postService.findByTags(tagList, page - 1, Setting.PAGE_SIZE);
+            posts = postService.findByTagsActived(tagList, page - 1, pageSize);
             return ResponseEntity.ok(posts);
         } else {
-            posts = postService.findAll(page - 1, Setting.PAGE_SIZE);
+            posts = postService.findActived(page - 1, pageSize);
         }
 
         return ResponseEntity.ok(posts);

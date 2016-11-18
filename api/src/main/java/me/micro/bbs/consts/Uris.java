@@ -41,6 +41,9 @@ public final class Uris {
     // 回复的回复
     public static final String API_REPLIES_REPLY_ID_REPLIES = "/api/replies/{replyId}/replies";
 
+    ////////////////////////////admin////////////////////////////////
+    public static final String API_ADMIN_POSTS = "/api/admin/posts";
+
     /** 所有分类*/
     public static final String API_ADMIN_CATEGORIES = "/api/admin/categories";
 

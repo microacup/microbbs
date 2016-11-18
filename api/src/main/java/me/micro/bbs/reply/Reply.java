@@ -22,7 +22,7 @@ import java.util.Date;
  * Created by microacup on 2016/11/1.
  */
 @Entity
-@Table(name = "M_REPLY")
+@Table(name = "M_REPLY", indexes = {@Index(unique = false, name = "IDX_STATUS", columnList = "r_status")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter

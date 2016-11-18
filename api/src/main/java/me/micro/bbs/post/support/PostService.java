@@ -1,5 +1,6 @@
 package me.micro.bbs.post.support;
 
+import me.micro.bbs.enums.PostStatus;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.post.PostForm;
 import me.micro.bbs.tag.Tag;
@@ -41,6 +42,10 @@ public class PostService {
         return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
     }
 
+    public Page<Post> findActived(int page, int pageSize) {
+        return postRepository.findByStatus(PostStatus.actived, new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
+    }
+
     @Cacheable(value = CACHE_NAME, key = "#id")
     public Post findOne(Long id) {
         return postRepository.findOne(id);
@@ -52,8 +57,14 @@ public class PostService {
         return posts;
     }
 
+    public Page<Post> findByTagsActived(Collection<Long> tags, int page, int pageSize) {
+        Page<Post> posts = postRepository.findByTagsAndStatus(tags, PostStatus.actived,
+                new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
+        return posts;
+    }
+
     public Page<Post> findByCategoryId(Long categoryId, int page, int pageSize) {
-        Page<Post> posts = postRepository.findByCategoryId(categoryId,
+        Page<Post> posts = postRepository.findByCategoryIdAndStatus(categoryId, PostStatus.actived,
                 new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
         return posts;
     }

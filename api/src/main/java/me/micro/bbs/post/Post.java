@@ -29,7 +29,7 @@ import java.util.List;
  * Created by microacup on 2016/11/1.
  */
 @Entity
-@Table(name = "M_POST")
+@Table(name = "M_POST", indexes = {@Index(name = "IDX_STATUS", columnList = "p_status")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter

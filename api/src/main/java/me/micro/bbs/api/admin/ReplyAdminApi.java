@@ -23,10 +23,13 @@ import static me.micro.bbs.consts.Uris.API_ADMIN_POSTS_ID_REPLIES;
 public class ReplyAdminApi {
     // 帖子的回复
     @GetMapping(API_ADMIN_POSTS_ID_REPLIES)
-    public ResponseEntity<Page<Reply>> replies(@PathVariable("postId") long postId, @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<Page<Reply>> replies(@PathVariable("postId") long postId,
+                                               @RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "0") int size) {
+        size = size == 0 ? Setting.REPLY_PAGE_SIZE : size;
         Post post = new Post();
         post.setId(postId);
-        Page<Reply> replies = replyService.findAllReplies(post, page - 1, Setting.REPLY_PAGE_SIZE);
+        Page<Reply> replies = replyService.findAllReplies(post, page - 1, size);
         return ResponseEntity.ok(replies);
     }
 

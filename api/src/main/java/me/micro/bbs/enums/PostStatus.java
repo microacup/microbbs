@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum PostStatus {
     actived("正常"),
-    disabled("黑名单"),
-    deleted("删除")
+    disabled("禁用"),
+    deleted("已删除")
     ;
     private String title;
 

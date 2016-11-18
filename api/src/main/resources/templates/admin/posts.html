@@ -11,14 +11,23 @@
   <div class="box">
     <div class="box-header">
       <h3 class="box-title">话题管理</h3>
+      <div class="box-tools pull-right" data-toggle="tooltip">
+        <div class="btn-group" data-toggle="btn-toggle">
+          <button type="button" class="btn btn-default btn-sm active">全</button>
+          <button type="button" class="btn btn-default btn-sm" title="查看置顶帖">顶</button>
+          <button type="button" class="btn btn-default btn-sm" title="查看优选帖">优</button>
+          <button type="button" class="btn btn-default btn-sm" title="查看禁回帖">禁</button>
+          <button type="button" class="btn btn-default btn-sm" title="查看删除帖">删</button>
+        </div>
+      </div>
     </div>
     <!-- /.box-header -->
     <div id="toolbar" class="btn-group">
       <button id="btn-post-top" class="btn btn-default">
-        置顶
+        设为置顶
       </button>
       <button id="btn-post-perfect" class="btn btn-default" >
-        优选
+        设为优选
       </button>
       <button id="btn-post-disable" class="btn btn-default">
         禁止回复
@@ -42,8 +51,9 @@
              data-side-pagination="server"
              data-ajax="loadPosts"
              data-pagination="true"
-             data-page-size="10"
-             data-page-list="[10, 25, 50, 100, ALL]"
+             data-page-size="20"
+             data-page-list="[20, 50, 100, ALL]"
+             data-click-to-select = "true"
              data-toggle="table">
         <thead>
         <tr>
@@ -68,7 +78,8 @@
 <div layout:fragment="scripts">
   <script type="text/javascript">
     function loadPosts (params) {
-      $.get(ms.Urls.posts ,function (result) {
+      var _url = ms.Urls.posts + "?page=" + ((params.data.offset/params.data.limit) + 1);
+      $.get(_url ,function (result) {
                 params.success({
                   total: result.totalElements,
                   rows:  result.content
@@ -96,7 +107,11 @@
 
     function postStatusFormatter(value, row, index) {
       var html = [];
-      html.push('<span>' + row.status + '</span>');
+      if(row.status === '正常') {
+        html.push('<i class="fa fa-square text-green" title="' + row.status + '"></i>');
+      } else {
+        html.push('<i class="fa fa-square text-red" title="' + row.status + '"></i>');
+      }
       if (row.top) {
         html.push('<i class="iconfont icon-micro icon-zhiding" title="置顶"></i>');
       }

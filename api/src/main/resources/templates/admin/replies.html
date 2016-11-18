@@ -21,13 +21,12 @@
       <div class="tab-pane active" id="tab_1">
         <div id="toolbar-posts" class="btn-group" data-toggle="buttons">
           <label class="btn btn-default active">
-            <input id="btn-post-all" type="radio" name="options" id="option1" autocomplete="off" checked> 全部
+            <input id="btn-post-all" type="radio" name="options" id="option1" autocomplete="off" checked> 查看全部
           </label>
           <label class="btn btn-default">
             <input id="btn-post-filter"  type="radio" name="options" id="option2" autocomplete="off"> 仅看有回复的
           </label>
         </div>
-
         <table id="posts"
                class="table table-no-bordered table-striped bbs-table"
                data-show-export="true"
@@ -36,50 +35,27 @@
                data-toolbar="#toolbar-posts"
                data-search="true"
                data-show-refresh="true"
-               data-detail-formatter="detailFormatter"
                data-show-toggle="false"
                data-show-footer="false"
-               data-side-pagination="client"
+               data-side-pagination="server"
+               data-ajax="loadPosts"
                data-pagination="true"
                data-page-size="10"
-               data-page-list="[10, 25, 50, 100, ALL]"
+               data-page-list="[10, 25, 50, ALL]"
+               data-click-to-select = "true"
                data-toggle="table">
           <thead>
           <tr>
             <th data-field="id" data-sortable="true">ID</th>
             <th data-field="title">标题</th>
-            <th data-field="author" data-sortable="true">作者</th>
-            <th data-field="createTime" data-sortable="true">发表时间</th>
+            <th data-field="author.nick" data-sortable="true">作者</th>
+            <th data-field="createdTime" data-sortable="true" data-formatter="timeFormatter">发表时间</th>
             <th data-field="replyCount" data-sortable="true">回复数</th>
-            <th data-field="lastReplyAuthor" data-sortable="true">最后回复人</th>
-            <th data-field="lastReplyTime" data-sortable="true">最后回复时间</th>
-            <th data-field="status" data-sortable="true">状态</th>
-            <th>操作</th>
+            <th data-field="lastAuthorName" data-sortable="true">最后回复人</th>
+            <th data-field="lastReplyTime" data-sortable="true" data-formatter="timeFormatter">最后回复时间</th>
+            <th data-sortable="true" data-formatter="postStatusFormatter">状态</th>
           </tr>
           </thead>
-          <tbody>
-
-          <tr th:each="post: ${posts}">
-            <td th:text="${post.id}">ID</td>
-            <td>
-              <a th:text="${post.title}" th:href="@{'/post/' + ${post.id}}" target="_blank">标题</a>
-            </td>
-            <td><a class="author" href="#" th:text="${post.author.nick}">作者</a></td>
-            <td class="time" th:text='${#dates.format(post.createdTime, "yyyy-MM-dd HH:ss:mm")}'>发表时间</td>
-            <td th:text="${post.replyCount}">回复数</td>
-            <td>
-              <a class="author" href="#" th:text="${post.lastAuthorName}">lastAuthorName</a>
-            </td>
-            <td><span class="time" th:if="${post.lastReplyTime}" th:text='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:ss:mm")}'>-</span></td>
-            <td>
-              <span th:text="${post.status.title}">状态</span>
-              <i class="iconfont icon-micro icon-zhiding" th:if="${post.top}" title="置顶"></i>
-              <i class="iconfont icon-micro icon-youxuan" th:if="${post.perfect}" title="优选"></i>
-              <i class="iconfont icon-micro icon-disabled" th:unless="${post.replyable}" title="禁止回复"></i>
-            </td>
-            <td><a href="#">管理</a></td>
-          </tr>
-          </tbody>
         </table>
       </div>
     </div>
@@ -88,20 +64,27 @@
 
 
   <!--回复列表-->
-    <div class="box">
+    <div class="box" id="comments-box" style="display: block">
       <div class="box-header">
-        <h3 class="box-title">回复管理</h3>
+        <h3 class="box-title"><i class="fa fa-arrow-left" id="closeWindow"></i> 回复管理</h3>
+        <div class="box-tools pull-right" data-toggle="tooltip">
+          <div class="btn-group" data-toggle="btn-toggle">
+            <button type="button" class="btn btn-default btn-sm active">全部</button>
+            <button type="button" class="btn btn-default btn-sm" title="正常"><i class="fa fa-square text-green"></i></button>
+            <button type="button" class="btn btn-default btn-sm" title="删除"><i class="fa fa-square text-red"></i></button>
+          </div>
+        </div>
       </div>
       <!-- /.box-header -->
       <div id="toolbar" class="btn-group">
         <button id="btn-post-top" class="btn btn-default">
-          置顶
+          设为置顶
         </button>
         <button id="btn-post-adopt" class="btn btn-default" >
-          采纳
+          采纳该回复
         </button>
         <button id="btn-post-perfect" class="btn btn-default" >
-          优选
+          设为优选
         </button>
         <button id="btn-post-remove" class="btn btn-default" >
           删除
@@ -124,13 +107,14 @@
                data-page-size="20"
                data-page-list="[20, 50, 100, ALL]"
                data-ajax="loadComments"
+               data-click-to-select = "true"
                data-toggle="table">
           <thead>
           <tr>
             <th data-checkbox="true"></th>
             <th data-field="id" data-sortable="true">ID</th>
             <th data-field="floor" data-sortable="true">楼层</th>
-            <th data-field="renderedContent" data-formatter="contentFormatter">内容摘要</th>
+            <!--<th data-field="renderedContent" data-formatter="contentFormatter">内容摘要</th>-->
             <th data-field="author.nick" data-sortable="true" >回复人</th>
             <th data-field="createdTime" data-sortable="true" data-formatter="timeFormatter">回复时间</th>
             <th data-field="upCount" data-sortable="true">赞同</th>
@@ -148,21 +132,59 @@
 </section>
 
 <div layout:fragment="scripts">
+  <script type="text/javascript" src="//cdn.bootcss.com/layer/2.4/layer.min.js"></script>
   <script type="text/javascript">
-    function loadComments (params) {
-      var postId = '1';
-
-      $.get(ms.Urls.replies.format({postId:postId})
-              ,function (result) {
-                  params.success({
-                      total: result.totalElements,
-                      rows:  result.content
-                  });
-              });
+    function loadPosts (params) {
+      var _url = ms.Urls.posts + "?page=" + ((params.data.offset/params.data.limit) + 1) + '&size=' + params.data.limit;
+      $.get(_url ,function (result) {
+        params.success({
+          total: result.totalElements,
+          rows:  result.content
+        });
+      });
     }
-    
+
+
+    function postFormatter(index, row) {
+      var html = [];
+      html.push('<p><b>作者ID:</b> ' + row.author.id + '</p>');
+      html.push('<p><b>最后更新时间:</b> ' + timeFormatter(row.updatedTime) + '</p>');
+      html.push('<p><b>优选:</b> ' + (row.perfect ? '是':'否') + '</p>');
+      if (row.perfect) {
+        html.push('<p><b>优选时间:</b> ' + timeFormatter(row.perfectTime) + '</p>');
+      }
+      html.push('<p><b>置顶:</b> ' + (row.top ? '是':'否') + '</p>');
+      if(row.top) {
+        html.push('<p><b>置顶时间:</b> ' + timeFormatter(row.topTime) + '</p>');
+      }
+      html.push('<p><b>状态:</b> ' + row.status + '</p>');
+
+      return html.join('');
+    }
+
+    function postStatusFormatter(value, row, index) {
+      var html = [];
+      if(row.status === '正常') {
+        html.push('<i class="fa fa-square text-green" title="' + row.status + '"></i>');
+      } else {
+        html.push('<i class="fa fa-square text-red" title="' + row.status + '"></i>');
+      }
+      if (row.top) {
+        html.push('<i class="iconfont icon-micro icon-zhiding" title="置顶"></i>');
+      }
+      if(row.perfect) {
+        html.push('<i class="iconfont icon-micro icon-youxuan" title="优选"></i>');
+      }
+      if (!row.replyable) {
+        html.push('<i class="iconfont icon-micro icon-disabled" title="禁止回复"></i>');
+      }
+
+      return html.join('');
+    }
+
+    //////////comments///////
     function contentFormatter(value) {
-      return value.length > 30 ? (value.slice(0, 30) + '...') : value;
+      return ''; //value.length > 30 ? (value.slice(0, 30) + '...') : value
     }
 
     function replyFormatter(index, row) {
@@ -182,7 +204,12 @@
     
     function replyStatusFormatter(value, row, index) {
       var html = [];
-      html.push('<span>' + row.status + '</span>');
+      if(row.status === '正常') {
+        html.push('<i class="fa fa-square text-green" title="' + row.status + '"></i>');
+      } else {
+        html.push('<i class="fa fa-square text-red" title="' + row.status + '"></i>');
+      }
+      // html.push('<span>' + row.status + '</span>');
       if (row.top) {
         html.push('<i class="iconfont icon-micro icon-zhiding" title="置顶"></i>');
       }
@@ -194,6 +221,45 @@
       }
       return html.join('');
     }
+
+    var $postId = 0;
+    $('#posts').on('dbl-click-row.bs.table', function (row, $element, field) {
+      var replyWindow = layer.open({
+        type: 1,
+        title: false,
+        content: $('#comments-box'),
+        closeBtn: 0,
+        scrollbar: true
+      });
+      layer.full(replyWindow);
+      $('#closeWindow').click(function () {
+        layer.close(replyWindow);
+      });
+      $postId = $element.id;
+      $('#replies').bootstrapTable('refresh', {
+        silent: true
+      });
+    });
+
+    function loadComments (params) {
+      if(!$postId) {
+        params.success({
+          total: 0,
+          rows:  []
+        });
+        return;
+      };
+
+      var _url = ms.Urls.replies.format({postId:$postId}) + "?page=" + ((params.data.offset/params.data.limit) + 1) ;
+      $.get(_url, function (result) {
+        params.success({
+          total: result.totalElements,
+          rows:  result.content
+        });
+      });
+    }
+
+
   </script>
 </div>
 </body>
