@@ -23,6 +23,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-mail')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-devtools')
+	compile("org.springframework.boot:spring-boot-configuration-processor")
 	compile('org.springframework.security.oauth:spring-security-oauth2')
 
 	compile('org.projectlombok:lombok')

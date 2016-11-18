@@ -1,0 +1,48 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<div th:if="${message}">
+		<h2 th:text="${message}"/>
+	</div>
+
+	<div>
+		<form method="POST" enctype="multipart/form-data" th:action="@{/upload}">
+			<table>
+				<tr><td>Common to upload:</td><td><input type="file" name="file" /></td></tr>
+				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+			</table>
+		</form>
+
+		<form method="POST" enctype="multipart/form-data" th:action="@{/upload/avatar}">
+			<table>
+				<tr><td>Avarar to upload:</td><td><input type="file" name="file" /></td></tr>
+				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+			</table>
+		</form>
+
+		<form method="POST" enctype="multipart/form-data" th:action="@{/upload/post}">
+			<table>
+				<tr><td>Post to upload:</td><td><input type="file" name="file" /></td></tr>
+				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+			</table>
+		</form>
+
+		<form method="POST" enctype="multipart/form-data" th:action="@{/upload/reply}">
+			<table>
+				<tr><td>Reply to upload:</td><td><input type="file" name="file" /></td></tr>
+				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+			</table>
+		</form>
+	</div>
+
+	<div>
+		<ul>
+			<li th:each="file : ${files}">
+				<a th:href="${file}" th:text="${file}" ></a>
+				<img style="width: 100px;height: 100px;" th:src="${file}" />
+			</li>
+		</ul>
+	</div>
+
+</body>
+</html>

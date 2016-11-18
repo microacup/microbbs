@@ -7125,7 +7125,7 @@ function wordCount(data) {
 
     {name: 'link', shortcut:'链接',action: drawLink},
     {name: 'image', shortcut:'在线图片',innerText:'在线图片', action: drawImage},
-    {name: 'imageex', shortcut:'本地图片',innerText:'本地图片', className:'editor-icon-image'},
+    {name: 'imageex', shortcut:'本地图片',innerText:'本地图片', action: drawImage, className:'editor-icon-image'},
     '|',
 
     // {name: 'info', action: 'http://lab.lepture.com/editor/markdown'},
@@ -7141,6 +7141,10 @@ function Editor(options) {
 
   if (options.element) {
     this.element = options.element;
+  }
+
+  if(options.upload) {
+      this.upload = '/upload' || options.upload;
   }
 
   options.toolbar = options.toolbar || Editor.toolbar;

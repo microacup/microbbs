@@ -6,6 +6,15 @@
   <title th:inline="text">[[#{app.title}]]</title>
   <link rel="stylesheet" th:href="@{/static/lib/editor/editor.css}" />
   <link rel="stylesheet" th:href="@{/static/lib/At.js/dist/css/jquery.atwho.min.css}" />
+  <style type="text/css">
+    /* app.css & editor.css 顺序*/
+    .CodeMirror {
+      height: 114px;
+    }
+    :-webkit-full-screen {
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
 <!--post header-->
@@ -58,10 +67,6 @@
       <div class="box-tools">
         <ul id="pagination-comments" class="pagination pagination-sm inline"></ul>
       </div>
-    </div>
-
-    <div class="box-body">
-
     </div>
 
     <div class="box-footer box-comments">
@@ -194,8 +199,11 @@
   <script th:src="@{/static/lib/At.js/dist/js/jquery.atwho.min.js}"></script>
   <script th:inline="javascript" type="text/javascript">
       var postId = /*[[${post.id}]]*/;
-      var editor = new Editor({element: $("#reply-content")[0], status: []});
+      var editor = new Editor({element: $("#reply-content")[0], status: [], upload:"/upload/reply"});
       editor.render();
+      var ext = new EditorExt({
+        upload: _ctx + '/upload/reply'
+      });
 
       var author = $('.author-name').text();
 

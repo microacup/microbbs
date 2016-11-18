@@ -8,6 +8,10 @@ server:
     port: 7000
     contextPath: /bbs
 spring:
+  http:
+    multipart:
+      max-file-size: 2048KB
+      max-request-size: 2048KB
   datasource:
     driverClassName:  com.mysql.jdbc.Driver
     url:  jdbc:mysql://127.0.0.1/microbbs?serverTimezone=UTC&useSSL=false
