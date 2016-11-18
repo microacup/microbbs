@@ -64,7 +64,7 @@
 
 
   <!--回复列表-->
-    <div class="box" id="comments-box" style="display: block">
+    <div class="box" id="comments-box" style="display: none">
       <div class="box-header">
         <h3 class="box-title"><i class="fa fa-arrow-left" id="closeWindow"></i> 回复管理</h3>
         <div class="box-tools pull-right" data-toggle="tooltip">
@@ -229,16 +229,18 @@
         title: false,
         content: $('#comments-box'),
         closeBtn: 0,
-        scrollbar: true
+        scrollbar: true,
+        success: function(layero, index){
+          $('#closeWindow').click(function () {
+            layer.close(replyWindow);
+          });
+          $postId = $element.id;
+          $('#replies').bootstrapTable('refresh', {
+            silent: true
+          });
+        }
       });
       layer.full(replyWindow);
-      $('#closeWindow').click(function () {
-        layer.close(replyWindow);
-      });
-      $postId = $element.id;
-      $('#replies').bootstrapTable('refresh', {
-        silent: true
-      });
     });
 
     function loadComments (params) {
