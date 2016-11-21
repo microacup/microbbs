@@ -16,16 +16,17 @@
       <li><a href="#tab_3" data-toggle="tab">热门回复</a></li>
       <li><a href="#tab_3" data-toggle="tab">热门收藏</a></li>
       <li><a href="#tab_3" data-toggle="tab">黑名单</a></li>
+      <li class="pull-right"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gear"></i></a>
+        <ul class="dropdown-menu">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">查看全部</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">仅看有回复的</a></li>
+        </ul>
+      </li>
     </ul>
     <div class="tab-content">
       <div class="tab-pane active" id="tab_1">
         <div id="toolbar-posts" class="btn-group" data-toggle="buttons">
-          <label class="btn btn-default active">
-            <input id="btn-post-all" type="radio" name="options" id="option1" autocomplete="off" checked> 查看全部
-          </label>
-          <label class="btn btn-default">
-            <input id="btn-post-filter"  type="radio" name="options" id="option2" autocomplete="off"> 仅看有回复的
-          </label>
+          <button class="btn btn-default" id="btn-post-replies"  autocomplete="off">查看回复</button>
         </div>
         <table id="posts"
                class="table table-no-bordered table-striped bbs-table"
@@ -40,12 +41,13 @@
                data-side-pagination="server"
                data-ajax="loadPosts"
                data-pagination="true"
-               data-page-size="10"
-               data-page-list="[10, 25, 50, ALL]"
+               data-page-size="15"
+               data-page-list="[15, 30, 50, ALL]"
                data-click-to-select = "true"
                data-toggle="table">
           <thead>
           <tr>
+            <th data-radio="true"></th>
             <th data-field="id" data-sortable="true">ID</th>
             <th data-field="title">标题</th>
             <th data-field="author.nick" data-sortable="true">作者</th>
@@ -223,7 +225,21 @@
     }
 
     var $postId = 0;
+    $('#btn-post-replies').click(function () {
+      var selections = $('#posts').bootstrapTable('getSelections');
+      if (!selections || selections.length == 0) {
+        alert('请先选择分类');
+        return;
+      }
+      $postId = selections[0].id;
+      openReplyWindow();
+    });
     $('#posts').on('dbl-click-row.bs.table', function (row, $element, field) {
+      $postId = $element.id;
+      openReplyWindow();
+    });
+
+    function openReplyWindow() {
       var replyWindow = layer.open({
         type: 1,
         title: false,
@@ -234,14 +250,13 @@
           $('#closeWindow').click(function () {
             layer.close(replyWindow);
           });
-          $postId = $element.id;
           $('#replies').bootstrapTable('refresh', {
             silent: true
           });
         }
       });
       layer.full(replyWindow);
-    });
+    }
 
     function loadComments (params) {
       if(!$postId) {
