@@ -69,40 +69,66 @@ public class ReplyService {
 
     @CacheEvict(value = PostService.CACHE_NAME, key = "#replyForm.postId")
     public Reply addReply(ReplyForm replyForm, String username) {
-        User author = userRepository.findByUsername(username);
-        Reply reply = createReply(replyForm, author);
+        Reply reply = createReply(replyForm, username);
 
         // 渲染markdown
         RenderedContent renderedContent = renderer.render(replyForm.getContent());
         String renderedHtml = renderedContent.getHtml();
         reply.setRenderedContent(renderedHtml);
         replyRepository.save(reply);
-        Post post = postRepository.save(postFormAdapter.updatePostFromReply(reply));
-
-        addMessage(author, reply, renderedContent, post);
+        postRepository.save(postFormAdapter.updatePostFromReply(reply));
+        addMessage(reply, renderedContent.getAtedUsers());
         return reply;
     }
 
     // 消息
-    private void addMessage(User author, Reply reply, RenderedContent renderedContent, Post post) {
-        List<User> atedUsers = renderedContent.getAtedUsers();
-        List<Message> messages = Lists.newArrayListWithExpectedSize(atedUsers.size());
+    private void addMessage(Reply reply, List<User> atedUsers) {
+        User author = reply.getAuthor();
+        Long authorId = author.getId();
+        Post post = reply.getPost();
+        Long postId = post.getId();
         Date now = new Date();
+        Long replyId = reply.getId();
+
+        // 相同的targetId只被通知一次，所以实际的比期望的小
+        List<Message> messages = Lists.newArrayListWithExpectedSize(atedUsers.size() + 2);
+
+        // 帖子的回复
+        Long target1 = post.getAuthor().getId();
+        String content1 = author.getNick() + "回复了你的帖子：" + post.getTitle() + " #floor" + reply.getFloor();
+        Message postmsg = messageService.createMessage(replyId, authorId, postId, now, target1, content1, MessageType.reply);
+        messages.add(postmsg);
+
+        // 回复的消息
+        Reply reply2 = reply.getReply();
+        Long target2 = Long.MIN_VALUE;
+        if (reply2 !=  null) {
+            target2 = reply2.getAuthor().getId();
+            if (!target1.equals(target2)) {
+                String content2 = author.getNick() + "在话题：" + post.getTitle() + " #floor" + reply.getFloor() + " 回复了你";
+                Message replymsg = messageService.createMessage(replyId, authorId, postId, now, target2, content2, MessageType.reply2);
+                messages.clear(); // reply2优先
+                messages.add(replymsg);
+            }
+        }
+
+        // at的消息
         for (User u : atedUsers) {
-            Message message = new Message();
-            message.setAuthorId(author.getId());
-            message.setTargetUserId(u.getId());
-            message.setCreatedTime(now);
-            message.setPostId(post.getId());
-            message.setReplyId(reply.getId());
-            message.setContent(author.getNick() + "在回复" + post.getTitle().substring(0, 10) + "的回复 #floor" + reply.getFloor() + " ＠了你");
-            message.setType(MessageType.at);
+            Long targetId = u.getId();
+            if (target1.equals(targetId) || target2.equals(targetId)) {
+                continue;
+            }
+
+            String content = author.getNick() + "在话题：" + post.getTitle() + "的回复 #floor" + reply.getFloor() + " ＠了你";
+            Message message = messageService.createMessage(replyId, authorId, postId, now, targetId, content, MessageType.at);
             messages.add(message);
         }
         messageService.addMessages(messages);
     }
 
-    private Reply createReply(ReplyForm replyForm, User author) {
+    private Reply createReply(ReplyForm replyForm, String username) {
+        User author = userRepository.findByUsername(username);
+
         Reply reply = new Reply();
         reply.setCreatedTime(new Date());
         reply.setUpdatedTime(reply.getCreatedTime());

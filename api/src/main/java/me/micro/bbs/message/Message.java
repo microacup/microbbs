@@ -23,7 +23,8 @@ import java.util.Date;
  * Created by microacup on 2016/11/15.
  */
 @Entity
-@Table(name = "M_MESSAGE", indexes = {@Index(name = "IDX_TARGET", columnList = "m_targetUserId")})
+@Table(name = "M_MESSAGE", indexes = {@Index(name = "IDX_TARGET", columnList = "m_targetUserId"),
+        @Index(name = "IDX_HASREAD", columnList = "m_hasRead")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
