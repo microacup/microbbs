@@ -60,6 +60,10 @@ public class Message {
     @Column(name = "m_replyId")
     private Long replyId;
 
+    // 所在回复
+    @Column(name = "m_floor")
+    private Long floor;
+
     // 已读
     @Column(name = "m_hasRead", nullable = false)
     private Boolean hasRead = false;

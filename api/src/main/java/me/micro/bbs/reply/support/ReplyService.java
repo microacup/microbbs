@@ -96,7 +96,7 @@ public class ReplyService {
         // 帖子的回复
         Long target1 = post.getAuthor().getId();
         String content1 = author.getNick() + "回复了你的帖子：" + post.getTitle() + " #floor" + reply.getFloor();
-        Message postmsg = messageService.createMessage(replyId, authorId, postId, now, target1, content1, MessageType.reply);
+        Message postmsg = messageService.createMessage(reply, authorId, postId, now, target1, content1, MessageType.reply);
         messages.add(postmsg);
 
         // 回复的消息
@@ -106,7 +106,7 @@ public class ReplyService {
             target2 = reply2.getAuthor().getId();
             if (!target1.equals(target2)) {
                 String content2 = author.getNick() + "在话题：" + post.getTitle() + " #floor" + reply.getFloor() + " 回复了你";
-                Message replymsg = messageService.createMessage(replyId, authorId, postId, now, target2, content2, MessageType.reply2);
+                Message replymsg = messageService.createMessage(reply, authorId, postId, now, target2, content2, MessageType.reply2);
                 messages.clear(); // reply2优先
                 messages.add(replymsg);
             }
@@ -120,7 +120,7 @@ public class ReplyService {
             }
 
             String content = author.getNick() + "在话题：" + post.getTitle() + "的回复 #floor" + reply.getFloor() + " ＠了你";
-            Message message = messageService.createMessage(replyId, authorId, postId, now, targetId, content, MessageType.at);
+            Message message = messageService.createMessage(reply, authorId, postId, now, targetId, content, MessageType.at);
             messages.add(message);
         }
         messageService.addMessages(messages);

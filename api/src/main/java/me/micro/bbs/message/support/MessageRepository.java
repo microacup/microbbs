@@ -15,6 +15,6 @@ import java.util.List;
 @Repository
 @Transactional
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findByTargetUserId(Long targetUserId);
+    List<Message> findByTargetUserIdAndHasReadFalseOrderByCreatedTimeDesc(Long targetUserId);
 
 }

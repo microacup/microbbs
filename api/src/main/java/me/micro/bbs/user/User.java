@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.micro.bbs.enums.Channel;
 import me.micro.bbs.enums.ClientType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -27,7 +30,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
-public class User {
+public class User implements UserDetails {
 
     // 主键
     @Id
@@ -130,4 +133,34 @@ public class User {
     // 账号是否激活
     @Column(name = "u_isActive")
     private Boolean isActive;
+
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return this.isActive;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return this.isActive;
+    }
 }

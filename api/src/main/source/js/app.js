@@ -1,4 +1,4 @@
-'use strict';
+
 
 // 功能开始
 var _ctx = $("meta[name='ctx']").attr("content");
@@ -10,7 +10,8 @@ var ms = {
         posts_now_top5: '{ctx}/api/posts/now/top5',
         replies: '{ctx}/api/posts/{postId}/replies',
         do_reply: _ctx + '/api/replies',
-        tags_hot: '{ctx}/api/tags/hot'
+        tags_hot: '{ctx}/api/tags/hot',
+        messages: _ctx + '/api/messages'
     }
 }
 
@@ -67,3 +68,27 @@ function error(msg) {
     alert(msg);
     console.log(msg);
 }
+
+// 加载消息
+var navBarApp = new Vue({
+    el: '#nav-bar',
+    data: {
+        messages: []
+    },
+    created: function () {
+        this.loadMessages();
+    },
+    methods: {
+        loadMessages: function() {
+            this.$http.get(ms.Urls.messages).then(function (response) {
+                if(response.status == 200) {
+                    this.messages =  response.body.data || [];
+                } else {
+                    //error(response.body.msg);
+                }
+            }, function (response) {
+
+            });
+        }
+    }
+});

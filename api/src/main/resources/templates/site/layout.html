@@ -31,7 +31,7 @@
 <div class="wrapper">
   <!-- Main Header -->
   <header class="main-header">
-    <nav class="navbar navbar-static-top">
+    <nav class="navbar navbar-static-top" id="nav-bar">
       <div class="container">
         <div class="navbar-header">
           <a class="navbar-brand" th:href="@{/}" th:utext="#{app.title}">LMS</a>
@@ -81,25 +81,27 @@
             <!-- Notifications Menu -->
             <li class="dropdown notifications-menu">
               <!-- Menu toggle button -->
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-bell-o"></i>
-                <span class="label label-warning">10</span>
-              </a>
-              <ul class="dropdown-menu">
-                <li class="header">You have 10 notifications</li>
-                <li>
-                  <!-- Inner Menu: contains the notifications -->
-                  <ul class="menu">
-                    <li><!-- start notification -->
-                      <a href="#">
-                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                      </a>
-                    </li>
-                    <!-- end notification -->
-                  </ul>
-                </li>
-                <li class="footer"><a href="#">View all</a></li>
-              </ul>
+              <template>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-bell-o"></i>
+                  <span class="label label-warning">{{messages.length}}</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">你有{{messages.length}}条未读消息</li>
+                  <li>
+                    <!-- Inner Menu: contains the notifications -->
+                    <ul class="menu notifications-list">
+                      <li v-for="msg in messages"><!-- start notification -->
+                        <a :href="_ctx+ '/post/' + msg.postId + '#floor' + msg.floor">
+                          {{msg.content}}
+                        </a>
+                      </li>
+                      <!-- end notification -->
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">查看全部</a></li>
+                </ul>
+              </template>
             </li>
 
             <!--admin-->
@@ -115,7 +117,7 @@
                 <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="user-image"
                      alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                <span class="hidden-xs">张小明</span>
+                <span class="hidden-xs"><span sec:authentication="principal.nick">Bob</span></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->

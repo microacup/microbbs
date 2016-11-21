@@ -1,10 +1,14 @@
 package me.micro.bbs.config;
 
+import me.micro.bbs.user.support.UserService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.header.writers.HstsHeaderWriter;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 
@@ -23,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/","/static/**", "/test/**").permitAll()
                 .anyRequest().authenticated()
-                .and().rememberMe()
+                .and().rememberMe().rememberMeServices(rememberMeServices())
                 .and().formLogin()
                 .and().logout()
                 .and().csrf();
@@ -36,5 +40,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().cacheControl()
                 .and().addHeaderWriter(writer).frameOptions();
     }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.eraseCredentials(true)
+                .userDetailsService(userService())
+                ;
+    }
+
+    /*@Bean
+    public PasswordEncoder passwordEncoder() {
+        return new StandardPasswordEncoder();
+    }*/
+
+    @Bean
+    public TokenBasedRememberMeServices rememberMeServices() {
+        return new TokenBasedRememberMeServices("remember-me-key", userService());
+    }
+
+    @Bean
+    public UserService userService() {
+        return new UserService();
+    }
+
 
 }
