@@ -36,18 +36,21 @@ public class ContentRenderer {
      * @param content
      * @return
      */
-    public String render(final String content) {
+    public RenderedContent render(final String content) {
+        RenderedContent renderedContent = new RenderedContent();
         String markdownText = content;
-        markdownText = replaceAt(markdownText);
+        markdownText = replaceAt(renderedContent, markdownText);
         String html = markdownService.renderToHtml(markdownText);
-        return renderCallouts(decode(html));
+        renderedContent.setHtml(renderCallouts(decode(html)));
+        return renderedContent;
     }
 
-    private String replaceAt(String markdownText) {
+    private String replaceAt(RenderedContent renderedContent, String markdownText) {
         Set<String> nickNames = getUserNames(markdownText);
         for (final String nickName : nickNames) {
             User user = userRepository.findByNick(nickName);
             if(user != null) {
+                renderedContent.addUser(user);
                 markdownText = markdownText.replace('@' + nickName, "@<a href='" + contextPath
                         + "/users/" + user.getId() + "/profile'>" + nickName + "</a>");
             }

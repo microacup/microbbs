@@ -10,6 +10,9 @@ package me.micro.bbs.enums;
  * at: xx ＠了你
  */
 public enum MessageType {
-
+    reply,
+    reply2,
+    follow,
+    at
     ;
 }

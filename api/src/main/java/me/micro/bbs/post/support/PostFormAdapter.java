@@ -1,8 +1,10 @@
 package me.micro.bbs.post.support;
 
 import me.micro.bbs.markdown.ContentRenderer;
+import me.micro.bbs.markdown.RenderedContent;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.post.PostForm;
+import me.micro.bbs.reply.Reply;
 import me.micro.bbs.user.support.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ import java.util.Date;
  * Created by microacup on 2016/11/11.
  */
 @Service
-class PostFormAdapter {
+public class PostFormAdapter {
     private static final int SUMMARY_LENGTH = 140;
 
     @Autowired
@@ -45,7 +47,8 @@ class PostFormAdapter {
 
     //
     private void setPostProperties(Post post) {
-        post.setRenderedContent(renderer.render(post.getContent()));
+        RenderedContent renderedContent = renderer.render(post.getContent());
+        post.setRenderedContent(renderedContent.getHtml());
         summarize(post);
     }
 
@@ -53,6 +56,17 @@ class PostFormAdapter {
     public void summarize(Post post) {
         String renderedSummary = postSummary.forContent(post.getRenderedContent(), SUMMARY_LENGTH);
         post.setSummary(renderedSummary);
+    }
+
+    public Post updatePostFromReply(Reply reply) {
+        Post post = reply.getPost();
+        post.setLastReplyTime(reply.getCreatedTime());
+        post.setLastTime(reply.getCreatedTime());
+        post.setLastAuthorName(reply.getAuthor().getNick());
+        post.setLastAuthor(reply.getAuthor().getId());
+        post.setFloorCount(reply.getFloor());
+        post.setReplyCount(post.getReplyCount() + 1);
+        return post;
     }
 
 
