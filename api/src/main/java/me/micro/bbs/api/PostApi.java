@@ -81,6 +81,7 @@ public class PostApi {
         Post post = postService.findOne(id);
         if (post == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+        // TODO readCount + 1
         return ResponseEntity.ok(post);
     }
 

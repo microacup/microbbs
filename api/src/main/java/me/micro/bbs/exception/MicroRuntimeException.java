@@ -5,7 +5,7 @@ package me.micro.bbs.exception;
  *
  * Created by microacup on 2016/11/16.
  */
-public class MicroRuntimeException extends Exception {
+public class MicroRuntimeException extends RuntimeException {
     public MicroRuntimeException() {
         super("服务器正在思考人生...");
     }

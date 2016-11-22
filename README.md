@@ -38,6 +38,7 @@
 * 1、Thymeleaf中inline script导致调用问题：
     
 元凶：
+
     <script th:inline="javascript"  type="text/javascript">
         var categories = /*[[${categories}]]*/
     </script>    

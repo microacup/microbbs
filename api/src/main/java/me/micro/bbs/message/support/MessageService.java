@@ -26,6 +26,10 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
+    public int readed(Long messageId) {
+        return messageRepository.readed(messageId);
+    }
+
     public List<Message> findMine() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {

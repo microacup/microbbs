@@ -5,12 +5,14 @@ import me.micro.bbs.post.Post;
 import me.micro.bbs.post.PostForm;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
+import me.micro.bbs.user.support.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
  * Created by microacup on 2016/11/2.
  */
 @Service
+@Transactional
 public class PostService {
     public static final String CACHES_NAME = "cache.posts";
     public static final String CACHES_REALTIME_NAME = "cache.posts.realtime";
@@ -37,6 +40,9 @@ public class PostService {
 
     @Autowired
     private PostFormAdapter postFormAdapter;
+
+    @Autowired
+    private ProfileService profileService;
 
     public Page<Post> findAll(int page, int pageSize) {
         return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
@@ -111,6 +117,9 @@ public class PostService {
         Post post = postFormAdapter.createPostFromPostForm(postForm, username);
         Post saved = postRepository.save(post);
         // saveToIndex(post);
+
+        // 更新Profile
+        profileService.addPostCount(post.getAuthor().getId()); // == 1成功
         return saved;
     }
 

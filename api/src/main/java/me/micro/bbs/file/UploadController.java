@@ -39,7 +39,7 @@ public class UploadController {
         this.storageService.init();
     }
 
-    //TODO test @GetMapping
+    //XXX test @GetMapping
     public String listUploadedFiles(Model model) throws IOException {
 
         model.addAttribute("files", storageService

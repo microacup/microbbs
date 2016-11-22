@@ -14,6 +14,7 @@ import me.micro.bbs.post.support.PostService;
 import me.micro.bbs.reply.Reply;
 import me.micro.bbs.reply.ReplyForm;
 import me.micro.bbs.user.User;
+import me.micro.bbs.user.support.ProfileService;
 import me.micro.bbs.user.support.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -78,6 +79,9 @@ public class ReplyService {
         replyRepository.save(reply);
         postRepository.save(postFormAdapter.updatePostFromReply(reply));
         addMessage(reply, renderedContent.getAtedUsers());
+
+        // 更新Profile
+        profileService.addReplyCount(reply.getAuthor().getId());
         return reply;
     }
 
@@ -166,5 +170,8 @@ public class ReplyService {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private ProfileService profileService;
 
 }

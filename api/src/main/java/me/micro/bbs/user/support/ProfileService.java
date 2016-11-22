@@ -22,4 +22,12 @@ public class ProfileService {
     }
 
 
+    // 更新PostCount
+    public int addPostCount(Long userId) {
+        return profileRepository.addPostCount(userId);
+    }
+
+    public int addReplyCount(Long userId) {
+        return profileRepository.addReplyCount(userId);
+    }
 }

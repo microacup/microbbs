@@ -128,6 +128,9 @@ public class PostController {
 
         Post post = postService.findOne(id);
         if (post == null) return "site/404";
+
+        // TODO readCount + 1
+
         model.addAttribute("post", post);
         return "site/post";
     }
