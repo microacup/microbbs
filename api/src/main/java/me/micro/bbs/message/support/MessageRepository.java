@@ -21,6 +21,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByTargetUserIdAndHasReadFalseOrderByCreatedTimeDesc(Long targetUserId);
 
     @Modifying
-    @Query("update Message m set m.hasRead = true where m.id=:id")
-    int readed(@Param("id") Long id);
+    @Query("update Message m set m.hasRead = true where m.id in :id")
+    int readed(@Param("id") Long[] ids);
 }

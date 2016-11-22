@@ -26,8 +26,8 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
-    public int readed(Long messageId) {
-        return messageRepository.readed(messageId);
+    public int readed(Long[] ids) {
+        return messageRepository.readed(ids);
     }
 
     public List<Message> findMine() {

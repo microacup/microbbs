@@ -86,11 +86,40 @@ var navBarApp = new Vue({
                 if(response.status == 200) {
                     this.messages =  response.body.data || [];
                 } else {
-                    //error(response.body.msg);
+                    error(response.body.msg);
                 }
             }, function (response) {
-
+                error('拉取消息失败');
             });
+        },
+        markReaded: function () {
+            if(this.messages.length == 0) return;
+
+            var msgIds = [];
+            for(var i = this.messages.length -1;i>=0;i--) {
+                if(!this.messages[i].hasRead) {
+                    msgIds.push(this.messages[i].id);
+                }
+            }
+
+            if(msgIds.length > 0) {
+                var _csrf = $('#messages-form input[name="_csrf"]').val();
+                var ids = '?ids=' + msgIds.join(',') + '&_csrf=' + _csrf;
+                this.$http.put(ms.Urls.messages + ids).then(function (response) {
+                    if(response.status == 200) {
+                        var $badge = $('#badge-messages');
+                        $badge.text("0");
+                        $badge.hide();
+                        navBarApp.messages.map(function(msg){msg.hasRead=true});
+                    } else {
+                        error(response.body.msg);
+                    }
+                }, function (response) {
+                    console.log(response);
+                    //error('标记消息失败');
+                });
+
+            }
         }
     }
 });

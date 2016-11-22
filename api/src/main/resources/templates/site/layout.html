@@ -82,10 +82,13 @@
             <li class="dropdown notifications-menu">
               <!-- Menu toggle button -->
               <template>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <a id="messages" @click="markReaded" href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <i class="fa fa-bell-o"></i>
-                  <span class="label label-warning">{{messages.length}}</span>
+                  <span id="badge-messages" v-show="messages.length > 0" class="label label-warning">{{messages.length}}</span>
                 </a>
+                <form id="messages-form" method="put" th:action="@{/api/messages}">
+                  <input type="hidden"/>
+                </form>
                 <ul class="dropdown-menu">
                   <li class="header">你有{{messages.length}}条未读消息</li>
                   <li>

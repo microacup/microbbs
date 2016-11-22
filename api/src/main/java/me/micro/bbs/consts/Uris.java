@@ -44,8 +44,9 @@ public final class Uris {
     // 消息
     public static final String API_MESSAGES = "/api/messages";
 
-    // 某个消息
-    public static final String API_MESSAGES_ID = "/api/messages/{id}";
+    // 个人信息
+    public static final String API_PROFILE = "/api/profile";
+    public static final String API_USERS_USER_ID_PROFILE = "/api/users/{userId}/profile";
 
     ////////////////////////////admin////////////////////////////////
     public static final String API_ADMIN_POSTS = "/api/admin/posts";

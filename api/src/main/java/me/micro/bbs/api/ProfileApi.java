@@ -10,8 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static me.micro.bbs.consts.Uris.API_PROFILE;
+import static me.micro.bbs.consts.Uris.API_USERS_USER_ID_PROFILE;
 
 /**
  *
@@ -20,12 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class ProfileApi {
-
     @Autowired
     private ProfileService profileService;
 
-    @GetMapping
-    @RequestMapping("/api/profile")
+    @GetMapping(API_PROFILE)
     Result<UserProfile> me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -37,8 +37,7 @@ public class ProfileApi {
         return Result.ok(profile);
     }
 
-    @GetMapping
-    @RequestMapping("/api/users/{userId}/profile")
+    @GetMapping(API_USERS_USER_ID_PROFILE)
     Result<UserProfile> profile(@PathVariable("userId") Long userId) {
         UserProfile profile = profileService.profile(userId);
         return Result.ok(profile);

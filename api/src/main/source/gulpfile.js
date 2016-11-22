@@ -48,6 +48,12 @@ gulp.task('compress', function() {
         .pipe(gulp.dest(paths.dest));
 });
 
+gulp.task('compress-debug', function() {
+    return gulp.src(paths.js)
+        .pipe(gulp.dest(paths.dest));
+});
+
+
 gulp.task('compress-js', function() {
     // gulp compress-js --src lib/editor/editor.js
     if(gulp.env._&&gulp.env._.length>0) {
