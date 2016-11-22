@@ -123,5 +123,7 @@ public class PostService {
         return saved;
     }
 
-
+    // TODO update ReadCount
+    public void updateReadCount() {
+    }
 }

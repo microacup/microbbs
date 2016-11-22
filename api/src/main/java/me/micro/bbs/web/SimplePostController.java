@@ -12,68 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Posts
  *
- * Created by microacup on 2016/11/3.
+ *
+ * Created by microacup on 2016/11/22.
  */
 @Controller
-public class PostController {
-
-    /**
-     * 按分类展示话题
-     *
-     * @param categoryId
-     * @param model
-     * @return
-     */
-    @GetMapping("/category/{categoryId}")
-    public String postsByCategory(@PathVariable("categoryId") long categoryId,
-                                  @RequestParam(defaultValue = "1") int page,
-                                  Model model) {
-        Category activeCategory = categoryService.findOne(categoryId);
-        if (activeCategory == null) return "site/404";
-
-        List<Category> categories = categoryService.findAll();
-        if (categories == null) return "site/404";
-
-        model.addAttribute("activeCategory", activeCategory);
-        model.addAttribute("categories", categories);
-
-        List<Tag> tags = tagService.findByCategory(activeCategory.getId());
-        if(tags.isEmpty()) return "site/404";
-
-        Tag activeTag = getDefaultTag(activeCategory);
-        model.addAttribute("activeTag", activeTag);
-        model.addAttribute("tags", tags);
-
-        Page<Post> posts = postService.findByCategoryId(categoryId, page - 1, Setting.PAGE_SIZE);
-        model.addAttribute("posts", posts.getContent());
-        model.addAttribute("totalPages", posts.getTotalPages());
-        model.addAttribute("currentPage", page);
-
-        return "site/index";
-    }
-
-    private Tag getDefaultTag(Category activeCategory) {
-        Tag activeTag = new Tag();
-        activeTag.setId(-1L);
-        activeTag.setTitle("全部");
-        activeTag.setCategory(activeCategory);
-        return activeTag;
-    }
-
+@RequestMapping("/simple")
+public class SimplePostController {
     /**
      * 按照分类下的标签展示话题
      *
@@ -90,17 +44,10 @@ public class PostController {
         Category activeCategory = categoryService.findOne(categoryId);
         if (activeCategory == null) return "site/404";
 
-        List<Category> categories = categoryService.findAll();
-        if (categories == null) return "site/404";
-        model.addAttribute("categories", categories);
-
         Tag activeTag = tagService.findOne(tagId);
         if (activeTag == null) return "site/404";
         model.addAttribute("activeCategory", activeCategory);
         model.addAttribute("activeTag", activeTag);
-
-        List<Tag> tags = tagService.findByCategory(activeCategory.getId());
-        model.addAttribute("tags", tags);
 
         List<Long> tagIds = new ArrayList<>(1);
         tagIds.add(tagId);
@@ -109,7 +56,7 @@ public class PostController {
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);
 
-        return "site/index";
+        return "simple/index";
     }
 
     /**
@@ -121,17 +68,12 @@ public class PostController {
      */
     @GetMapping("/post/{id}")
     public String post(@PathVariable("id") long id, Model model) {
-        List<Category> categories = categoryService.findAll();
-        if (categories == null) return "site/404";
-        model.addAttribute("categories", categories);
-
         Post post = postService.findOne(id);
         if (post == null) return "site/404";
 
         postService.updateReadCount();
-
         model.addAttribute("post", post);
-        return "site/post";
+        return "simple/post";
     }
 
     // 新增Post
@@ -143,24 +85,9 @@ public class PostController {
         model.addAttribute("categories", categories);
         model.addAttribute("tags", tagService.getTagsMap());
         model.addAttribute("postForm", new PostForm());
-        return "site/create";
+        return "simple/create";
     }
 
-    /**
-     * 新增Post
-     *
-     * @param principal
-     * @param postForm
-     * @param bindingResult
-     * @param model
-     * @return
-     */
-    @PostMapping("/post/create")
-    public String createPost(Principal principal, @Valid PostForm postForm, BindingResult bindingResult, Model model) {
-        String name = principal.getName();
-        Post post = postService.addPost(postForm, name);
-        return "redirect:/post/" + post.getId();
-    }
 
     @Autowired
     private CategoryService categoryService;

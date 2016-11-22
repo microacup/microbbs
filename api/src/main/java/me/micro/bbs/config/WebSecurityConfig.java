@@ -38,7 +38,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         writer.setRequestMatcher(AnyRequestMatcher.INSTANCE);
         headers.contentTypeOptions().and().xssProtection()
                 .and().cacheControl()
-                .and().addHeaderWriter(writer).frameOptions();
+                .and().frameOptions().sameOrigin()
+                .addHeaderWriter(writer).frameOptions();
     }
 
     @Override
