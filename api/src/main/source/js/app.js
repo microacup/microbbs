@@ -6,12 +6,14 @@ var _ctx = $("meta[name='ctx']").attr("content");
 
 var ms = {
     Urls: {
-        posts_related_top5: '{ctx}/api/posts/{postId}/related/top5',
-        posts_now_top5: '{ctx}/api/posts/now/top5',
-        replies: '{ctx}/api/posts/{postId}/replies',
+        posts_related_top5: _ctx + '/api/posts/{postId}/related/top5',
+        posts_now_top5: _ctx + '/api/posts/now/top5',
+        replies: _ctx + '/api/posts/{postId}/replies',
         do_reply: _ctx + '/api/replies',
-        tags_hot: '{ctx}/api/tags/hot',
-        messages: _ctx + '/api/messages'
+        tags_hot: _ctx + '/api/tags/hot',
+        messages: _ctx + '/api/messages',
+        profile: _ctx + '/api/profile',
+        profile_id: _ctx + '/api/users/{userId}/profile'
     }
 }
 

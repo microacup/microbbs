@@ -28,8 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/","/static/**", "/test/**").permitAll()
                 .anyRequest().authenticated()
                 .and().rememberMe().rememberMeServices(rememberMeServices())
-                .and().formLogin()
-                .and().logout()
+                .and().formLogin().permitAll()
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").permitAll()
                 .and().csrf();
     }
 

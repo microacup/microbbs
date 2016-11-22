@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public class MessageApi {
 
     @GetMapping
     @RequestMapping(Uris.API_MESSAGES)
-    public Result<List<Message>> findUnReadMessages(Principal principal) {
+    public Result<List<Message>> findUnReadMessages() {
         List<Message> mine = messageService.findMine();
         return Result.ok(mine);
     }

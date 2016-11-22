@@ -126,32 +126,34 @@
     </div>
 
     <div class="box-footer">
-      <div class="row">
-        <div class="col-sm-4 border-right">
-          <div class="description-block">
-            <h5 class="description-header">3,200</h5>
-            <span class="description-text">话题</span>
+      <template v-if="profile">
+        <div class="row">
+          <div class="col-sm-6 border-right">
+            <div class="description-block">
+              <h5 class="description-header">{{profile.postCount}}</h5>
+              <span class="description-text">话题</span>
+            </div>
+            <!-- /.description-block -->
           </div>
-          <!-- /.description-block -->
-        </div>
-        <!-- /.col -->
-        <div class="col-sm-4 border-right">
-          <div class="description-block">
-            <h5 class="description-header">13,000</h5>
-            <span class="description-text">回复</span>
+          <!-- /.col -->
+          <div class="col-sm-6">
+            <div class="description-block">
+              <h5 class="description-header">{{profile.replyCount}}</h5>
+              <span class="description-text">回复</span>
+            </div>
+            <!-- /.description-block -->
           </div>
-          <!-- /.description-block -->
+          <!-- /.col -->
+          <!--<div class="col-sm-4">
+            <div class="description-block">
+              <h5 class="description-header">35</h5>
+              <span class="description-text">关注</span>
+            </div>
+            &lt;!&ndash; /.description-block &ndash;&gt;
+          </div>-->
+          <!-- /.col -->
         </div>
-        <!-- /.col -->
-        <div class="col-sm-4">
-          <div class="description-block">
-            <h5 class="description-header">35</h5>
-            <span class="description-text">关注</span>
-          </div>
-          <!-- /.description-block -->
-        </div>
-        <!-- /.col -->
-      </div>
+      </template>
       <!-- /.row -->
     </div>
   </section>
@@ -198,6 +200,7 @@
   <script th:src="@{/static/lib/At.js/dist/js/jquery.atwho.min.js}"></script>
   <script th:inline="javascript" type="text/javascript">
       var postId = /*[[${post.id}]]*/;
+      var authorId = /*[[${post.author.id}]]*/;
       var editor = new Editor({element: $("#reply-content")[0], status: [], upload:"/upload/reply"});
       editor.render();
       var ext = new EditorExt({
@@ -259,7 +262,7 @@
         },
         methods: {
           loadComments: function () {
-            this.$http.get(ms.Urls.replies.format({ctx:_ctx, postId:postId})).then((response) => {
+            this.$http.get(ms.Urls.replies.format({postId:postId})).then((response) => {
               // success callback
               if(response.status == 200 && response.ok) {
                 this.comments =  response.body.content || [];
@@ -305,7 +308,7 @@
             });
           },
           nextPage: function() {
-            var _url = ms.Urls.replies.format({ctx:_ctx, postId:postId});
+            var _url = ms.Urls.replies.format({postId:postId});
             this.$http.get(_url + '?page=' + this.currentPage).then((response) => {
               // success callback
               if(response.status == 200 && response.ok) {
@@ -335,10 +338,12 @@
       var sidebarApp = new Vue({
         el: '#sidebar',
         data: {
+          profile: null,
           nows: null,
           rps: null
         },
         created: function () {
+          this.loadProfile();
           this.loadNow();
           this.loadRelated();
         },
@@ -348,8 +353,22 @@
           }
         },
         methods: {
+          loadProfile:function () {
+            this.$http.get(ms.Urls.profile_id.format({userId: authorId})).then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok && response.body.code == 200) {
+              this.profile =  response.body.data;
+            } else {
+              error(response.msg || '无法拉取个人信息');
+            }
+          }, (response) => {
+              // error callback
+              console.log(response);
+            });
+          },
+
           loadNow: function () {
-            this.$http.get(ms.Urls.posts_now_top5.format({ctx: _ctx})).then((response) => {
+            this.$http.get(ms.Urls.posts_now_top5).then((response) => {
               // success callback
               if(response.status == 200 && response.ok) {
                 this.nows =  response.body;
@@ -360,7 +379,7 @@
             });
           },
           loadRelated: function () {
-            this.$http.get(ms.Urls.posts_related_top5.format({ctx:_ctx, postId:postId})).then((response) => {
+            this.$http.get(ms.Urls.posts_related_top5.format({postId:postId})).then((response) => {
               // success callback
               if(response.status == 200 && response.ok) {
                 this.rps =  response.body;
