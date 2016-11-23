@@ -1,24 +1,26 @@
 package me.micro.bbs.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import me.micro.bbs.enums.Channel;
 import me.micro.bbs.enums.ClientType;
+import me.micro.bbs.security.Permission;
+import me.micro.bbs.security.Role;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 用户
@@ -30,6 +32,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements UserDetails {
 
     // 主键
@@ -134,10 +137,29 @@ public class User implements UserDetails {
     @Column(name = "u_isActive")
     private Boolean isActive;
 
-    @Override
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name="sys_user_role",
+            joinColumns={@JoinColumn(name="user_id")},
+            inverseJoinColumns={@JoinColumn(name="role_id")}
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    // 权限列表
+    @Transient
     @JsonIgnore
+    private Set<Permission> permissions = new HashSet<>();
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if (roles.isEmpty() && permissions.isEmpty())
+            return null;
+
+        List<GrantedAuthority> grantedAuthorities = Lists.newArrayListWithExpectedSize(roles.size() + permissions.size());
+        grantedAuthorities.addAll(roles.stream().map(role -> new SimpleGrantedAuthority(role.getCode())).collect(Collectors.toList()));
+        grantedAuthorities.addAll(permissions.stream().map(permission -> new SimpleGrantedAuthority(permission.getCode())).collect(Collectors.toList()));
+
+        return grantedAuthorities;
     }
 
     @Override
@@ -162,5 +184,25 @@ public class User implements UserDetails {
     @JsonIgnore
     public boolean isEnabled() {
         return this.isActive;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof User)) return false;
+        User other = (User) obj;
+        if (id == null) {
+            if (other.id != null) return false;
+        } else if (!id.equals(other.id)) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
 }

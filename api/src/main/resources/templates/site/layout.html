@@ -108,7 +108,7 @@
             </li>
 
             <!--admin-->
-            <li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')">
               <a th:href="@{/admin}" class="" title="管理中心"><i class="fa fa-cog"></i></a>
             </li>
 
@@ -175,7 +175,8 @@
       <div class="pull-right hidden-xs">
         <b>Version</b> 1.0.0
       </div>
-      <strong>Copyright &copy; 2016 <a href="#">microbbs</a>.</strong> All rights reserved.
+      <strong>本社区由<a href="http://bbs.meiqiu.me">microbbs</a>强力驱动</strong>
+      Copyright &copy; 2016 <a href="http://tripinn.meiqiu.me">tripinn</a>. All rights reserved.
     </div>
     <!-- /.container -->
   </footer>

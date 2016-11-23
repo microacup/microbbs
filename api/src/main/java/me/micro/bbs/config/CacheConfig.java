@@ -8,6 +8,7 @@ import me.micro.bbs.cache.RedisCacheManager;
 import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.support.PostService;
 import me.micro.bbs.reply.support.ReplyService;
+import me.micro.bbs.security.support.PermissionService;
 import me.micro.bbs.tag.support.TagService;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -77,6 +78,15 @@ public class CacheConfig extends CachingConfigurerSupport {
         JavaType replies = typeFactory.constructParametricType(ArrayList.class, ReplyService.CACHE_TYPE);
         JsonRedisTemplate<? extends Object>  repliesTemplate = new JsonRedisTemplate<>(redisConnectionFactory, replies);
         cacheManager.withCache(ReplyService.CACHES_NAME, repliesTemplate, cacheTimeToLive);
+
+        // Permission
+        JavaType permissions = typeFactory.constructCollectionType(ArrayList.class, PermissionService.CACHE_TYPE);
+        JsonRedisTemplate<Object> permissionsTemplate = new JsonRedisTemplate<>(redisConnectionFactory, permissions);
+        cacheManager.withCache(PermissionService.CACHES_NAME, permissionsTemplate, cacheTimeToLive);
+
+        JsonRedisTemplate<? extends Object> permissionTemplate = new JsonRedisTemplate<>(redisConnectionFactory, PermissionService.CACHE_TYPE);
+        cacheManager.withCache(PermissionService.CACHE_NAME, permissionTemplate, cacheTimeToLive);
+
         return cacheManager;
     }
 

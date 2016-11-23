@@ -34,10 +34,11 @@ public class MicrobbsApplication extends SpringBootServletInitializer {
 
 		return (container -> {
 			ErrorPage error401Page = new ErrorPage(HttpStatus.UNAUTHORIZED, "/404");
+			ErrorPage error403Page = new ErrorPage(HttpStatus.FORBIDDEN, "/404");
 			ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/404");
 			ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/404");
 
-			container.addErrorPages(error401Page, error404Page, error500Page);
+			container.addErrorPages(error401Page, error403Page, error404Page, error500Page);
 		});
 	}
 

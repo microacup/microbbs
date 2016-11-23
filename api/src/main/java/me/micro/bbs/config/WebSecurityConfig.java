@@ -1,5 +1,6 @@
 package me.micro.bbs.config;
 
+import me.micro.bbs.security.runtime.MyFilterSecurityInterceptor;
 import me.micro.bbs.user.support.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.header.writers.HstsHeaderWriter;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
@@ -24,6 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         configureHeaders(http.headers());
+        http.addFilterBefore(myFilterSecurityInterceptor(), FilterSecurityInterceptor.class);
         http.authorizeRequests()
                 .antMatchers("/","/static/**", "/test/**").permitAll()
                 .anyRequest().authenticated()
@@ -64,5 +67,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new UserService();
     }
 
+    @Bean
+    public MyFilterSecurityInterceptor myFilterSecurityInterceptor() {
+        return new MyFilterSecurityInterceptor();
+    }
 
 }
