@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,17 @@ import java.util.List;
 @Controller
 @RequestMapping("/simple")
 public class SimplePostController {
+
+    @GetMapping
+    public String index(HttpServletRequest request) {
+        String entry = (String) WebUtils.getSessionAttribute(request, "entry");
+        if (entry != null) {
+            return "redirect:" + entry;
+        }
+
+        return "redirect:/404";
+    }
+
     /**
      * 按照分类下的标签展示话题
      *
@@ -37,10 +50,13 @@ public class SimplePostController {
      * @return
      */
     @GetMapping("/category/{categoryId}/tag/{tagId}")
-    public String postsByTag(@PathVariable("categoryId") long categoryId,
+    public String postsByTag(HttpServletRequest request,
+                             @PathVariable("categoryId") long categoryId,
                              @PathVariable("tagId") long tagId,
                              @RequestParam(defaultValue = "1") int page,
                              Model model) {
+        WebUtils.setSessionAttribute(request, "entry", request.getRequestURL().toString());
+
         Category activeCategory = categoryService.findOne(categoryId);
         if (activeCategory == null) return "site/404";
 

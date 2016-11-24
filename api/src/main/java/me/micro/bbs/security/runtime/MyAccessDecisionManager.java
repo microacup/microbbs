@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 @Service
 public class MyAccessDecisionManager implements AccessDecisionManager {
@@ -25,17 +24,16 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
         if (null == configAttributes || configAttributes.size() <= 0) {
             return;
         }
-        ConfigAttribute c;
-        String needRole;
-        for (Iterator<ConfigAttribute> iter = configAttributes.iterator(); iter.hasNext(); ) {
-            c = iter.next();
-            needRole = c.getAttribute();
+
+        for (ConfigAttribute attr : configAttributes) {
+            String attribute = attr.getAttribute();
             for (GrantedAuthority ga : authentication.getAuthorities()) {
-                if (needRole.trim().equals(ga.getAuthority())) {
+                if (attribute.equals(ga.getAuthority())) {
                     return;
                 }
             }
         }
+
         throw new AccessDeniedException("no right");
     }
 

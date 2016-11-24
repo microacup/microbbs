@@ -143,6 +143,7 @@ public class User implements UserDetails {
             joinColumns={@JoinColumn(name="user_id")},
             inverseJoinColumns={@JoinColumn(name="role_id")}
     )
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
     // 权限列表
@@ -151,6 +152,7 @@ public class User implements UserDetails {
     private Set<Permission> permissions = new HashSet<>();
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (roles.isEmpty() && permissions.isEmpty())
             return null;

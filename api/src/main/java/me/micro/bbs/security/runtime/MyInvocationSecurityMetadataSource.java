@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class MyInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
@@ -27,23 +27,6 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
     private PermissionService permissionService;
 
     private HashMap<String, Collection<ConfigAttribute>> map = null;
-
-    /**
-     * 加载资源，初始化资源变量
-     */
-    public void loadResourceDefine() {
-        map = new HashMap<>();
-        Collection<ConfigAttribute> array;
-        ConfigAttribute cfg;
-        List<Permission> permissions = permissionService.findAll();
-        for (Permission permission : permissions) {
-            array = new ArrayList<>();
-            cfg = new SecurityConfig(permission.getCode());
-            array.add(cfg);
-            map.put(permission.getUrl(), array);
-        }
-        log.info("security info load success!!");
-    }
 
 
     /**
@@ -56,18 +39,21 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object)
             throws IllegalArgumentException {
-        if (map == null) loadResourceDefine();
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
-        AntPathRequestMatcher matcher;
-        String resUrl;
-        for (Iterator<String> iter = map.keySet().iterator(); iter.hasNext(); ) {
-            resUrl = iter.next();
-            matcher = new AntPathRequestMatcher(resUrl);
-            if (matcher.matches(request)) {
-                return map.get(resUrl);
+        List<ConfigAttribute> attrs = new ArrayList<>();
+        try {
+            List<Permission> permissions = permissionService.findAll();
+            for (Permission p : permissions) {
+                AntPathRequestMatcher matcher = new AntPathRequestMatcher(p.getUrl());
+                if (matcher.matches(request)) {
+                    attrs.add(new SecurityConfig(p.getCode()));
+                }
             }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-        return null;
+
+        return attrs;
     }
 
     /**
