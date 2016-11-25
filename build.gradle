@@ -6,7 +6,7 @@ buildscript {
 	}
 	repositories {
 		mavenLocal()
-		mavenCentral()
+		jcenter()
 		maven { url springRepo }
 		maven { url springSnapshot }
 	}
@@ -43,7 +43,7 @@ configure(javaProjects) {
 
 	repositories {
 		mavenLocal()
-		mavenCentral()
+		jcenter()
 		maven { url springRepo }
 		maven { url springSnapshot }
 	}
