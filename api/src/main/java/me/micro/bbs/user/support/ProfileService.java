@@ -18,7 +18,14 @@ public class ProfileService {
 
     // TODO Cachable
     public UserProfile profile(Long userId) {
-        return profileRepository.findByUserId(userId);
+        UserProfile profile = profileRepository.findByUserId(userId);
+        if (profile == null) {
+            profile = new UserProfile();
+            profile.setUserId(userId);
+            profileRepository.save(profile);
+        }
+
+        return profile;
     }
 
 

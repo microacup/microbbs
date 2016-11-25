@@ -32,45 +32,45 @@ public class UserProfile {
 
     // 发表话题数
     @Column(nullable = false)
-    private Long postCount;
+    private Long postCount= 0L;
 
     // 发表回复数
     @Column(nullable = false)
-    private Long replyCount;
+    private Long replyCount= 0L;
 
     // 关注数
     @Column(nullable = false)
-    private Long followCount;
+    private Long followCount= 0L;
 
     // 粉丝数
     @Column(nullable = false)
-    private Long fansCount;
+    private Long fansCount= 0L;
 
     // 收藏帖子数
     @Column(nullable = false)
-    private Long favorCount;
+    private Long favorCount= 0L;
 
     // 关注标签数
     @Column(nullable = false)
-    private Long tagsCount;
+    private Long tagsCount = 0L;
 
     // 赞同
     @Column(nullable = false)
-    private Long upCount;
+    private Long upCount = 0L;
 
     // 反对
     @Column(nullable = false)
-    private Long downCount;
+    private Long downCount = 0L;
 
     //公开帖子列表
     @Column(nullable = false)
-    private Boolean pubPost;
+    private Boolean pubPost = true;
 
     // 公开回复列表
     @Column(nullable = false)
-    private Boolean pubReply;
+    private Boolean pubReply = true;
 
     // 公开活动
     @Column(nullable = false)
-    private Boolean pubActive;
+    private Boolean pubActive = true;
 }

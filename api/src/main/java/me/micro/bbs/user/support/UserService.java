@@ -6,6 +6,7 @@ import me.micro.bbs.security.support.PermissionService;
 import me.micro.bbs.security.support.RoleService;
 import me.micro.bbs.user.User;
 import me.micro.bbs.user.UserForm;
+import me.micro.bbs.user.UserProfile;
 import me.micro.bbs.user.UserSocial;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,9 @@ import java.util.Set;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private UserSocialRepository socialRepository;
@@ -97,6 +101,11 @@ public class UserService implements UserDetailsService {
         Set<Role> roles = new HashSet<Role>(){{add(userRole);}};
         user.setRoles(roles);
         User saved = userRepository.save(user);
+
+        // 资料
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUserId(user.getId());
+        profileRepository.save(userProfile);
 
         UserSocial userSocial = new UserSocial();
         userSocial.setNickname(userForm.getOpenNickname());
