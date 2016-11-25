@@ -9,6 +9,7 @@ import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.support.PostService;
 import me.micro.bbs.reply.support.ReplyService;
 import me.micro.bbs.security.support.PermissionService;
+import me.micro.bbs.security.support.RoleService;
 import me.micro.bbs.tag.support.TagService;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -86,6 +87,10 @@ public class CacheConfig extends CachingConfigurerSupport {
 
         JsonRedisTemplate<? extends Object> permissionTemplate = new JsonRedisTemplate<>(redisConnectionFactory, PermissionService.CACHE_TYPE);
         cacheManager.withCache(PermissionService.CACHE_NAME, permissionTemplate, cacheTimeToLive);
+
+        // Role
+        JsonRedisTemplate<? extends Object> roleTemplte = new JsonRedisTemplate<>(redisConnectionFactory, RoleService.CACHE_TYPE);
+        cacheManager.withCache(RoleService.CACHE_NAME, roleTemplte, cacheTimeToLive);
 
         return cacheManager;
     }

@@ -1,6 +1,6 @@
 package me.micro.bbs.security;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.EqualsAndHashCode;
@@ -52,6 +52,6 @@ public class Permission implements Serializable {
     private Long parentId;
 
     @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 }

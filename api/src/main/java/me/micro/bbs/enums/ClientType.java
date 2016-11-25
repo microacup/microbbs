@@ -9,7 +9,6 @@ public enum ClientType {
     ANDROID("Android"),
     IOS("IOS"),
     WEB("Web"),
-    CLIENT("客户端"),
     OTHER("other")
     ;
     private String title;

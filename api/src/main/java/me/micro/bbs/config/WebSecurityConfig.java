@@ -1,14 +1,20 @@
 package me.micro.bbs.config;
 
 import me.micro.bbs.security.runtime.MyFilterSecurityInterceptor;
+import me.micro.bbs.security.social.SocialAuthenticationProvider;
 import me.micro.bbs.user.support.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.header.writers.HstsHeaderWriter;
@@ -28,10 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configureHeaders(http.headers());
         http.addFilterBefore(myFilterSecurityInterceptor(), FilterSecurityInterceptor.class);
         http.authorizeRequests()
-                .antMatchers("/","/static/**", "/test/**").permitAll()
+                .antMatchers("/","/static/**", "/test/**", "/oauth/**").permitAll()
                 .anyRequest().authenticated()
                 .and().rememberMe().rememberMeServices(rememberMeServices())
-                .and().formLogin().permitAll()
+                .and().formLogin().loginPage("/login").permitAll()
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").permitAll()
                 .and().csrf();
     }
@@ -47,19 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.eraseCredentials(true)
-                .userDetailsService(userService())
-                ;
-    }
-
-    /*@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new StandardPasswordEncoder();
-    }*/
-
-    @Bean
-    public TokenBasedRememberMeServices rememberMeServices() {
-        return new TokenBasedRememberMeServices("remember-me-key", userService());
+        auth.authenticationProvider(socialAuthenticationProvider());
+        auth.authenticationProvider(authenticationProvider());
     }
 
     @Bean
@@ -68,8 +63,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public AuthenticationProvider socialAuthenticationProvider() {
+        return new SocialAuthenticationProvider();
+    }
+
+    @Bean
+    public TokenBasedRememberMeServices rememberMeServices() {
+        return new TokenBasedRememberMeServices("remember-me-key", userService());
+    }
+
+    @Override
+    @Bean(name="authenticationManager")
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
+    @Bean
     public MyFilterSecurityInterceptor myFilterSecurityInterceptor() {
         return new MyFilterSecurityInterceptor();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

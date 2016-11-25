@@ -30,3 +30,56 @@ h6, .h6 { font-size: $font-size-h6; }
 .notifications-list {
   font-size: 12px;
 }
+
+
+[class*=icon-oauth-] {
+  display: inline-block;
+  background-image: url(#{$images-path}/icon-sn.svg);
+  background-repeat: no-repeat;
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  border-radius: 14px;
+  background-size: auto 56px;
+  margin: 0 10px;
+}
+
+.icon-oauth-weibo {
+  background-color: #e90d24;
+  background-position: -56px 0;
+}
+
+.icon-oauth-weibo-reverse {
+  background-position: -56px -28px;
+}
+
+.icon-oauth-weixin {
+  background-color: #00b500;
+  background-position: -252px 0;
+}
+
+.icon-oauth-weixin-reverse {
+  background-position: -252px -28px;
+}
+
+.icon-oauth-qq {
+  background-color: #0098e6;
+  background-position: -84px 0;
+}
+
+.icon-oauth-qq-reverse {
+  background-position: -84px -28px;
+}
+
+.reg-entry {
+  position: absolute;
+  top: 44px;
+  right: 20px;
+}
+
+.social-auth-links {
+  background: #f3f7fb;
+  padding: 20px;
+  margin: 20px -20px -20px;
+  text-align: center;
+}

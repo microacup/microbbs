@@ -21,6 +21,7 @@ import javax.persistence.Table;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
+
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

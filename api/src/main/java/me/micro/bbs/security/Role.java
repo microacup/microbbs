@@ -1,6 +1,7 @@
 package me.micro.bbs.security;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.EqualsAndHashCode;
@@ -40,15 +41,16 @@ public class Role implements Serializable {
     private String title;
 
     @ManyToMany(mappedBy = "roles" ,fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinTable(
             name="sys_role_permission",
             joinColumns={@JoinColumn(name="role_id")},
             inverseJoinColumns={@JoinColumn(name="permission_id")}
     )
+    @JsonBackReference("permissionsReference")
     private Set<Permission> permissions = new HashSet<>();
 
 }

@@ -45,7 +45,7 @@ public class User implements UserDetails {
     private String username;
 
     // 昵称
-    @Column(name = "u_nick")
+    @Column(name = "u_nick", unique = true)
     private String nick;
 
     // 一句话介绍
@@ -69,7 +69,7 @@ public class User implements UserDetails {
     @Column(name = "u_name")
     private String name;
 
-    @Column(name = "u_gender")
+    @Column(name = "u_gender", nullable = false)
     private int gender;
 
     // 公司/学校/机构
@@ -108,11 +108,11 @@ public class User implements UserDetails {
     private String idCard;
 
     // 注册时间
-    @Column(name = "u_registerTime")
+    @Column(name = "u_registerTime", nullable = false)
     private Date registerTime;
 
     // 登录次数
-    @Column(name = "u_loginTimes")
+    @Column(name = "u_loginTimes", nullable = false)
     private Integer loginTimes = 0;
 
     // 最后登录时间
@@ -134,10 +134,10 @@ public class User implements UserDetails {
     private ClientType client;
 
     // 账号是否激活
-    @Column(name = "u_isActive")
-    private Boolean isActive;
+    @Column(name = "u_isActive", nullable = false)
+    private Boolean isActive = true;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="sys_user_role",
             joinColumns={@JoinColumn(name="user_id")},

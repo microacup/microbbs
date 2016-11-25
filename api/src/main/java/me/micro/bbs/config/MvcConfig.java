@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -26,9 +27,12 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("redirect:/hot");
+        registry.addViewController("/login").setViewName("login");
         registry.addViewController("/explore").setViewName("forward:/hot");
         registry.addViewController("/admin").setViewName("admin/index");
         registry.addViewController("/404").setViewName("site/404");
+        registry.addViewController("/500").setViewName("site/500");
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
 
     @Override
@@ -73,5 +77,6 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         }
 
     }
+
 
 }
