@@ -1,0 +1,319 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+  <title>标签管理</title>
+</head>
+<body>
+<section layout:fragment="content" class="content">
+  <div class="box">
+    <div class="box-header">
+      <h3 class="box-title">标签管理</h3>
+    </div>
+    <!-- /.box-header -->
+    <div id="toolbar" class="btn-group">
+      <button id="btn-add" class="btn btn-default" data-toggle="modal" data-target="#addModal"> 新增 </button>
+      <button id="btn-edit" class="btn btn-default"> 修改 </button>
+      <button id="btn-delete" class="btn btn-default"> 删除 </button>
+    </div>
+    <div class="box-body">
+      <table id="tags-table"
+             class="table table-no-bordered table-striped bbs-table"
+             data-show-export="true"
+             data-unique-id="id"
+             data-toolbar="#toolbar"
+             data-search="true"
+             data-show-refresh="true"
+             data-detail-view="false"
+             data-detail-formatter="categoryFormatter"
+             data-show-toggle="false"
+             data-show-footer="false"
+             data-side-pagination="client"
+             data-ajax="loadCategories"
+             data-page-size="50"
+             data-page-list="[50, 100, ALL]"
+             data-pagination="true"
+             data-filter-control="true"
+             data-filter-show-clear="true"
+             data-click-to-select = "true"
+             data-toggle="table">
+        <thead>
+        <tr>
+          <th data-radio="true"></th>
+          <th data-field="id" data-sortable="true">ID</th>
+          <th data-field="title" data-sortable="true" data-filter-control="input">标题</th>
+          <th data-field="code" data-sortable="true" data-filter-control="input">代码</th>
+          <th data-field="categoryId" data-sortable="true" data-filter-control="select" data-formatter="categoryFormatter">所属分类</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+    <!-- /.box-body -->
+  </div>
+  <!-- /.box -->
+
+  <!--新增-->
+  <div class="modal fade" id="addModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">新增标签</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" id="add-form" method="post" th:action="@{/api/admin/tags}">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="c-code" class="col-sm-2 control-label">代码：</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="c-code" placeholder="请输入代码（必填）">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="c-title" class="col-sm-2 control-label">标题：</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="c-title" placeholder="请输入标题（必填）">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="e-category" class="col-sm-2 control-label">分类：</label>
+                <div class="col-sm-10">
+                  <select id="c-category" name="category"  class="form-control">
+                    <option th:each="centry : ${categories}" th:value="${centry.key}" th:text="${centry.key + ' - ' + centry.value.title + ' - ' + centry.value.code}">option 1</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="submit-add">新增</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--编辑-->
+  <div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">修改标签</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" id="edit-form">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="e-code" class="col-sm-2 control-label">代码：</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="e-code" placeholder="请输入代码（必填）">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="e-title" class="col-sm-2 control-label">标题：</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="e-title" placeholder="请输入标题（必填）">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="e-category" class="col-sm-2 control-label">分类：</label>
+                <div class="col-sm-10">
+                  <select id="e-category" name="category" class="form-control">
+                    <option th:each="centry : ${categories}" th:value="${centry.key}" th:text="${centry.key + ' - ' + centry.value.title + ' - ' + centry.value.code}">option 1</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="submit-edit">更新</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--删除-->
+  <div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">删除标签</h4>
+        </div>
+        <div class="modal-body">
+          <form  role="form" id="delete-form">
+            <div class="form-group">
+              <div class="box-body">
+                <label for="d-code" class="control-label" id="label-d-code">输入代码来确认要删除的标签：</label>
+                <input type="text" class="form-control" id="d-code" placeholder="请输入要删除的代码（必填）">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-danger" id="submit-delete">删除</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</section>
+
+<div layout:fragment="scripts">
+  <script src="//cdn.bootcss.com/bootstrap-table/1.10.1/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+  <script th:inline="javascript"  type="text/javascript">
+    var categories = /*[[${categories}]]*/
+
+    function loadCategories (params) {
+      $.get(ms.Urls.tags ,function (result) {
+                params.success({
+                  data:  result
+                });
+      });
+    }
+
+    function categoryFormatter(value, row, index) {
+      var _c = categories[value];
+      return value + ' - ' + _c.title + ' - ' + _c.code;
+    }
+
+    var $table = $('#tags-table');
+    $('#btn-add').click(function () {
+      var _code = $('#c-code');
+      var _title= $('#c-title');
+      _code.val('');
+      _title.val('');
+    });
+
+    $('#submit-add').click(function () {
+      var _code = $('#c-code');
+      var _title= $('#c-title');
+      var _csrf = $("input[name='_csrf']").val();
+      var jsonData = {
+        code: _code.val().trim(),
+        title: _title.val().trim(),
+        categoryId: $('#c-category').val()
+      };
+
+      $.ajax({
+        contentType: "application/json;charset=utf-8",
+        dataType : 'json',
+        url: ms.Urls.tags + "?_csrf=" + _csrf,
+        data: JSON.stringify(jsonData),
+        type: 'POST',
+        success: function (result) {
+          if(result && result.code == 200) {
+            $table.bootstrapTable('append', result.data);
+            $table.bootstrapTable('scrollTo', 'bottom');
+            $('#addModal').modal('hide');
+          } else {
+            alert(result.msg || '添加失败');
+          }
+        },
+        error:function(xhr, status, _e) {
+          error(_e || '服务暂时遇到了一个问题');
+          console.log(_e);
+        }
+      });
+    });
+
+    $('#btn-edit').click(function () {
+      var selections = $table.bootstrapTable('getSelections');
+      if (!selections || selections.length == 0) {
+        alert('请先选择标签');
+        return;
+      }
+
+      $('#editModal').modal('show');
+      $('#editModal').data('tag-id',selections[0].id);
+      $('#e-code').val(selections[0].code);
+      $('#e-title').val(selections[0].title);
+      $('#e-category').val(selections[0].categoryId);
+    });
+
+    $('#submit-edit').click(function () {
+      var _id = $('#editModal').data('tag-id');
+      var _code = $('#e-code').val().trim();
+      var _title = $('#e-title').val().trim();
+      var _csrf = $("input[name='_csrf']").val();
+      var jsonData = {
+        code: _code,
+        title: _title,
+        categoryId: $("#e-category").val()
+      };
+
+      $.ajax({
+        contentType: "application/json;charset=utf-8",
+        dataType : 'json',
+        url: ms.Urls.tags_edit.format({id:_id}) + "?_csrf=" + _csrf,
+        data: JSON.stringify(jsonData),
+        type: 'PUT',
+        success: function (result) {
+          if(result && result.code == 200) {
+            $table.bootstrapTable('updateByUniqueId', {id: _id, row: result.data });
+            $('#editModal').modal('hide');
+          } else {
+            alert(result.msg || '编辑失败');
+          }
+        },
+        error:function(xhr, status, _e) {
+          error(_e || '服务暂时遇到了一个问题');
+          console.log(_e);
+        }
+      });
+    });
+
+    // delete
+    $('#btn-delete').click(function () {
+      var selections = $table.bootstrapTable('getSelections');
+      if (!selections || selections.length == 0) {
+        alert('请先选择标签');
+        return;
+      }
+
+      $('#deleteModal').modal('show');
+      $('#deleteModal').data('tag-id',selections[0].id);
+      $('#d-code').val('');
+    });
+
+    $('#submit-delete').click(function () {
+      var _id = $('#deleteModal').data('tag-id');
+      var _csrf = $("input[name='_csrf']").val();
+
+      var selection = $table.bootstrapTable('getSelections')[0];
+      if (selection.code !== $('#d-code').val()) {
+        $('#label-d-code').html('请输入正确的代码');
+        $('#d-code').parents('.form-group').addClass('has-error');
+        return;
+      }
+
+      $.ajax({
+        contentType: "application/json;charset=utf-8",
+        dataType : 'json',
+        url: ms.Urls.tags_edit.format({id:_id}) + "?_csrf=" + _csrf,
+        type: 'delete',
+        success: function (result,status,xhr) {
+          if(result.code == 200) {
+            $table.bootstrapTable('remove', {field: 'id', values: [_id]});
+          } else {
+            alert(result.msg || '删除失败');
+          }
+          $('#deleteModal').modal('hide');
+        },
+        error:function(xhr, status, _e) {
+          error(_e || '服务暂时遇到了一个问题');
+          console.log(_e);
+        }
+      });
+    });
+  </script>
+</div>
+</body>
+</html>

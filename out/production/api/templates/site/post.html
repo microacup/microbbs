@@ -1,0 +1,416 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="site/layout">
+<head>
+  <title th:inline="text">[[#{app.title}]]</title>
+  <link rel="stylesheet" th:href="@{/static/lib/editor/editor.css}" />
+  <link rel="stylesheet" th:href="@{/static/lib/At.js/dist/css/jquery.atwho.min.css}" />
+  <style type="text/css">
+    /* app.css & editor.css 顺序*/
+    .CodeMirror {
+      height: 114px;
+    }
+    :-webkit-full-screen {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+<!--post header-->
+<section layout:fragment="top" class="post-header">
+</section><!--/post-->
+
+<!--content-->
+<main layout:fragment="content" id="posts">
+  <section class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="post-title text-lg"  th:utext="${post.title}">title</h3>
+      <i class="iconfont icon-zhiding icon-micro"
+         th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
+      <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
+      <div class="post-footer">
+        <a class="tag tag-sm" th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
+           th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
+        <span class="post-author">
+          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" class="author-name"  th:utext="${post.author.nick}">user</a> 发布于
+        </span>
+        <span class="post-time" th:utext='${#dates.format(post.createdTime, "yyyy-MM-dd HH:mm:ss")}'>1天前</span>
+        <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+        <span class="post-time-last" th:if="${post.lastReplyTime}" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:mm:ss")}'>1小时前</span>
+        <span class="post-read-count"><span th:text="${post.readCount + 1}">A</span> 次阅读</span>
+      </div>
+    </div>
+    <div class="box-body post-content" th:utext="${post.renderedContent}">
+      content
+    </div>
+
+    <div class="box-footer">
+      <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> 分享</button>
+      <button type="button" class="btn btn-default btn-xs"><i class="fa fa-bookmark"></i> 收藏</button>
+      <a href="#do-comments" type="button" class="btn btn-default btn-xs pull-right"><i class="fa fa-reply"></i> 回复</a>
+    </div>
+  </section>
+
+  <!--<section class="box box-danger">
+    <div class="box-header with-border">
+      <h3 class="box-title">热门回复</h3>
+      <div class="box-tools">
+        <button type="button" title="折叠/展开" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+  </section>-->
+
+  <section class="box box-default" id="comments">
+    <div class="box-header with-border">
+      <h3 class="box-title"><template>{{totalComments}}</template> 次回复</h3>
+      <div class="box-tools">
+        <ul id="pagination-comments" class="pagination pagination-sm inline"></ul>
+      </div>
+    </div>
+
+    <div class="box-footer box-comments">
+      <template v-for="comment in comments">
+        <div class="box-comment" :id="'floor' + comment.floor">
+          <!-- User image -->
+          <img class="img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="User Image">
+          <div class="comment-text">
+            <div class="username">
+              <span class="reply-author">{{comment.author.nick}}</span>
+              <a class="text-muted floor" :href="'#floor' + comment.floor"> # {{comment.floor}}</a>
+              <span class="text-muted time"><i class="fa fa-clock-o"></i> {{comment.createdTime | moment}}</span>
+              <a class="pull-right comment-action action-down" title="收藏"><i class="fa fa-bookmark"></i></a>
+              <a class="pull-right comment-action action-like" title="反对"><i class="fa fa-thumbs-o-down"></i></a>
+              <a class="pull-right comment-action action-up" title="赞同"><i class="fa fa-thumbs-o-up"></i></a>
+              <a href="#do-comments" class="pull-right comment-action action-reply" title="回复此楼"><i class="fa fa-reply"></i></a>
+            </div><!-- /.username -->
+            <div class="comment-content" v-html="comment.renderedContent"></div>
+          </div>
+          <!-- /.comment-text -->
+        </div>
+      </template>
+    </div>
+  </section>
+
+  <section class="box box-default box-do-comments" id="do-comments">
+    <div class="box-header with-border">
+      <h3 class="box-title">发表回复</h3>
+    </div>
+    <!-- /.box-footer -->
+    <div class="box-footer">
+      <form action="#" method="post">
+        <input id="comment-csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <img class="img-responsive img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="Alt Text">
+        <!-- .img-push is used to add margin to elements next to floating images -->
+        <div class="img-push">
+          <div class="form-group">
+            <textarea name="reply-content" id="reply-content" rows="3" class="form-control" placeholder="在此输入回复内容，支持Markdown语法哦~"></textarea>
+          </div>
+          <button type="button" id="submit-comment" class="btn btn-info btn-sm btn-flat pull-right">提交回复</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main><!--/content-->
+
+<aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="sidebar">
+
+  <section class="sidebar box box-widget widget-user">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header avatar-bg text-center">
+      <h3 class="widget-user-username" th:utext="${post.author.nick}">author</h3>
+      <h5 class="widget-user-desc" th:utext="${post.author.info}">我的愿望是，世界和平</h5>
+      <div class="widget-user-image">
+        <img th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" data-adaptive-background class="img-circle" alt="User Image" />
+      </div>
+    </div>
+
+    <div class="box-footer">
+      <template v-if="profile">
+        <div class="row">
+          <div class="col-sm-6 border-right">
+            <div class="description-block">
+              <h5 class="description-header">{{profile.postCount}}</h5>
+              <span class="description-text">话题</span>
+            </div>
+            <!-- /.description-block -->
+          </div>
+          <!-- /.col -->
+          <div class="col-sm-6">
+            <div class="description-block">
+              <h5 class="description-header">{{profile.replyCount}}</h5>
+              <span class="description-text">回复</span>
+            </div>
+            <!-- /.description-block -->
+          </div>
+          <!-- /.col -->
+          <!--<div class="col-sm-4">
+            <div class="description-block">
+              <h5 class="description-header">35</h5>
+              <span class="description-text">关注</span>
+            </div>
+            &lt;!&ndash; /.description-block &ndash;&gt;
+          </div>-->
+          <!-- /.col -->
+        </div>
+      </template>
+      <!-- /.row -->
+    </div>
+  </section>
+
+
+  <!--相关话题-->
+  <section class="sidebar box box-success">
+    <div class="box-header with-border">
+      <h3 class="box-title">相关话题</h3>
+    </div>
+    <div class="box-body no-padding">
+      <ul class="list index-nows">
+        <template v-for="rp in rps">
+          <li class="item"><a target="_blank" :href="_ctx + '/post/' + rp.id">{{rp.title}}</a></li>
+        </template>
+      </ul>
+    </div>
+  </section><!--/相关话题-->
+
+  <!--此刻-->
+  <section class="sidebar box box-info">
+    <div class="box-header with-border">
+      <h3 class="box-title">此刻</h3>
+    </div>
+    <div class="box-body no-padding">
+      <ul class="list index-nows">
+        <template v-for="n in nows">
+          <li class="item"><a target="_blank" :href="_ctx + '/post/' + n.id">{{n.title}}</a></li>
+        </template>
+      </ul>
+    </div>
+  </section><!--/此刻-->
+
+</aside>
+
+<div layout:fragment="scripts">
+  <script type="text/javascript" th:src="@{/static/lib/webuploader/webuploader.withoutimage.js}"></script>
+  <!--<script src="//cdn.bootcss.com/markdown-it/8.1.0/markdown-it.min.js"></script>-->
+  <script type="text/javascript" src="//cdn.bootcss.com/markdown-it/3.0.3/markdown-it.min.js"></script>
+  <script type="text/javascript" th:src="@{/static/lib/editor/editor.js}"></script>
+  <script type="text/javascript" th:src="@{/static/lib/editor/ext.js}"></script>
+  <script src="//cdn.bootcss.com/moment.js/2.15.2/moment-with-locales.min.js"></script>
+  <script th:src="@{/static/lib/Caret.js/dist/jquery.caret.min.js}"></script>
+  <script th:src="@{/static/lib/At.js/dist/js/jquery.atwho.min.js}"></script>
+  <script th:inline="javascript" type="text/javascript">
+      var postId = /*[[${post.id}]]*/;
+      var authorId = /*[[${post.author.id}]]*/;
+      var editor = new Editor({element: $("#reply-content")[0], status: [], upload:"/upload/reply"});
+      editor.render();
+      var ext = new EditorExt({
+        upload: _ctx + '/upload/reply'
+      });
+
+      var author = $('.author-name').text();
+
+      $('#submit-comment').click(submitComment);
+      var $input = $(editor.codemirror.display.input);
+      $input.keydown(function(e){
+        if(e.ctrlKey && e.which == 13 ) {
+          submitComment(e);
+        }
+      });
+      function submitComment (e) {
+        // 发表评论
+        var _csrf = $('#comment-csrf').val();
+        var _content = editor.codemirror.getValue();
+        var jsonData = {content: _content, postId:postId};
+
+        $.ajax(ms.Urls.do_reply+'?_csrf=' + _csrf, {
+          type: 'POST',
+          contentType: "application/json;charset=utf-8",
+          dataType : 'json',
+          data: JSON.stringify(jsonData),
+          success: function (result) {
+            if (result.code == 200) {
+              commentsApp.comments.push(result.data);
+              commentsApp.totalComments += 1;
+              editor.codemirror.setValue('');
+            } else {
+              error(result.msg || '回复失败');
+            }
+
+          },
+          error:function(xhr, status, _e) {
+            error(_e ||xhr.responseJSON.message|| '服务暂时遇到了一个问题');
+            console.log(_e);
+          }
+        })
+      }
+
+      var commentsApp = new Vue({
+        el: '#comments',
+        data: {
+          comments: null,
+          totalComments: 0,
+          totalPages: 1,
+          currentPage: 1
+        },
+        created: function () {
+           this.loadComments();
+        },
+        filters: {
+          moment: function (date) {
+            return moment(date).format('YYYY-MM-DD HH:mm');
+          }
+        },
+        methods: {
+          loadComments: function () {
+            this.$http.get(ms.Urls.replies.format({postId:postId})).then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                this.comments =  response.body.content || [];
+                this.totalComments = response.body.totalElements;
+                this.totalPages = response.body.totalPages || 1;
+
+                var names = [author];
+                for(var i = this.comments.length; i--;) {
+                  names.push(this.comments[i].author.nick);
+                }
+                $.unique(names);
+                ating(names);
+
+
+                // 分页
+                var defaultOption = {
+                  hideOnlyOnePage: true,
+                  initiateStartPageClick: false,
+                  first: '«',
+                  prev:'←',
+                  next:'→',
+                  last:'»',
+                  disabledClass: 'disabled hidden',
+                  startPage: this.currentPage,
+                  totalPages: this.totalPages || 1,
+                  visiblePages: 3,
+                  onPageClick: function (event, page) {
+                    if(commentsApp.currentPage !== page) {
+                      commentsApp.currentPage = page;
+                      commentsApp.nextPage();
+                    }
+                  }
+                };
+                $('#pagination-comments').twbsPagination(defaultOption);
+              } else {
+                console.log(response);
+                error(response.statusText || '数据错误');
+              }
+            }, (response) => {
+              // error callback
+              console.log(response);
+            });
+          },
+          nextPage: function() {
+            var _url = ms.Urls.replies.format({postId:postId});
+            this.$http.get(_url + '?page=' + this.currentPage).then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                this.comments =  response.body.content;
+                this.totalComments = response.body.totalElements;
+                this.totalPages = response.body.totalPages;
+
+                // at
+                var names = [author];
+                for(var i = this.comments.length; i--;) {
+                  names.push(this.comments[i].author.nick);
+                }
+                $.unique(names);
+                ating(names);
+              } else {
+                console.log(response);
+                error(response.statusText || '数据错误');
+              }
+            }, (response) => {
+                // error callback
+                console.log(response);
+              });
+            }
+          }
+      });
+
+      var sidebarApp = new Vue({
+        el: '#sidebar',
+        data: {
+          profile: null,
+          nows: null,
+          rps: null
+        },
+        created: function () {
+          this.loadProfile();
+          this.loadNow();
+          this.loadRelated();
+        },
+        filters: {
+          moment: function (date) {
+            return moment(date).format('YYYY-MM-DD HH:mm');
+          }
+        },
+        methods: {
+          loadProfile:function () {
+            this.$http.get(ms.Urls.profile_id.format({userId: authorId})).then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok && response.body.code == 200) {
+              this.profile =  response.body.data;
+            } else {
+              error(response.msg || '无法拉取个人信息');
+            }
+          }, (response) => {
+              // error callback
+              console.log(response);
+            });
+          },
+
+          loadNow: function () {
+            this.$http.get(ms.Urls.posts_now_top5).then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                this.nows =  response.body;
+              }
+            }, (response) => {
+              // error callback
+              console.log(response);
+            });
+          },
+          loadRelated: function () {
+            this.$http.get(ms.Urls.posts_related_top5.format({postId:postId})).then((response) => {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                this.rps =  response.body;
+              }
+            }, (response) => {
+              // error callback
+              console.log(response);
+            });
+          }
+        }
+      });
+      
+      function ating(who) {
+        // at.js 配置
+        var codeMirrorGoLineUp = CodeMirror.commands.goLineUp;
+        var codeMirrorGoLineDown = CodeMirror.commands.goLineDown;
+        var codeMirrorNewlineAndIndent = CodeMirror.commands.newlineAndIndent;
+        $input.atwho({
+          at: '@',
+          data: who
+        }).on('shown.atwho', function () {
+          CodeMirror.commands.goLineUp = $.noop;
+          CodeMirror.commands.goLineDown = $.noop;
+          CodeMirror.commands.newlineAndIndent = $.noop;
+        }).on('hidden.atwho', function () {
+          CodeMirror.commands.goLineUp = codeMirrorGoLineUp;
+          CodeMirror.commands.goLineDown = codeMirrorGoLineDown;
+          CodeMirror.commands.newlineAndIndent = codeMirrorNewlineAndIndent;
+        });
+        // END at.js 配置
+      }
+  </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title th:inline="text">[[#{app.title}]]</title>
+  <link rel="stylesheet" th:href="@{/static/css/app.css}"/>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}" />
+  <link rel="icon" th:href="@{/static/images/favicon.ico}" type="image/x-icon" />
+</head>
+<body>
+  <main class="col-xs-12 col-md-12">
+    <div class="notfound">
+      <h4>手动404</h4>
+      <p>你似乎来到了没有知识存在的荒原...</p>
+      <a href="javascript:history.back()">返回</a>
+    </div>
+  </main>
+</body>
+</html>

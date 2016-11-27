@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:data="https://github.com/mxab/thymeleaf-extras-data-attribute"
+      data-search data-mobile-support>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title th:inline="text">[[#{app.title}]]</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}" />
+  <link rel="icon" th:href="@{/static/images/favicon.ico}" type="image/x-icon" />
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link href="//cdn.bootcss.com/select2/4.0.3/css/select2.min.css" rel="stylesheet">
+  <link th:href="@{/static/lib/admin-lte/dist/css/AdminLTE.min.css}" rel="stylesheet">
+  <link href="//cdn.bootcss.com/admin-lte/2.3.8/css/skins/skin-black-light.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/static/lib/iconfont/iconfont.css}">
+  <link rel="stylesheet" th:href="@{/static/css/simple.css}"/>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition skin-black-light layout-top-nav simple">
+<div class="wrapper">
+  <!-- Main Header -->
+  <header class="main-header">
+    <nav class="navbar navbar-static-top" id="nav-bar">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" th:href="@{/simple}" th:utext="#{app.title}">LMS</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div>
+
+        <div class="pull-left">
+          <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <input type="text" class="form-control" id="navbar-search-input" placeholder="搜索本站...">
+            </div>
+          </form>
+        </div>
+
+        <!-- /.navbar-collapse -->
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+            <!-- 发表新话题 -->
+            <li>
+              <a th:href="@{/simple/create}" class=""><i class="fa fa-edit"></i> <span class="">发表新话题</span></a>
+            </li>
+
+            <!-- Notifications Menu -->
+            <li class="dropdown notifications-menu">
+              <!-- Menu toggle button -->
+              <template>
+                <a id="messages" @click="markReaded" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-bell-o"></i>
+                  <span id="badge-messages" v-show="messages.length > 0" class="label label-warning">{{messages.length}}</span>
+                </a>
+                <form id="messages-form" method="put" th:action="@{/api/messages}">
+                  <input type="hidden"/>
+                </form>
+                <ul class="dropdown-menu">
+                  <li class="header">你有{{messages.length}}条未读消息</li>
+                  <li>
+                    <!-- Inner Menu: contains the notifications -->
+                    <ul class="menu notifications-list">
+                      <li v-for="msg in messages"><!-- start notification -->
+                        <a :href="_ctx+ '/post/' + msg.postId + '#floor' + msg.floor">
+                          {{msg.content}}
+                        </a>
+                      </li>
+                      <!-- end notification -->
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">查看全部</a></li>
+                </ul>
+              </template>
+            </li>
+
+          </ul>
+        </div>
+        <!-- /.navbar-custom-menu -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+  </header>
+  <!-- Full Width Column -->
+    <div class="container">
+      <!-- Content Header (Page header) -->
+      <section layout:fragment="top">
+      </section>
+
+      <div class="row">
+        <!-- Main content -->
+        <main class="col-xs-12 col-md-9" layout:fragment="content">
+        </main>
+        <!-- /.content -->
+
+        <aside class="col-xs-12 col-md-3" layout:fragment="sidebar">
+        </aside>
+      </div>
+    </div>
+    <!-- /.container -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="pull-right hidden-xs">
+        <b>Version</b> 1.0.0
+      </div>
+      <strong>Copyright &copy; 2016 <a href="#">microbbs</a>.</strong> All rights reserved.
+    </div>
+    <!-- /.container -->
+  </footer>
+</div>
+<!-- ./wrapper -->
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<!--<script th:src="@{/static/lib/jquery/dist/jquery.min.js}"></script>-->
+<!-- Bootstrap 3.3.6 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script th:src="@{/static/lib/twbs-pagination/jquery.twbsPagination.min.js}"></script>
+<!-- SlimScroll -->
+<script src="//cdn.bootcss.com/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+<!-- AdminLTE App -->
+<script src="//cdn.bootcss.com/admin-lte/2.3.8/js/app.min.js"></script>
+<!--<script th:src="@{/static/lib/vue.js}"></script>-->
+<script src="//cdn.bootcss.com/vue/2.0.5/vue.js"></script>
+<script src="//cdn.bootcss.com/vue-resource/1.0.3/vue-resource.js"></script>
+<script th:src="@{/static/lib/jquery.adaptive-backgrounds.js}"></script>
+<script th:src="@{/static/js/app.js}"></script>
+<div layout:fragment="scripts">
+</div>
+</body>
+</html>

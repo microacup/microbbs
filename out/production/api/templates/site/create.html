@@ -1,0 +1,97 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="site/layout">
+<head>
+  <title th:inline="text">[[#{app.title}]]</title>
+  <link rel="stylesheet" th:href="@{/static/lib/editor/editor.css}" />
+  <!--<link rel="stylesheet" href="//cdn.staticfile.org/webuploader/0.1.5/webuploader.css"/>-->
+</head>
+<body>
+<!--post header-->
+<section layout:fragment="top" class="post-header">
+</section><!--/post-->
+
+<!--content-->
+<main layout:fragment="content" id="posts">
+  <section class="sidebar box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">发表新话题</h3>
+    </div>
+    <div class="box-body">
+
+      <form method="post" th:action="@{/post/create}" id="postForm" th:object="${postForm}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div class="form-group">
+          <label for="title">标题</label>
+          <input type="text" class="form-control" th:field="*{title}" id="title" name="title" placeholder="标题" autofocus>
+        </div>
+        <div class="form-group">
+          <label for="title">内容</label>
+          <textarea name="content"  th:field="*{content}" id="content" rows="15" class="form-control" placeholder="支持Markdown语法哦~"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="title">标签</label>
+          <select name="tags" id="tags" th:field="*{tags}" multiple="multiple" data-placeholder="请选择标签" class="form-control select2">
+            <optgroup th:each="tagentry: ${tags}" th:label="${tagentry.key.title}">
+              <option th:each="tag: ${tagentry.value}" th:value="${tag.id}" th:text="${tag.title}">A</option>
+            </optgroup>
+          </select>
+        </div>
+        <button type="submit" onclick="" class="btn btn-info btn-sm btn-flat">发表</button>
+        <span id="error_message"></span>
+      </form>
+
+    </div>
+  </section>
+</main><!--/content-->
+
+<aside class="col-xs-12 col-md-3" layout:fragment="sidebar">
+  <section class="sidebar box box-info">
+    <div class="box-header with-border">
+      <h3 class="box-title">话题发表指南</h3>
+    </div>
+    <div class="box-body">
+      <p>• 话题内容支持 Markdown 文本标记语法</p>
+      <p>• 发表话题之前,可以点击预览查看</p>
+      <p>• ctrl+b 粗体</p>
+      <p>• ctrl+i 斜体</p>
+      <p>• ctrl+k 插入链接</p>
+      <p>• ctrl+alt+i 插入图片</p>
+      <p>• ctrl+' 插入引用</p>
+      <p>• ctrl+alt+l 有序列表</p>
+      <p>• ctrl+l 无序列表</p>
+      <!--<p>• ctrl+Enter 回复</p>-->
+      <p>• 截图在编辑器里直接粘贴即可上传(IE10+)</p>
+    </div>
+  </section>
+
+</aside>
+
+<div layout:fragment="scripts">
+  <script type="text/javascript" src="//cdn.bootcss.com/layer/2.4/layer.min.js"></script>
+  <!--<script src="//cdn.staticfile.org/webuploader/0.1.5/webuploader.withoutimage.min.js"></script>-->
+  <script type="text/javascript" th:src="@{/static/lib/webuploader/webuploader.withoutimage.js}"></script>
+  <!--<script src="//cdn.bootcss.com/markdown-it/8.1.0/markdown-it.min.js"></script>-->
+  <script type="text/javascript" src="//cdn.bootcss.com/markdown-it/3.0.3/markdown-it.min.js"></script>
+  <script type="text/javascript" th:src="@{/static/lib/editor/editor.js}"></script>
+  <script type="text/javascript" th:src="@{/static/lib/editor/ext.js}"></script>
+  <script type="text/javascript" src="//cdn.bootcss.com/select2/4.0.3/js/select2.min.js"></script>
+  <script type="text/javascript" src="//cdn.bootcss.com/select2/4.0.3/js/i18n/zh-CN.js"></script>
+
+  <script type="text/javascript">
+      var editor = new Editor({element: $("#content")[0], status: []});
+      editor.render();
+      var ext = new EditorExt({
+        upload: _ctx + '/upload/post'
+      });
+
+      //Initialize Select2 Elements
+      $(".select2").select2({
+        maximumSelectionLength: 3,
+        language: "zh-CN"
+      });
+  </script>
+</div>
+</body>
+</html>

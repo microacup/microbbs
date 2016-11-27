@@ -1,0 +1,296 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="admin/layout">
+<head>
+  <title>分类管理</title>
+</head>
+<body>
+<section layout:fragment="content" class="content" id="categories">
+  <div class="box">
+    <div class="box-header">
+      <h3 class="box-title">分类管理</h3>
+    </div>
+    <!-- /.box-header -->
+    <div id="toolbar" class="btn-group">
+      <button id="btn-add" class="btn btn-default" data-toggle="modal" data-target="#addModal"> 新增 </button>
+      <button id="btn-edit" class="btn btn-default"> 修改 </button>
+      <button id="btn-delete" class="btn btn-default"> 删除 </button>
+    </div>
+    <div class="box-body">
+      <table id="table" class="table table-no-bordered table-striped bbs-table"
+             data-show-export="true"
+             data-unique-id="id"
+             data-toolbar="#toolbar"
+             data-search="true"
+             data-show-refresh="true"
+             data-detail-view="false"
+             data-detail-formatter="categoryFormatter"
+             data-show-toggle="false"
+             data-show-footer="false"
+             data-side-pagination="client"
+             data-page-size="20"
+             data-page-list="[20, 50, 100]"
+             data-ajax="loadCategories"
+             data-pagination="true"
+             data-click-to-select = "true"
+             data-toggle="table">
+        <thead>
+        <tr>
+          <th data-radio="true"></th>
+          <th data-field="id" data-sortable="true">ID</th>
+          <th data-field="title" data-sortable="true">标题</th>
+          <th data-field="code" data-sortable="true">代码</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+    <!-- /.box-body -->
+  </div>
+  <!-- /.box -->
+
+  <!--新增-->
+  <div class="modal fade" id="addModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">新增分类</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" id="add-form" method="post" th:action="@{/api/admin/categories}">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="c-code" class="col-sm-2 control-label">代码：</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="code" id="c-code" placeholder="请输入代码（必填）">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="c-title" class="col-sm-2 control-label">标题：</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="title" id="c-title" placeholder="请输入标题（必填）">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="submit-add">新增</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--编辑-->
+  <div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">修改分类</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" id="edit-form">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="e-code" class="col-sm-2 control-label">代码：</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="e-code" placeholder="请输入代码（必填）">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="e-title" class="col-sm-2 control-label">标题：</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="e-title" placeholder="请输入标题（必填）">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="submit-edit">更新</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--删除-->
+  <div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">删除分类</h4>
+        </div>
+        <div class="modal-body">
+          <form  role="form" id="delete-form">
+            <div class="form-group">
+              <div class="box-body">
+                <label for="d-code" class="control-label" id="label-d-code">输入代码来确认要删除的分类：</label>
+                <input type="text" class="form-control" id="d-code" placeholder="请输入要删除的代码（必填）">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-danger" id="submit-delete">删除</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</section>
+
+<div layout:fragment="scripts">
+  <script type="text/javascript">
+    function loadCategories (params) {
+      $.get(ms.Urls.categories ,function (result) {
+                params.success({
+                  data:  result
+                });
+      });
+    }
+
+    function error(msg) {
+      console.log(msg);
+    };
+
+    $(function () {
+      var $table = $('#table');
+
+      $('#btn-add').click(function () {
+        var _code = $('#c-code');
+        var _title= $('#c-title');
+        _code.val('');
+        _title.val('');
+      });
+
+      $('#submit-add').click(function () {
+        var _code = $('#c-code');
+        var _title= $('#c-title');
+        var _csrf = $("input[name='_csrf']").val();
+        var jsonData = {
+          code: _code.val().trim(),
+          title: _title.val().trim()
+        };
+
+        $.ajax({
+          contentType: "application/json;charset=utf-8",
+          dataType : 'json',
+          url: ms.Urls.categories + "?_csrf=" + _csrf,
+          data: JSON.stringify(jsonData),
+          type: 'POST',
+          success: function (result) {
+            if(result) {
+              $table.bootstrapTable('append', result);
+              $table.bootstrapTable('scrollTo', 'bottom');
+              $('#addModal').modal('hide');
+            } else {
+              alert('add error');
+            }
+          },
+          error:function(xhr, status, _e) {
+            error(_e || '服务暂时遇到了一个问题');
+            console.log(_e);
+          }
+        });
+      });
+      
+      $('#btn-edit').click(function () {
+        var selections = $table.bootstrapTable('getSelections');
+        if (!selections || selections.length == 0) {
+          alert('请先选择分类');
+          return;
+        }
+
+        $('#editModal').modal('show');
+        $('#editModal').data('category-id',selections[0].id);
+        $('#e-code').val(selections[0].code);
+        $('#e-title').val(selections[0].title);
+      });
+
+      $('#submit-edit').click(function () {
+        var _id = $('#editModal').data('category-id');
+        var _code = $('#e-code').val().trim();
+        var _title = $('#e-title').val().trim();
+        var _csrf = $("input[name='_csrf']").val();
+        var jsonData = {
+          code: _code,
+          title: _title
+        };
+
+        $.ajax({
+          contentType: "application/json;charset=utf-8",
+          dataType : 'json',
+          url: ms.Urls.categories_edit.format({id:_id}) + "?_csrf=" + _csrf,
+          data: JSON.stringify(jsonData),
+          type: 'PUT',
+          success: function (result) {
+            if(result) {
+              $table.bootstrapTable('updateByUniqueId', {id: _id, row: result });
+              $('#editModal').modal('hide');
+            } else {
+              alert('add error');
+            }
+          },
+          error:function(xhr, status, _e) {
+            error(_e || '服务暂时遇到了一个问题');
+            console.log(_e);
+          }
+        });
+      });
+
+      // delete
+      $('#btn-delete').click(function () {
+        var selections = $table.bootstrapTable('getSelections');
+        if (!selections || selections.length == 0) {
+          alert('请先选择分类');
+          return;
+        }
+
+        $('#deleteModal').modal('show');
+        $('#deleteModal').data('category-id',selections[0].id);
+        $('#d-code').val('');
+      });
+      
+      $('#submit-delete').click(function () {
+        var _id = $('#deleteModal').data('category-id');
+        var _csrf = $("input[name='_csrf']").val();
+
+        var selection = $table.bootstrapTable('getSelections')[0];
+        if (selection.code !== $('#d-code').val()) {
+          $('#label-d-code').html('请输入正确的代码');
+          $('#d-code').parents('.form-group').addClass('has-error');
+          return;
+        }
+
+        $.ajax({
+          contentType: "application/json;charset=utf-8",
+          dataType : 'json',
+          url: ms.Urls.categories_edit.format({id:_id}) + "?_csrf=" + _csrf,
+          type: 'delete',
+          success: function (result,status,xhr) {
+            if(result.code == 200) {
+              $table.bootstrapTable('remove', {field: 'id', values: [_id]});
+            } else {
+              alert(result.msg);
+            }
+            $('#deleteModal').modal('hide');
+          },
+          error:function(xhr, status, _e) {
+            error(_e || '服务暂时遇到了一个问题');
+            console.log(_e);
+          }
+        });
+      });
+
+    });
+  </script>
+</div>
+</body>
+</html>

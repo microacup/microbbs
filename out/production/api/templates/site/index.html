@@ -1,0 +1,228 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="site/layout">
+<head>
+  <title th:inline="text">[[#{app.title}]]</title>
+</head>
+<body>
+<!--tags-->
+<main layout:fragment="content" id="posts">
+  <ul class="list-group">
+    <!--#numbers.sequence( 1, 8)-->
+    <li class="list-group-item" th:each="post: ${posts}">
+      <div class="media-left">
+        <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
+          <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
+        </a>
+      </div>
+      <div class="media-body">
+        <a th:href="@{'/post/' + ${post.id}}" class="post-title" th:utext="${post.title}">Title</a>
+        <i class="iconfont icon-zhiding icon-micro"
+           th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
+        <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
+        <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
+        <div class="post-footer">
+          <a class="label label-default"
+             th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
+             th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
+          <a class="post-author" th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a>
+          <span th:unless="${post.lastAuthorName}">
+               发布于
+          </span>
+          <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+          <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:mm:ss")}'>1小时14分钟前</span>
+        </div>
+      </div>
+      <div class="media-right">
+        <span class="badge" th:if="${post.replyCount > 0}" th:text="${post.replyCount}">0</span>
+      </div>
+    </li>
+  </ul>
+
+  <!--分页-->
+  <div class="text-center" th:if="${totalPages > 1}">
+    <ul id="pagination-posts" class="pagination-sm"></ul>
+  </div>
+</main><!--/content-->
+
+<!--content-->
+<section layout:fragment="top" class="content-header">
+  <ul class="nav nav-pills" role="tablist" th:if="${activeCategory == null}">
+    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'hot')}"><a th:href="@{/hot}">热门</a></li>
+    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'perfect')}"><a th:href="@{/perfect}">优选</a></li>
+    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'now')}"><a th:href="@{/now}">此刻</a></li>
+  </ul>
+
+  <ul class="nav nav-pills" role="tablist" th:if="${activeCategory != null}">
+    <li role="presentation" th:class="${#strings.equals(activeTag.id, '-1') ? 'active' : ''}">
+      <a th:href="@{'/category/' + ${activeCategory.id}}">全部</a>
+    </li>
+    <li role="presentation"  th:each="tag: ${tags}" th:class="${tag.id == activeTag.id ? 'active' : ''}">
+      <a th:href="@{'/category/' + ${activeCategory.id} + '/tag/' + ${tag.id}}" th:utext="${tag.title}"></a>
+      <!--<span class="badge">42</span>-->
+    </li>
+  </ul>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+    <li th:if="${activeCategory != null}"><a href="#" th:utext="${activeCategory.title}">探索</a></li>
+    <li th:if="${activeCategory == null}"><a href="#">探索</a></li>
+    <li class="active" th:if="${activeTag != null}" th:utext="${activeTag.title}">此刻</li>
+    <li class="active" th:if="${activeTag == null}" th:utext="${activedExplorer}">此刻</li>
+  </ol>
+</section><!--/tags-->
+
+<aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="sidebar">
+
+  <section class="sidebar box box-widget widget-user">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header avatar-bg text-center">
+      <h3 class="widget-user-username" sec:authentication="principal.nick">xm</h3>
+      <h5 class="widget-user-desc" sec:authentication="principal.info">我的愿望是，世界和平</h5>
+      <div class="widget-user-image">
+        <img th:src="@{/static/lib/admin-lte/dist/img/user7-128x128.jpg}" data-adaptive-background class="img-circle"
+             alt="User Image">
+      </div>
+    </div>
+    <div class="box-footer">
+      <template v-if="profile">
+      <div class="row">
+        <div class="col-sm-6 border-right">
+          <div class="description-block">
+            <h5 class="description-header">{{profile.postCount}}</h5>
+            <span class="description-text">话题</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <div class="description-block">
+            <h5 class="description-header">{{profile.replyCount}}</h5>
+            <span class="description-text">回复</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <!--<div class="col-sm-4">
+          <div class="description-block">
+            <h5 class="description-header">35</h5>
+            <span class="description-text">关注</span>
+          </div>
+          &lt;!&ndash; /.description-block &ndash;&gt;
+        </div>-->
+        <!-- /.col -->
+      </div>
+      </template>
+      <!-- /.row -->
+    </div>
+  </section>
+
+  <!--此刻-->
+  <section class="sidebar box box-info">
+    <div class="box-header with-border">
+      <h3 class="box-title">此刻</h3>
+    </div>
+    <div class="box-body no-padding">
+      <ul class="list index-nows">
+        <template v-for="n in nows">
+          <li class="item"><a target="_blank" :href="_ctx + '/post/' + n.id">{{n.title}}</a></li>
+        </template>
+      </ul>
+    </div>
+  </section><!--/此刻-->
+
+  <section class="sidebar box box-danger">
+    <div class="box-header with-border">
+      <h3 class="box-title">热门标签</h3>
+    </div>
+    <div class="box-body hot-tags">
+      <template v-for="ht in hotTags">
+        <a :href="_ctx + '/category/' + ht.categoryId + '/tag/' + ht.id " class="label label-default">{{ht.title}}</a>
+      </template>
+    </div>
+  </section>
+</aside>
+
+<div layout:fragment="scripts">
+  <script th:inline="javascript" th type="text/javascript">
+    var totalPages = /*[[${totalPages}]]*/;
+    var currentPage = /*[[${currentPage}]]*/;
+
+    $('#pagination-posts').twbsPagination({
+      hideOnlyOnePage: true,
+      initiateStartPageClick: false,
+      first: '«',
+      prev:'←',
+      next:'→',
+      last:'»',
+      disabledClass: 'disabled hidden',
+      startPage: currentPage || 1,
+      totalPages: totalPages || 1,
+      visiblePages: 5,
+      onPageClick: function (event, page) {
+        top.location.href = top.location.pathname + '?page=' + page;
+      }
+    });
+
+    var sidebarApp = new Vue({
+      el: '#sidebar',
+      data: {
+        profile: null,
+        nows: null,
+        hotTags: null
+      },
+      created: function () {
+        this.loadProfile();
+        this.loadNow();
+        this.loadHotTags();
+      },
+      filters: {
+        moment: function (date) {
+          return moment(date).format('YYYY-MM-DD HH:mm');
+        }
+      },
+      methods: {
+        loadProfile:function () {
+          this.$http.get(ms.Urls.profile).then((response) => {
+            // success callback
+            if(response.status == 200 && response.ok && response.body.code == 200) {
+              this.profile =  response.body.data;
+            } else {
+              error(response.msg || '无法拉取个人信息');
+            }
+          }, (response) => {
+              // error callback
+              console.log(response);
+            });
+        },
+
+        loadNow: function () {
+          this.$http.get(ms.Urls.posts_now_top5).then((response) => {
+            // success callback
+            if(response.status == 200 && response.ok) {
+              this.nows =  response.body;
+            }
+          }, (response) => {
+            // error callback
+            console.log(response);
+          });
+        },
+        loadHotTags: function () {
+          this.$http.get(ms.Urls.tags_hot).then((response) => {
+            // success callback
+            if(response.status == 200 && response.ok) {
+              this.hotTags =  response.body;
+            }
+          }, (response) => {
+            // error callback
+            console.log(response);
+          });
+        }
+      }
+    });
+
+  </script>
+
+</div>
+</body>
+</html>
