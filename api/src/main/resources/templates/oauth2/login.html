@@ -28,10 +28,10 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <!-- /.login-logo -->
+  <div class="login-logo">
+    <img class="img-circle" th:src="@{/static/images/logo-48x48.png}">
+  </div>
   <div class="login-box-body">
-    <div class="login-logo">
-      <img class="img-circle" th:src="@{/static/images/logo-48x48.png}">
-    </div>
     <form th:action="@{/oauth2/login}" method="post" role="form">
       <legend class="text-center"><h4>登录并授权<strong th:text="${appName}"></strong></h4></legend>
       <input type="hidden" name="action" id="action" value="login"/>
