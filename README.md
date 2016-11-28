@@ -16,7 +16,7 @@
 
 * Admin 采用AdminLTE(去掉了google fonts), 模板引擎thymeleaf
 
-  ​
+ 
 
 ## 特性
 
@@ -52,13 +52,11 @@
 
 - `gradle clean bootRun` 运行
 
-  ​
-
+  
 ## 开发指导
 
     > compass watch #　监听css
     > gulp minify-css # 避免重复处理其他资源
-
 
 
 ## TODO
@@ -81,12 +79,11 @@
 
 - [ ] 权限支持黑名单模式
 
-      ​
+
 
 ## 开源协议
 
 GPL协议。
-
 
 
 ## 商用授权

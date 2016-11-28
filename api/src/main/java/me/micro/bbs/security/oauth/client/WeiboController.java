@@ -1,4 +1,4 @@
-package me.micro.bbs.web;
+package me.micro.bbs.security.oauth.client;
 
 import me.micro.bbs.enums.Channel;
 import me.micro.bbs.enums.ClientType;
@@ -56,7 +56,7 @@ public class WeiboController {
     @Value("${oauth2.weibo.clientSecret}")
     private String clientSecret;
 
-    @Value("${oauth2.server}")
+    @Value("${site.server}")
     private String server;
 
     @Autowired
@@ -168,7 +168,7 @@ public class WeiboController {
         userForm.setInfo(userInfo.getString("description"));
         userForm.setName(userInfo.getString("name"));
         userForm.setUsername(ShortUUID.uuid());
-        userForm.setNick(userInfo.getString("screen_name") + "_" + getName());
+        userForm.setNick(userInfo.getString("screen_name"));
         userForm.setOpenNickname(userInfo.getString("screen_name"));
         userForm.setSource(getName());
 

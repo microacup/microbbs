@@ -54,10 +54,12 @@ security:
   require_ssl: false
 
 oauth2:
-  server: http://meiqiu.ngrok.cc/bbs
   weibo:
     clientId: 2469375966
     clientSecret: 0f0b097b256ed88bb9f21037e36604b8
+
+site:
+  server: http://meiqiu.ngrok.cc/bbs
 
 logging:
   level:

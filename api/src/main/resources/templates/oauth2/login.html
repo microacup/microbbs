@@ -27,13 +27,19 @@
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
-  <div class="login-logo">
-    <img class="img-circle" th:src="@{/static/images/logo-48x48.png}">
-    <h2>登录<span th:utext="#{app.title}">LMS</span></h2>
-  </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
-    <form th:action="@{/login}" method="post" role="form">
+    <div class="login-logo">
+      <img class="img-circle" th:src="@{/static/images/logo-48x48.png}">
+    </div>
+    <form th:action="@{/oauth2/login}" method="post" role="form">
+      <legend class="text-center"><h4>登录并授权<strong th:text="${appName}"></strong></h4></legend>
+      <input type="hidden" name="action" id="action" value="login"/>
+      <input type="hidden" name="response_type" th:value="${response_type}"/>
+      <input type="hidden" name="redirect_uri" th:value="${redirect_uri}"/>
+      <input type="hidden" name="client_id" th:value="${client_id}"/>
+      <input type="hidden" name="scope" id="scope" th:value="${scope}"/>
+      <input type="hidden" name="state" id="state" th:value="${state}"/>
       <div class="form-group has-feedback">
         <input name="username" type="text"  th:maxlength="128" maxlength="128" class="form-control" placeholder="手机号/电子邮箱/用户名">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -48,24 +54,15 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" name="submit" class="btn btn-primary btn-block btn-flat">登 录</button>
+          <button type="submit" name="submit" class="btn btn-primary btn-block btn-flat">登录</button>
         </div>
         <!-- /.col -->
       </div>
     </form>
-    <div class="social-auth-links">
-      <h4>社交网络登录 </h4>
-      <div class="social-items">
-        <a class="icon-oauth-weibo" title="微博登录" th:href="@{/oauth/weibo/login}"></a>
-        <a class="icon-oauth-weixin" title="微信登录" th:href="@{/oauth/weixin/login}"></a>
-        <a class="icon-oauth-qq" title="QQ登录" th:href="@{/oauth/qq/login}"></a>
-      </div>
-    </div>
-
   </div>
   <!-- /.login-box-body -->
   <div class="login-box-body create-account-callout">
-    还没有账号？<a class="link" th:href="@{/register}">立即注册</a>
+      还没有账号？<a class="link" th:href="@{/register}">立即注册</a>
   </div>
 </div>
 <!-- /.login-box -->

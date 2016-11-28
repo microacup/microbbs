@@ -8,6 +8,7 @@ import me.micro.bbs.cache.RedisCacheManager;
 import me.micro.bbs.category.support.CategoryService;
 import me.micro.bbs.post.support.PostService;
 import me.micro.bbs.reply.support.ReplyService;
+import me.micro.bbs.security.oauth.server.OAuth2Service;
 import me.micro.bbs.security.support.PermissionService;
 import me.micro.bbs.security.support.RoleService;
 import me.micro.bbs.tag.support.TagService;
@@ -91,6 +92,10 @@ public class CacheConfig extends CachingConfigurerSupport {
         // Role
         JsonRedisTemplate<? extends Object> roleTemplte = new JsonRedisTemplate<>(redisConnectionFactory, RoleService.CACHE_TYPE);
         cacheManager.withCache(RoleService.CACHE_NAME, roleTemplte, cacheTimeToLive);
+
+        //Oauth
+        JsonRedisTemplate<String> oauthTemplte = new JsonRedisTemplate<>(redisConnectionFactory, String.class);
+        cacheManager.withCache(OAuth2Service.CACHE_NAME, oauthTemplte, cacheTimeToLive);
 
         return cacheManager;
     }
