@@ -4,7 +4,6 @@
 # Package Files #
 *.war
 *.ear
-
 ### STS ###
 .classpath
 .factorypath
@@ -420,3 +419,5 @@ node_modules/
 stylesheets/
 classes/
 api/src/main/resources/static/
+api/src/main/source/sass/site/
+api/src/test/
