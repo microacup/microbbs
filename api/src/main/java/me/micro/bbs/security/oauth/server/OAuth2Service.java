@@ -27,8 +27,8 @@ public class OAuth2Service {
         this.tokenCache = cacheManager.getCache(CACHE_ACCESSTOKEN);
     }
 
-    public void addCode(String code, String username) {
-        codeCache.put(code, username);
+    public void addCode(String code, String openId) {
+        codeCache.put(code, openId);
     }
 
     public String getOpenId(String code) {
@@ -38,8 +38,8 @@ public class OAuth2Service {
         return (String) valueWrapper.get();
     }
 
-    public void addAccessToken(String accessToken, String username) {
-        tokenCache.put(accessToken, username);
+    public void addAccessToken(String accessToken, String openId) {
+        tokenCache.put(accessToken, openId);
     }
 
     public long getExpireIn() {

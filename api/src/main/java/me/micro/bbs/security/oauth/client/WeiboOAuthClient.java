@@ -44,11 +44,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping("/oauth/weibo")
-public class WeiboController {
+public class WeiboOAuthClient {
     private static final String authorize_url = "https://api.weibo.com/oauth2/authorize";
     private static final String access_token_url = "https://api.weibo.com/oauth2/access_token";
     private static final String user_show = "https://api.weibo.com/2/users/show.json?uid=%s";
     private static final String STATE_LOGIN = "login";
+    public static final String OAUTH_WEIBO_CALLBACK = "/oauth/weibo/callback";
 
     @Value("${oauth2.weibo.clientId}")
     private String clientId;
@@ -77,7 +78,7 @@ public class WeiboController {
                     .authorizationLocation(authorize_url)
                     .setResponseType(OAuth.OAUTH_CODE)
                     .setClientId(clientId)
-                    .setRedirectURI(server + "/oauth/weibo/callback")
+                    .setRedirectURI(server + OAUTH_WEIBO_CALLBACK)
                     .setState(STATE_LOGIN)
                     .buildQueryMessage();
             WebUtils.setSessionAttribute(request, "state", STATE_LOGIN);
@@ -107,7 +108,7 @@ public class WeiboController {
                     .setGrantType(GrantType.AUTHORIZATION_CODE)
                     .setClientId(clientId)
                     .setClientSecret(clientSecret)
-                    .setRedirectURI(server + "/oauth/weibo/callback")
+                    .setRedirectURI(server + OAUTH_WEIBO_CALLBACK)
                     .setCode(code)
                     .buildQueryMessage();
             OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
@@ -149,14 +150,15 @@ public class WeiboController {
                 }
             }
 
-            return "redirect:/500";
         } catch (OAuthSystemException ex) {
-            return  "redirect:/404";
+            ex.printStackTrace();
+            model.addAttribute("message", ex.getMessage());
         } catch (OAuthProblemException e) {
             e.printStackTrace();
+            model.addAttribute("message", e.getDescription());
         }
 
-        return "redirect:/404";
+        return "site/500";
     }
 
     private UserForm toUserForm(JSONObject userInfo) {

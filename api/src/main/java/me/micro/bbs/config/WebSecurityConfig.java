@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configureHeaders(http.headers());
         http.addFilterBefore(myFilterSecurityInterceptor(), FilterSecurityInterceptor.class);
         http.authorizeRequests()
-                .antMatchers("/","/static/**", "/test/**", "/oauth/**","/oauth2/**").permitAll()
+                .antMatchers("/","/static/**", "/test/**","/500", "/404", "/oauth/**","/oauth2/**").permitAll()
                 .anyRequest().authenticated()
                 .and().rememberMe().rememberMeServices(rememberMeServices())
                 .and().formLogin().loginPage("/login").permitAll()

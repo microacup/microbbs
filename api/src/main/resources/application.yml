@@ -57,6 +57,9 @@ oauth2:
   weibo:
     clientId: 2469375966
     clientSecret: 0f0b097b256ed88bb9f21037e36604b8
+  lms:
+     clientId: 1xx1255436
+     clientSecret: 7x0b09ssb256ed88bb9f21037e36604b7
 
 site:
   server: http://meiqiu.ngrok.cc/bbs

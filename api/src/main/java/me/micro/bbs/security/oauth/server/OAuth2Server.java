@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,7 +81,7 @@ public class OAuth2Server {
                 OAuthResponse oauthResponse = OAuthASResponse.errorResponse(HttpServletResponse.SC_UNAUTHORIZED).setError(OAuthError.CodeResponse.ACCESS_DENIED).setErrorDescription(OAuthError.CodeResponse.UNAUTHORIZED_CLIENT).buildJSONMessage();
                 logger.error("oauthRequest.getRedirectURI() : " + oauthRequest.getRedirectURI() + " oauthResponse.getBody() : " + oauthResponse.getBody());
                 model.addAttribute("message", oauthResponse.getBody());
-                return "/oauth2/500";
+                return "site/500";
             }
 
             String redirectURI = oauthRequest.getRedirectURI();
@@ -89,7 +90,7 @@ public class OAuth2Server {
                 OAuthResponse oauthResponse = OAuthASResponse.errorResponse(HttpServletResponse.SC_UNAUTHORIZED).setError(OAuthError.CodeResponse.ACCESS_DENIED).setErrorDescription(OAuthError.CodeResponse.UNAUTHORIZED_CLIENT).buildJSONMessage();
                 logger.error("oauthRequest.getRedirectURI() : " + oauthRequest.getRedirectURI() + " oauthResponse.getBody() : " + oauthResponse.getBody());
                 model.addAttribute("message", oauthResponse.getBody());
-                return "/oauth2/500";
+                return "site/500";
             }
 
             // 查询app信息
@@ -127,20 +128,23 @@ public class OAuth2Server {
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
         authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
-        Authentication authentication = authenticationManager.authenticate(authRequest);
-        if (authentication != null && authentication.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            StringBuilder sb = new StringBuilder();
-            sb.append("/oauth2/authorize").append("?")
-                    .append(OAuth.OAUTH_CLIENT_ID).append("=").append(request.getParameter(OAuth.OAUTH_CLIENT_ID)).append("&")
-                    .append(OAuth.OAUTH_RESPONSE_TYPE).append("=").append(request.getParameter(OAuth.OAUTH_RESPONSE_TYPE)).append("&")
-                    .append(OAuth.OAUTH_SCOPE).append("=").append(request.getParameter(OAuth.OAUTH_SCOPE)).append("&")
-                    .append(OAuth.OAUTH_STATE).append("=").append(request.getParameter(OAuth.OAUTH_STATE)).append("&")
-                    .append(OAuth.OAUTH_REDIRECT_URI).append("=").append(request.getParameter(OAuth.OAUTH_REDIRECT_URI));
-            return "redirect:" + sb.toString();
+        try {
+            Authentication authentication = authenticationManager.authenticate(authRequest);
+            if (authentication != null && authentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (BadCredentialsException er) {
+            // nothing here
         }
 
-        return "oauth2/login";
+        StringBuilder sb = new StringBuilder();
+        sb.append("/oauth2/authorize").append("?")
+                .append(OAuth.OAUTH_CLIENT_ID).append("=").append(request.getParameter(OAuth.OAUTH_CLIENT_ID)).append("&")
+                .append(OAuth.OAUTH_RESPONSE_TYPE).append("=").append(request.getParameter(OAuth.OAUTH_RESPONSE_TYPE)).append("&")
+                .append(OAuth.OAUTH_SCOPE).append("=").append(request.getParameter(OAuth.OAUTH_SCOPE)).append("&")
+                .append(OAuth.OAUTH_STATE).append("=").append(request.getParameter(OAuth.OAUTH_STATE)).append("&")
+                .append(OAuth.OAUTH_REDIRECT_URI).append("=").append(request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+        return "redirect:" + sb.toString();
     }
 
 
@@ -161,7 +165,7 @@ public class OAuth2Server {
                     .buildQueryMessage();
             return "redirect:" + oauthResponse.getLocationUri();
         } else {
-            return "/oauth2/authorize";
+            return "oauth2/authorize";
         }
     }
 
@@ -178,7 +182,7 @@ public class OAuth2Server {
      */
     @PostMapping(value = "/access_token", produces = Uris.APPLICATION_JSON)
     @ResponseBody
-    public ResponseEntity<?> accessToken(HttpServletRequest request, Model model) {
+    public ResponseEntity<?> accessToken(HttpServletRequest request) {
         //构建oauth2请求
         try {
             OAuthTokenRequest oauthRequest = new OAuthTokenRequest(request);
@@ -194,7 +198,6 @@ public class OAuth2Server {
                         .setErrorDescription(OAuthError.TokenResponse.UNAUTHORIZED_CLIENT)
                         .buildJSONMessage();
                 logger.error("oauthRequest.getRedirectURI() : " + oauthRequest.getRedirectURI() + " oauthResponse.getBody() : " + oauthResponse.getBody());
-                model.addAttribute("message", oauthResponse.getBody());
                 return ResponseEntity.badRequest().body(oauthResponse.getBody());
             }
 
@@ -206,7 +209,6 @@ public class OAuth2Server {
                         .setErrorDescription(OAuthError.TokenResponse.UNAUTHORIZED_CLIENT)
                         .buildJSONMessage();
                 logger.error("oauthRequest.getRedirectURI() : " + oauthRequest.getRedirectURI() + " oauthResponse.getBody() : " + oauthResponse.getBody());
-                model.addAttribute("message", oauthResponse.getBody());
                 return ResponseEntity.badRequest().body(oauthResponse.getBody());
             }
 
@@ -218,7 +220,6 @@ public class OAuth2Server {
                         .setErrorDescription(OAuthError.TokenResponse.UNSUPPORTED_GRANT_TYPE)
                         .buildJSONMessage();
                 logger.error("oauthRequest.getRedirectURI() : " + oauthRequest.getRedirectURI() + " oauthResponse.getBody() : " + oauthResponse.getBody());
-                model.addAttribute("message", oauthResponse.getBody());
                 return ResponseEntity.badRequest().body(oauthResponse.getBody());
             }
 
@@ -231,7 +232,6 @@ public class OAuth2Server {
                         .setErrorDescription("授权码不正确")
                         .buildJSONMessage();
                 logger.error("oauthRequest.getRedirectURI() : " + oauthRequest.getRedirectURI() + " oauthResponse.getBody() : " + oauthResponse.getBody());
-                model.addAttribute("message", oauthResponse.getBody());
                 return ResponseEntity.badRequest().body(oauthResponse.getBody());
             }
 
