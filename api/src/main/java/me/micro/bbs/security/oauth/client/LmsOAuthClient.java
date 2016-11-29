@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Controller;
@@ -80,6 +81,12 @@ public class LmsOAuthClient {
     @GetMapping("/login")
     public String login(HttpServletRequest request,
                         @RequestParam("forward") String forward) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getDetails() instanceof User && authentication.isAuthenticated()) {
+            return "redirect:" + forward;
+        }
+
         try {
             OAuthClientRequest oauthResponse = OAuthClientRequest
                     .authorizationLocation(authorize_url)
