@@ -38,8 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().rememberMe().rememberMeServices(rememberMeServices())
                 .and().formLogin().loginPage("/login").permitAll()
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").permitAll()
-                .and().csrf();
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").permitAll();
+
+        http.csrf().ignoringAntMatchers("/oauth2/**", "/api/**");
     }
 
     private static void configureHeaders(HeadersConfigurer<?> headers) throws Exception {

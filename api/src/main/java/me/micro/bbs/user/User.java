@@ -40,6 +40,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // OpenId。OAuth2提供方
+    @Column(name = "u_openId", unique = true)
+    private String openId;
+
     // 内置用户ID
     @Column(name = "u_username", nullable = false, unique = true)
     private String username;

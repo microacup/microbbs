@@ -1,5 +1,6 @@
 package me.micro.bbs.user.support;
 
+import me.micro.bbs.file.ShortUUID;
 import me.micro.bbs.security.Permission;
 import me.micro.bbs.security.Role;
 import me.micro.bbs.security.support.PermissionService;
@@ -8,6 +9,8 @@ import me.micro.bbs.user.User;
 import me.micro.bbs.user.UserForm;
 import me.micro.bbs.user.UserProfile;
 import me.micro.bbs.user.UserSocial;
+import org.apache.oltu.oauth2.as.issuer.MD5Generator;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -94,6 +97,8 @@ public class UserService implements UserDetailsService {
         user.setChannel(userForm.getChannel());
         user.setRegisterTime(now);
         user.setClient(userForm.getClient());
+        String openId = generateOpenId();
+        user.setOpenId(openId);
         user.setPassword(passwordEncoder.encode(user.getUsername()));
 
         // 角色
@@ -115,6 +120,16 @@ public class UserService implements UserDetailsService {
         userSocial.setSource(userForm.getSource());
         socialRepository.save(userSocial);
         return user;
+    }
+
+    private String generateOpenId() {
+        try {
+            return new MD5Generator().generateValue();
+        } catch (OAuthSystemException e) {
+            e.printStackTrace();
+        }
+
+        return ShortUUID.uuid();
     }
 
     /**

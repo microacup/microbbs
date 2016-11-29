@@ -95,7 +95,10 @@ public class CacheConfig extends CachingConfigurerSupport {
 
         //Oauth
         JsonRedisTemplate<String> oauthTemplte = new JsonRedisTemplate<>(redisConnectionFactory, String.class);
-        cacheManager.withCache(OAuth2Service.CACHE_NAME, oauthTemplte, cacheTimeToLive);
+        cacheManager.withCache(OAuth2Service.CACHE_CODE, oauthTemplte, OAuth2Service.cacheTimeToLiveCode);
+
+        JsonRedisTemplate<String> tokenTemplte = new JsonRedisTemplate<>(redisConnectionFactory, String.class);
+        cacheManager.withCache(OAuth2Service.CACHE_ACCESSTOKEN, tokenTemplte, OAuth2Service.cacheTimeToLiveToken);
 
         return cacheManager;
     }
