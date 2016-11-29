@@ -33,9 +33,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 /**
  *
@@ -48,7 +50,6 @@ public class LmsOAuthClient {
     private static final String authorize_url = "http://hxdd.ngrok.cc/oauth2/authorize";
     private static final String access_token_url = "http://hxdd.ngrok.cc/oauth2/access_token";
     private static final String user_show = "http://hxdd.ngrok.cc/api/v2/users/%s";
-    private static final String STATE_LOGIN = "login";
     private static final String OAUTH_CALLBACK = "/oauth/lms/callback";
 
     @Value("${oauth2.lms.clientId}")
@@ -57,8 +58,7 @@ public class LmsOAuthClient {
     @Value("${oauth2.lms.clientSecret}")
     private String clientSecret;
 
-    @Value("${site.server}")
-    private String server;
+    private String server = "http://hxdd.ngrok.cc/bbs";
 
     @Autowired
     private UserSocialRepository userSocialRepository;
@@ -71,17 +71,24 @@ public class LmsOAuthClient {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    /**
+     * 集成LMS
+     *
+     * @param forward 授权成功后转发地址
+     * @return
+     */
     @GetMapping("/login")
-    public String login(HttpServletRequest request) {
+    public String login(HttpServletRequest request,
+                        @RequestParam("forward") String forward) {
         try {
             OAuthClientRequest oauthResponse = OAuthClientRequest
                     .authorizationLocation(authorize_url)
                     .setResponseType(OAuth.OAUTH_CODE)
                     .setClientId(clientId)
                     .setRedirectURI(server + OAUTH_CALLBACK)
-                    .setState(STATE_LOGIN)
+                    .setState(forward)
                     .buildQueryMessage();
-            WebUtils.setSessionAttribute(request, "state", STATE_LOGIN);
+            WebUtils.setSessionAttribute(request, "state", forward);
             return "redirect:"+oauthResponse.getLocationUri();
         } catch (OAuthSystemException e) {
             e.printStackTrace();
@@ -95,10 +102,10 @@ public class LmsOAuthClient {
         OAuthAuthzResponse oauthAuthzResponse = null;
         try {
             oauthAuthzResponse = OAuthAuthzResponse.oauthCodeAuthzResponse(request);
-            String state = oauthAuthzResponse.getState();
+            String forward = oauthAuthzResponse.getState();
             String code = oauthAuthzResponse.getCode();
 
-            if (illegal(state, request)) {
+            if (illegal(forward, request)) {
                 model.addAttribute("message", "非法入口");
                 return "site/500";
             }
@@ -124,14 +131,8 @@ public class LmsOAuthClient {
             // 根据UID查找是否已经登录过
             UserSocial userSocial = userSocialRepository.findBySourceAndOpenid(getName(), openId);
             if (userSocial != null) {
-                // 根据state判断是登录还是绑定
-                if (STATE_LOGIN.equals(state)) {
-                    User user = userSocial.getUser();
-                    return login(request, user);
-                } else {
-                    // TODO 绑定
-                }
-
+                User user = userSocial.getUser();
+                return login(request, user, forward);
             } else {
                 //获得资源服务
                 OAuthClientRequest userInfoRequest = new OAuthBearerClientRequest(String.format(user_show, openId))
@@ -142,14 +143,9 @@ public class LmsOAuthClient {
                 // 解析这个用户
                 JSONObject userInfo = new JSONObject(resBody);
                 if (userInfo.getInt("code") == 200) {
-                    // 根据state判断是登录还是绑定
-                    if (STATE_LOGIN.equals(state)) {
-                        UserForm userForm = toUserForm(userInfo.getJSONObject("data"));
-                        User user = userService.newUserAndUserSocial(userForm);
-                        return login(request, user);
-                    } else {
-                        // TODO 绑定
-                    }
+                    UserForm userForm = toUserForm(userInfo.getJSONObject("data"));
+                    User user = userService.newUserAndUserSocial(userForm);
+                    return login(request, user, forward);
                 } else {
                     model.addAttribute("message", userInfo.getString("msg"));
                 }
@@ -160,6 +156,9 @@ public class LmsOAuthClient {
         } catch (OAuthProblemException e) {
             e.printStackTrace();
             model.addAttribute("message", e.getDescription());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            model.addAttribute("message", "无法解码URL");
         }
 
         return "site/500";
@@ -187,13 +186,13 @@ public class LmsOAuthClient {
         return StringUtils.isBlank(state) || !state.equals(WebUtils.getSessionAttribute(request, "state"));
     }
 
-    private String login(HttpServletRequest request, User user) {
+    private String login(HttpServletRequest request, User user, String forward) throws UnsupportedEncodingException {
         // 第三方登录
         SocialToken socialToken = new SocialToken(user);
         socialToken.setDetails(authenticationDetailsSource.buildDetails(request));
         Authentication authenticate = authenticationManager.authenticate(socialToken);
         if (authenticate  != null && authenticate.isAuthenticated()) {
-            return "redirect:/";
+            return "redirect:" + forward;
         }
 
         return "redirect:/login";
