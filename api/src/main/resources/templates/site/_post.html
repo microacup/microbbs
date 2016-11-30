@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+  <section layout:fragment="post-list">
+    <ul class="list-group">
+      <!--#numbers.sequence( 1, 8)-->
+      <li class="list-group-item" th:each="post: ${posts}">
+        <div class="media-left">
+          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
+            <img class="post-avatar img-circle" th:src="@{'/api/users/' +  ${post.author.id} + '/avatar'}" />
+          </a>
+        </div>
+        <div class="media-body">
+          <a th:href="@{'/post/' + ${post.id}}" class="post-title" th:utext="${post.title}">Title</a>
+          <i class="iconfont icon-zhiding icon-micro"
+             th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
+          <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
+          <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
+          <div class="post-footer">
+            <a class="label label-default"
+               th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
+               th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
+            <a class="post-author" th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a>
+            <span th:unless="${post.lastAuthorName}">
+               发布于
+          </span>
+            <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+            <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:mm:ss")}'>1小时14分钟前</span>
+          </div>
+        </div>
+        <div class="media-right">
+          <span class="badge" th:if="${post.replyCount > 0}" th:text="${post.replyCount}">0</span>
+        </div>
+      </li>
+    </ul>
+
+    <!--分页-->
+    <div class="text-center" th:if="${totalPages > 1}">
+      <ul id="pagination-posts" class="pagination-sm"></ul>
+    </div>
+
+  </section>
+
+  <section class="box box-primary" layout:fragment="post-content">
+    <div class="box-header with-border">
+      <h3 class="post-title text-lg"  th:utext="${post.title}">title</h3>
+      <i class="iconfont icon-zhiding icon-micro"
+         th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
+      <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
+      <div class="post-footer">
+        <a class="tag tag-sm" th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
+           th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
+        <span class="post-author">
+          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" class="author-name"  th:utext="${post.author.nick}">user</a> 发布于
+        </span>
+        <span class="post-time" th:utext='${#dates.format(post.createdTime, "yyyy-MM-dd HH:mm:ss")}'>1天前</span>
+        <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+        <span class="post-time-last" th:if="${post.lastReplyTime}" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:mm:ss")}'>1小时前</span>
+        <span class="post-read-count"><span th:text="${post.readCount + 1}">A</span> 次阅读</span>
+      </div>
+    </div>
+    <div class="box-body post-content" th:utext="${post.renderedContent}">
+      content
+    </div>
+
+    <div class="box-footer">
+      <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> 分享</button>
+      <button type="button" class="btn btn-default btn-xs"><i class="fa fa-bookmark"></i> 收藏</button>
+      <a href="#do-comments" type="button" class="btn btn-default btn-xs pull-right"><i class="fa fa-reply"></i> 回复</a>
+    </div>
+  </section>
+
+  <section class="sidebar box box-primary" layout:fragment="do-post">
+    <div class="box-header with-border">
+      <h3 class="box-title">发表新话题</h3>
+    </div>
+    <div class="box-body">
+
+      <form method="post" th:action="@{/post/create}" id="postForm" th:object="${postForm}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div class="form-group">
+          <label for="title">标题</label>
+          <input type="text" class="form-control" th:field="*{title}" id="title" name="title" placeholder="标题" autofocus>
+        </div>
+        <div class="form-group">
+          <label for="title">内容</label>
+          <textarea name="content"  th:field="*{content}" id="content" rows="15" class="form-control" placeholder="支持Markdown语法哦~"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="title">标签</label>
+          <select name="tags" id="tags" th:field="*{tags}" multiple="multiple" data-placeholder="请选择标签" class="form-control select2">
+            <optgroup th:each="tagentry: ${tags}" th:label="${tagentry.key.title}">
+              <option th:each="tag: ${tagentry.value}" th:value="${tag.id}" th:text="${tag.title}">A</option>
+            </optgroup>
+          </select>
+        </div>
+        <button type="submit" onclick="" class="btn btn-info btn-sm btn-flat">发表</button>
+        <span id="error_message"></span>
+      </form>
+
+    </div>
+  </section>
+
+</body>
+</html>
