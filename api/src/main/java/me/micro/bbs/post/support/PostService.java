@@ -7,6 +7,7 @@ import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
 import me.micro.bbs.user.support.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -123,7 +124,10 @@ public class PostService {
         return saved;
     }
 
-    // TODO update ReadCount
-    public void updateReadCount() {
+    // update ReadCount
+    @CachePut(value = CACHE_NAME, key = "#post.id")
+    public void read(Post post) {
+        post.setReadCount(post.getReadCount() + 1);
+        postRepository.save(post);
     }
 }

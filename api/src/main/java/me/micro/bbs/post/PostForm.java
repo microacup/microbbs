@@ -20,6 +20,9 @@ import java.util.List;
 @Setter
 public class PostForm {
     @NotEmpty
+    private String mode;
+
+    @NotEmpty
     private String title;
 
     @NotEmpty

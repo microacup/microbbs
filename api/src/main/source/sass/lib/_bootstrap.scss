@@ -15,6 +15,10 @@
   font-size: 14px;
 }
 
+.navbar-brand>img {
+  display: inline-block;
+}
+
 @media (min-width: 768px) {
   nav .container {
     width: 100%;

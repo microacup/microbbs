@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 简单模式
  *
  * Created by microacup on 2016/11/22.
  */
 @Controller
 @RequestMapping("/simple")
-public class SimplePostController {
+public class SimplePostController extends BaseController {
 
     @GetMapping
     public String index(HttpServletRequest request) {
@@ -55,6 +55,7 @@ public class SimplePostController {
                              @PathVariable("tagId") long tagId,
                              @RequestParam(defaultValue = "1") int page,
                              Model model) {
+        super.injectMode(model);
         WebUtils.setSessionAttribute(request, "entry", request.getRequestURL().toString());
 
         Category activeCategory = categoryService.findOne(categoryId);
@@ -84,10 +85,14 @@ public class SimplePostController {
      */
     @GetMapping("/post/{id}")
     public String post(@PathVariable("id") long id, Model model) {
+        super.injectMode(model);
         Post post = postService.findOne(id);
         if (post == null) return "site/404";
 
-        postService.updateReadCount();
+        postService.read(post);
+
+        model.addAttribute("backable", true);
+        model.addAttribute("title", "返回");
         model.addAttribute("post", post);
         return "simple/post";
     }
@@ -95,9 +100,12 @@ public class SimplePostController {
     // 新增Post
     @GetMapping("/create")
     public String create(Model model) {
+        super.injectMode(model);
         List<Category> categories = categoryService.findAll();
         if (categories == null) return "site/404";
 
+        model.addAttribute("backable", true);
+        model.addAttribute("title", "返回");
         model.addAttribute("categories", categories);
         model.addAttribute("tags", tagService.getTagsMap());
         model.addAttribute("postForm", new PostForm());
@@ -113,4 +121,9 @@ public class SimplePostController {
 
     @Autowired
     private PostService postService;
+
+    @Override
+    protected String getMode() {
+        return MODE_SIMPLE;
+    }
 }

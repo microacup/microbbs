@@ -29,7 +29,7 @@ import java.util.List;
  * Created by microacup on 2016/11/3.
  */
 @Controller
-public class PostController {
+public class PostController extends BaseController {
 
     /**
      * 按分类展示话题
@@ -62,6 +62,7 @@ public class PostController {
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);
+        super.injectMode(model);
 
         return "site/index";
     }
@@ -108,6 +109,7 @@ public class PostController {
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);
+        super.injectMode(model);
 
         return "site/index";
     }
@@ -128,8 +130,8 @@ public class PostController {
         Post post = postService.findOne(id);
         if (post == null) return "site/404";
 
-        postService.updateReadCount();
-
+        postService.read(post);
+        super.injectMode(model);
         model.addAttribute("post", post);
         return "site/post";
     }
@@ -140,6 +142,7 @@ public class PostController {
         List<Category> categories = categoryService.findAll();
         if (categories == null) return "site/404";
 
+        super.injectMode(model);
         model.addAttribute("categories", categories);
         model.addAttribute("tags", tagService.getTagsMap());
         model.addAttribute("postForm", new PostForm());
@@ -159,6 +162,10 @@ public class PostController {
     public String createPost(Principal principal, @Valid PostForm postForm, BindingResult bindingResult, Model model) {
         String name = principal.getName();
         Post post = postService.addPost(postForm, name);
+        String mode = postForm.getMode();
+        if (MODE_SIMPLE.equalsIgnoreCase(mode)) {
+            return "redirect:/simple/post/" + post.getId();
+        }
         return "redirect:/post/" + post.getId();
     }
 
@@ -170,4 +177,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Override
+    protected String getMode() {
+        return MODE_NORMAL;
+    }
 }
