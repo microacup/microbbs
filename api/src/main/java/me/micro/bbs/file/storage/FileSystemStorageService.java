@@ -1,7 +1,7 @@
 package me.micro.bbs.file.storage;
 
 import me.micro.bbs.file.FilePart;
-import me.micro.bbs.file.ShortUUID;
+import me.micro.bbs.util.ShortUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

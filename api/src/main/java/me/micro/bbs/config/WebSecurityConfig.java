@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         headers.contentTypeOptions().and().xssProtection()
                 .and().cacheControl()
                 .and().frameOptions().sameOrigin()
-                .addHeaderWriter(writer).frameOptions();
+                .addHeaderWriter(writer);
     }
 
     @Override

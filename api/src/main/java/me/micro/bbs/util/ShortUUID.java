@@ -4,7 +4,7 @@
  * Copyright  2016 HXDD Corporation Copyright (c) All rights reserved.
  */
 
-package me.micro.bbs.file;
+package me.micro.bbs.util;
 
 import org.apache.commons.codec.binary.Base64;
 

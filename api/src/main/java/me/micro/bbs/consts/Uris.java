@@ -46,7 +46,9 @@ public final class Uris {
 
     // 个人信息
     public static final String API_PROFILE = "/api/profile";
+    public static final String API_AVATAR = "/api/avatar";
     public static final String API_USERS_USER_ID_PROFILE = "/api/users/{userId}/profile";
+    public static final String API_USERS_USER_ID_AVATAR = "/api/users/{userId}/avatar";
 
     ////////////////////////////admin////////////////////////////////
     public static final String API_ADMIN_POSTS = "/api/admin/posts";

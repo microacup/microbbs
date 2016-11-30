@@ -19,7 +19,7 @@ buildscript {
 
 
 def vJavaLang = '1.8'
-def javaProjects = [project(':api')]
+def javaProjects = [project(':api'), project(':identicon')]
 
 subprojects {
 	version = "1.0.0"

@@ -81,7 +81,7 @@
                             <!-- Menu Toggle Button -->
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- The user image in the navbar-->
-                                <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="user-image"
+                                <img th:src="@{/api/avatar}" class="user-image"
                                      alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                 <span class="hidden-xs"><span sec:authentication="principal.nick">Bob</span></span>
@@ -89,7 +89,7 @@
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header">
-                                    <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="img-circle"
+                                    <img th:src="@{/api/avatar}" class="img-circle"
                                          alt="User Image">
                                     <p sec:authentication="principal.nick"></p>
                                     <small sec:authentication="principal.info"></small>

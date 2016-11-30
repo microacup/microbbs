@@ -2,7 +2,7 @@ package me.micro.bbs.security.oauth.client;
 
 import me.micro.bbs.enums.Channel;
 import me.micro.bbs.enums.ClientType;
-import me.micro.bbs.file.ShortUUID;
+import me.micro.bbs.util.ShortUUID;
 import me.micro.bbs.security.social.SocialToken;
 import me.micro.bbs.user.User;
 import me.micro.bbs.user.UserForm;

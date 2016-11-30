@@ -62,7 +62,15 @@ $(function () {
     // 提取主色
     $.adaptiveBackground.run({
         parent: '.avatar-bg',
-        normalizeTextColor: true
+        normalizeTextColor: true,
+        normalizedTextColors: {
+            light:      "#fff",
+            dark:       "#444"
+        },
+        lumaClasses:  {
+            light:      "ab-light",
+            dark:       "ab-dark"
+        }
     });
 });
 

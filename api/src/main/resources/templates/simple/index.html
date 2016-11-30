@@ -13,7 +13,7 @@
     <li class="list-group-item" th:each="post: ${posts}">
       <div class="media-left">
         <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
-          <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
+          <img class="post-avatar img-circle" th:src="@{'/api/users/' +  ${post.author.id} + '/avatar'}" />
         </a>
       </div>
       <div class="media-body">
@@ -65,7 +65,7 @@
       <h3 class="widget-user-username" sec:authentication="principal.nick">xm</h3>
       <h5 class="widget-user-desc" sec:authentication="principal.info">我的愿望是，世界和平</h5>
       <div class="widget-user-image">
-        <img th:src="@{/static/lib/admin-lte/dist/img/user7-128x128.jpg}" data-adaptive-background class="img-circle"
+        <img th:src="@{/api/avatar}" data-adaptive-background class="img-circle"
              alt="User Image">
       </div>
     </div>

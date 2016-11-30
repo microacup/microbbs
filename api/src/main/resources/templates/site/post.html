@@ -73,7 +73,7 @@
       <template v-for="comment in comments">
         <div class="box-comment" :id="'floor' + comment.floor">
           <!-- User image -->
-          <img class="img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="User Image">
+          <img class="img-circle img-sm" :src="_ctx+'/api/users/' + comment.author.id + '/avatar'" alt="User Image">
           <div class="comment-text">
             <div class="username">
               <span class="reply-author">{{comment.author.nick}}</span>
@@ -100,7 +100,7 @@
     <div class="box-footer">
       <form action="#" method="post">
         <input id="comment-csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <img class="img-responsive img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="Alt Text">
+        <img class="img-responsive img-circle img-sm" th:src="@{/static/images/avatar.png}" alt="Alt Text">
         <!-- .img-push is used to add margin to elements next to floating images -->
         <div class="img-push">
           <div class="form-group">
@@ -121,7 +121,8 @@
       <h3 class="widget-user-username" th:utext="${post.author.nick}">author</h3>
       <h5 class="widget-user-desc" th:utext="${post.author.info}">我的愿望是，世界和平</h5>
       <div class="widget-user-image">
-        <img th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" data-adaptive-background class="img-circle" alt="User Image" />
+          <img th:src="@{'/api/users/' + ${post.author.id} + '/avatar'}" data-adaptive-background class="img-circle"
+               alt="User Image">
       </div>
     </div>
 
