@@ -6,36 +6,40 @@
   <title th:inline="text">[[#{app.title}]]</title>
 </head>
 <body>
+<!--content-->
+<section layout:fragment="top" class="main-top">
+  <div class="container">
+    <div class="content-header">
+      <ul class="nav nav-pills" role="tablist" th:if="${activeCategory == null}">
+        <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'hot')}"><a th:href="@{/hot}">热门</a></li>
+        <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'perfect')}"><a th:href="@{/perfect}">优选</a></li>
+        <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'now')}"><a th:href="@{/now}">此刻</a></li>
+      </ul>
+
+      <ul class="nav nav-pills" role="tablist" th:if="${activeCategory != null}">
+        <li role="presentation" th:class="${#strings.equals(activeTag.id, '-1') ? 'active' : ''}">
+          <a th:href="@{'/category/' + ${activeCategory.id}}">全部</a>
+        </li>
+        <li role="presentation"  th:each="tag: ${tags}" th:class="${tag.id == activeTag.id ? 'active' : ''}">
+          <a th:href="@{'/category/' + ${activeCategory.id} + '/tag/' + ${tag.id}}" th:utext="${tag.title}"></a>
+          <!--<span class="badge">42</span>-->
+        </li>
+      </ul>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li th:if="${activeCategory != null}"><a href="#" th:utext="${activeCategory.title}">探索</a></li>
+        <li th:if="${activeCategory == null}"><a href="#">探索</a></li>
+        <li class="active" th:if="${activeTag != null}" th:utext="${activeTag.title}">此刻</li>
+        <li class="active" th:if="${activeTag == null}" th:utext="${activedExplorer}">此刻</li>
+      </ol>
+    </div>
+  </div>
+</section><!--/tags-->
+
 <!--tags-->
 <main layout:fragment="content" id="posts">
   <section layout:replace="site/_post :: post-list"></section>
 </main><!--/content-->
-
-<!--content-->
-<section layout:fragment="top" class="content-header">
-  <ul class="nav nav-pills" role="tablist" th:if="${activeCategory == null}">
-    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'hot')}"><a th:href="@{/hot}">热门</a></li>
-    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'perfect')}"><a th:href="@{/perfect}">优选</a></li>
-    <li role="presentation" th:class="${@uih.tagClass(actived?:'', 'now')}"><a th:href="@{/now}">此刻</a></li>
-  </ul>
-
-  <ul class="nav nav-pills" role="tablist" th:if="${activeCategory != null}">
-    <li role="presentation" th:class="${#strings.equals(activeTag.id, '-1') ? 'active' : ''}">
-      <a th:href="@{'/category/' + ${activeCategory.id}}">全部</a>
-    </li>
-    <li role="presentation"  th:each="tag: ${tags}" th:class="${tag.id == activeTag.id ? 'active' : ''}">
-      <a th:href="@{'/category/' + ${activeCategory.id} + '/tag/' + ${tag.id}}" th:utext="${tag.title}"></a>
-      <!--<span class="badge">42</span>-->
-    </li>
-  </ul>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-    <li th:if="${activeCategory != null}"><a href="#" th:utext="${activeCategory.title}">探索</a></li>
-    <li th:if="${activeCategory == null}"><a href="#">探索</a></li>
-    <li class="active" th:if="${activeTag != null}" th:utext="${activeTag.title}">此刻</li>
-    <li class="active" th:if="${activeTag == null}" th:utext="${activedExplorer}">此刻</li>
-  </ol>
-</section><!--/tags-->
 
 <aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="sidebar">
   <section layout:replace="site/_sidebar :: me"></section>

@@ -69,6 +69,13 @@ public class ProfileApi {
         return Result.ok(profile);
     }
 
+    /**
+     * 俺的头像
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @GetMapping(API_AVATAR)
     public void meAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -82,6 +89,14 @@ public class ProfileApi {
         avatar(request, response, user);
     }
 
+    /**
+     * 别人家的头像
+     *
+     * @param userId
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @GetMapping(API_USERS_USER_ID_AVATAR)
     public void avatar(@PathVariable("userId") Long userId, HttpServletRequest request, HttpServletResponse response) throws IOException {
         // TODO 查询用户上传的头像

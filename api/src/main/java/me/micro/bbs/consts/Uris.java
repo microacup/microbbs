@@ -14,6 +14,9 @@ public final class Uris {
     /** 此刻 */
     public static final String API_POSTS_NOW = "/api/posts/now";
 
+    /** 我的帖子 */
+    public static final String API_POSTS_ME = "/api/posts/me";
+
     /** 前5名新话题 */
     public static final String API_POSTS_NOW_TOP5 = "/api/posts/now/top5";
 
@@ -49,6 +52,7 @@ public final class Uris {
     public static final String API_AVATAR = "/api/avatar";
     public static final String API_USERS_USER_ID_PROFILE = "/api/users/{userId}/profile";
     public static final String API_USERS_USER_ID_AVATAR = "/api/users/{userId}/avatar";
+    public static final String API_USERS_USER_ID_POSTS = "/api/users/{userId}/posts";
 
     ////////////////////////////admin////////////////////////////////
     public static final String API_ADMIN_POSTS = "/api/admin/posts";

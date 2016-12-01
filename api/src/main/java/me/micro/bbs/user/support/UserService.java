@@ -1,6 +1,5 @@
 package me.micro.bbs.user.support;
 
-import me.micro.bbs.util.ShortUUID;
 import me.micro.bbs.security.Permission;
 import me.micro.bbs.security.Role;
 import me.micro.bbs.security.support.PermissionService;
@@ -9,10 +8,10 @@ import me.micro.bbs.user.User;
 import me.micro.bbs.user.UserForm;
 import me.micro.bbs.user.UserProfile;
 import me.micro.bbs.user.UserSocial;
+import me.micro.bbs.util.ShortUUID;
 import org.apache.oltu.oauth2.as.issuer.MD5Generator;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,7 +51,7 @@ public class UserService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("没有找到该用户");
@@ -63,6 +62,10 @@ public class UserService implements UserDetailsService {
         user.setPermissions(permissions);
 
         return user;
+    }
+
+    public User findByNick(String nick) {
+        return userRepository.findByNick(nick);
     }
 
     public User findOne(Long id) {

@@ -10,7 +10,7 @@
       <!--#numbers.sequence( 1, 8)-->
       <li class="list-group-item" th:each="post: ${posts}">
         <div class="media-left">
-          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
+          <a th:href="@{'/profile/' + ${post.author.username}}">
             <img class="post-avatar img-circle" th:src="@{'/api/users/' +  ${post.author.id} + '/avatar'}" />
           </a>
         </div>
@@ -28,7 +28,7 @@
               <a th:case="'normal'" class="label label-default"
                  th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
                  th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-            <a class="post-author" th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a>
+            <a class="post-author" th:href="@{'/profile/' + ${post.author.username} }" th:utext="${post.author.nick}">user</a>
             <span th:unless="${post.lastAuthorName}">
                发布于
           </span>
@@ -61,7 +61,7 @@
         <a  th:case="'normal'" class="tag tag-sm" th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
            th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
         <span class="post-author">
-          <a th:href="@{'/users/' + ${post.author.id} + '/profile'}" class="author-name"  th:utext="${post.author.nick}">user</a> 发布于
+          <a th:href="@{'/profile/' + ${post.author.username} }" class="author-name"  th:utext="${post.author.nick}">user</a> 发布于
         </span>
         <span class="post-time" th:utext='${#dates.format(post.createdTime, "yyyy-MM-dd HH:mm:ss")}'>1天前</span>
         <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>

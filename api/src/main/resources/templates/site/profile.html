@@ -1,0 +1,117 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="site/layout">
+<head>
+  <title th:inline="text">[[#{app.title}]]</title>
+</head>
+<body>
+<section layout:fragment="top" class="profile-top">
+  <div class="profile-header">
+    <div class="profile-bg">
+      <img src="http://imglf1.nosdn.127.net/img/YW1YdUViNXRIc0N6YlJ3QWFxWXlCUTVCQnFnajdaM1pZNklDa1h5a2sydlNtY0FBaEo1V1pBPT0.jpg" />
+    </div>
+    <div class="container profile-inner">
+      <img th:src="@{'/api/users/' +  ${user.id} + '/avatar'}" class="profile-avatar" alt="User Image"/>
+
+      <div class="profile-detail">
+        <h1 th:text="${user.nick}">nick</h1>
+        <p th:text="${user.info}">info</p>
+      </div>
+
+      <div class="profile-controls">
+        <a href="#">详细资料</a>
+        <button class="btn btn-default">编辑个人资料</button>
+      </div>
+    </div>
+  </div>
+</section><!--/post-->
+
+<!--tags-->
+<main layout:fragment="content" id="profiles">
+  <ul class="nav nav-simple" role="tablist">
+    <li role="presentation" class="active"><a href="#">动态</a></li>
+    <li role="presentation"><a href="#">话题</a></li>
+    <li role="presentation"><a href="#">回复</a></li>
+    <li role="presentation"><a href="#">收藏</a></li>
+  </ul>
+
+  <template v-for="post in posts">
+    <div class="post">
+      <div class="user-block">
+        <img class="img-circle" th:src="@{'/api/users/' + ${user.id} + '/avatar'}" alt="User Image">
+        <span class="username"><a href="#">{{post.author.nick}}</a></span>
+        <span class="description">最后更新时间 {{post.updatedTime | moment}}</span>
+      </div>
+      <!-- /.box-header -->
+      <div class="post-wrapper">
+        <div class="post-content" v-html="post.summary"></div>
+        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> 分享</button>
+        <span class="pull-right text-muted"> {{post.replyCount}} 回复</span>
+      </div>
+      <!-- /.box-body -->
+    </div>
+  </template>
+</main><!--/content-->
+
+<aside layout:fragment="sidebar" id="sidebar">
+  <section class="sidebar box box-widget widget-user" layout:fragment="post-author">
+    <div class="box-footer">
+        <div class="row">
+          <div class="col-sm-6 border-right">
+            <div class="description-block">
+              <h5 class="description-header" th:text="${profile.followCount}">followCount</h5>
+              <span class="description-text">关注</span>
+            </div>
+            <!-- /.description-block -->
+          </div>
+          <!-- /.col -->
+          <div class="col-sm-6">
+            <div class="description-block">
+              <h5 class="description-header" th:text="${profile.fansCount}">fansCount</h5>
+              <span class="description-text">粉丝</span>
+            </div>
+            <!-- /.description-block -->
+          </div>
+        </div>
+      <!-- /.row -->
+    </div>
+  </section>
+
+</aside>
+<div layout:fragment="scripts">
+  <script src="//cdn.bootcss.com/moment.js/2.15.2/moment-with-locales.min.js"></script>
+  <script th:inline="javascript" type="text/javascript">
+      var userId = /*[[${user.id}]]*/;
+    var profileApp = new Vue({
+        el: '#profiles',
+        data: {
+            posts: null
+        },
+        created: function () {
+            this.loadPosts();
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format('YYYY-MM-DD HH:mm');
+            }
+        },
+        methods: {
+            loadPosts: function () {
+                this.$http.get(ms.Urls.posts_who.format({who:userId})).then(function (response) {
+                    if(response.status == 200 && response.body.code == 200) {
+                        profileApp.posts = response.body.data.content;
+                    } else {
+                        error(response.msg || '请求出错');
+                    }
+                }, function (response) {
+                    error(response.msg || '请求出错');
+                });
+            }
+        }
+    });
+
+  </script>
+</div>
+</body>
+</html>

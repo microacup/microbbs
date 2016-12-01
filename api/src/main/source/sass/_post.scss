@@ -1,4 +1,20 @@
 @import "mixin";
+.post {
+  position: relative;
+  border-radius: 3px;
+  background: #ffffff;
+  border-bottom: 1px solid #f4f4f4;
+  width: 100%;
+  @include border-radius(0);
+  margin: 0;
+  padding: 10px 15px;
+
+  &:last-of-type {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 15px;
+  }
+}
 
 .media-left, .modal-body, .media-right {
   vertical-align: middle;
@@ -7,10 +23,6 @@
 .post-avatar {
   height: 48px;
   width: 48px;
-}
-
-.post-header {
-  padding-top: 15px;
 }
 
 .post-title {
@@ -24,8 +36,18 @@
   @include one-line-text;
 }
 
+.post-wrapper {
+  margin-left: 50px;
+}
+
 .post-content {
   font-size: 14px;
+  img {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100%;
+    max-height: 2048px;
+  }
 }
 
 .post-author:before,

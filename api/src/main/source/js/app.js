@@ -8,6 +8,8 @@ var ms = {
     Urls: {
         posts_related_top5: _ctx + '/api/posts/{postId}/related/top5',
         posts_now_top5: _ctx + '/api/posts/now/top5',
+        posts_who:  _ctx + '/api/users/{who}/posts',
+        posts_me:  _ctx + '/api/posts/me',
         replies: _ctx + '/api/posts/{postId}/replies',
         do_reply: _ctx + '/api/replies',
         tags_hot: _ctx + '/api/tags/hot',

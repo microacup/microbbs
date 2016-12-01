@@ -5,6 +5,7 @@ import me.micro.bbs.post.Post;
 import me.micro.bbs.post.PostForm;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
+import me.micro.bbs.user.User;
 import me.micro.bbs.user.support.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -129,5 +130,14 @@ public class PostService {
     public void read(Post post) {
         post.setReadCount(post.getReadCount() + 1);
         postRepository.save(post);
+    }
+
+    public Page<Post> findByAuthor(User author, int page, int size) {
+        Page<Post> posts = postRepository.findByAuthor(author, new PageRequest(page, size, Sort.Direction.DESC, "updatedTime"));
+        return posts;
+    }
+
+    public Page<Post> findByAuthorId(Long authorId, int page, int size) {
+        return postRepository.findByAuthorId(authorId, new PageRequest(page, size, Sort.Direction.DESC, "updatedTime"));
     }
 }

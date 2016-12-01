@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css">
   <link href="//cdn.bootcss.com/select2/4.0.3/css/select2.min.css" rel="stylesheet">
   <link th:href="@{/static/lib/admin-lte/dist/css/AdminLTE.min.css}" rel="stylesheet">
-  <link href="//cdn.bootcss.com/admin-lte/2.3.8/css/skins/skin-green-light.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/admin-lte/2.3.8/css/skins/skin-black-light.min.css" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/static/lib/iconfont/iconfont.css}">
   <link rel="stylesheet" th:href="@{/static/css/app.css}"/>
 
@@ -27,7 +27,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 </head>
-<body class="hold-transition skin-green-light layout-top-nav">
+<body class="hold-transition skin-black-light layout-top-nav">
 <div class="wrapper">
   <!-- Main Header -->
   <header class="main-header">
@@ -47,10 +47,10 @@
               <a th:href="@{/explore}">探索</a>
             </li>
 
-            <li th:if="${#lists.size(categories) > 5}" th:each="a : ${#numbers.sequence(0,4)}" th:object="${categories.get(a)}" th:class="${activeCategory!= null && categories.get(a).id == activeCategory.id ? 'active' : ''}">
+            <li th:if="${categories != null and #lists.size(categories) > 5}" th:each="a : ${#numbers.sequence(0,4)}" th:object="${categories.get(a)}" th:class="${activeCategory!= null && categories.get(a).id == activeCategory.id ? 'active' : ''}">
               <a th:href="@{'/category/' + *{id}}" th:utext="*{title }"></a>
             </li>
-            <li th:if="${#lists.size(categories) > 5}" class="dropdown">
+            <li th:if="${categories != null and #lists.size(categories) > 5}" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">其他 <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li th:each="x : ${#numbers.sequence(5, (#lists.size(categories) - 1))}" th:object="${categories.get(x)}" th:class="${activeCategory!= null && categories.get(x).id == activeCategory.id ? 'active' : ''}">
@@ -151,19 +151,18 @@
     </nav>
   </header>
   <!-- Full Width Column -->
+  <section class="main-top" layout:fragment="top">
+  </section>
   <div class="content-wrapper">
     <div class="container">
       <!-- Content Header (Page header) -->
-      <section layout:fragment="top">
-      </section>
-
       <div class="row">
         <!-- Main content -->
-        <main class="col-xs-12 col-md-9" layout:fragment="content">
+        <main class="col-xs-12 col-md-9 main-content" layout:fragment="content">
         </main>
         <!-- /.content -->
 
-        <aside class="col-xs-12 col-md-3" layout:fragment="sidebar">
+        <aside class="col-xs-12 col-md-3 main-aside" layout:fragment="sidebar">
         </aside>
       </div>
     </div>

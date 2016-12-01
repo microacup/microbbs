@@ -37,7 +37,7 @@
 
           <a class="navbar-brand" th:href="@{/simple}">
             <img th:src="@{/static/images/icons/ic_arrow_back_black_24dp.png}" th:if="${backable}">
-            <span th:utext="${title}?: #{app.title}"></span>
+            <span th:utext="${title}?: '在线答疑'"></span>
           </a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>

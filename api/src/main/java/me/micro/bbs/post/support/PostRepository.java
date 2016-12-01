@@ -3,13 +3,12 @@ package me.micro.bbs.post.support;
 import me.micro.bbs.enums.PostStatus;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.tag.Tag;
+import me.micro.bbs.user.User;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,5 +43,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 某标签下的话题数量
     @Query(value = "select count(1) from m_posts_tags where tag_id = :tagId", nativeQuery = true)
     Long countByTagId(@Param("tagId") Long tagId);
+
+    Page<Post> findByAuthor(User author, Pageable pageable);
+
+    @Query("select p from Post p where p.author.id = :authorId")
+    Page<Post> findByAuthorId(@Param("authorId") Long authorId, Pageable pageable);
 
 }
