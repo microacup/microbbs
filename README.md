@@ -36,7 +36,7 @@
 
 ## Stack
 
-* (TODO) `React.js` 全家桶 
+* (TODO) `React.js` 全家桶 or Vue 
 * `Spring Boot` 全家桶
 * `Mysql`
 

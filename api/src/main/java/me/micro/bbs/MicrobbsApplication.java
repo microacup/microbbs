@@ -1,12 +1,10 @@
 package me.micro.bbs;
 
-import me.micro.bbs.file.storage.StorageProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
-@EnableConfigurationProperties(StorageProperties.class)
 public class MicrobbsApplication extends SpringBootServletInitializer {
 	@Value("${server.port}") private String port;
 	@Value("${server.contextPath}") private String contextPath;

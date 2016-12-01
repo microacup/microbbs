@@ -63,6 +63,9 @@ oauth2:
 
 site:
   server: http://meiqiu.ngrok.cc/bbs
+  upload:
+    windows: D:\microbbs\upload
+    linux: /data/microbbs/upload
 
 logging:
   level:

@@ -2,7 +2,7 @@ package me.micro.bbs.file.storage;
 
 import me.micro.bbs.file.FilePart;
 import me.micro.bbs.util.ShortUUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -21,12 +21,14 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private final Path rootLocation;
+    @Value("${site.upload.windows}")
+    private String location_windows;
 
-    @Autowired
-    public FileSystemStorageService(StorageProperties properties) {
-        this.rootLocation = Paths.get(properties.getLocation());
-    }
+    @Value("${site.upload.linux}")
+    private String location_linux;
+
+    private Path rootLocation;
+
 
     @Override
     public String store(MultipartFile file, String prefix) {
@@ -88,6 +90,15 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public void init() {
         try {
+            if (this.rootLocation == null) {
+                String os = System.getProperty("os.name").toLowerCase();
+                if (os.indexOf("windows") >= 0) {
+                    this.rootLocation = Paths.get(location_windows);
+                } else {
+                    this.rootLocation = Paths.get(location_linux);
+                }
+            }
+
             if (!rootLocation.toFile().exists()) {
                 Files.createDirectories(rootLocation);
             }
