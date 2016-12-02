@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 个人信息
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by microacup on 2016/12/1.
  */
 @Controller
-@RequestMapping("/profile/{userId}")
 public class ProfileController {
 
     @Autowired
@@ -28,7 +26,20 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @GetMapping
+    @GetMapping("/profile/me")
+    public String me(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User me = (User) authentication.getPrincipal();
+
+        UserProfile profile = profileService.profile(me.getId());
+        model.addAttribute("isMe", true);
+        model.addAttribute("user", me);
+        model.addAttribute("profile", profile);
+
+        return "site/profile";
+    }
+
+    @GetMapping("/profile/{userId}")
     public String profile(@PathVariable("userId") Long userId, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User me = (User) authentication.getPrincipal();

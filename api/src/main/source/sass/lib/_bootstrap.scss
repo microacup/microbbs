@@ -15,6 +15,11 @@
   font-size: 14px;
 }
 
+.navbar .nav>.active>a {
+  font-weight: bold;
+  color: $text-color-dark;
+}
+
 .navbar-brand>img {
   display: inline-block;
 }
