@@ -28,11 +28,11 @@
               <a th:case="'normal'" class="label label-default"
                  th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
                  th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-            <a class="post-author" th:href="@{'/profile/' + ${post.author.username} }" th:utext="${post.author.nick}">user</a>
+            <a class="post-author" th:href="@{'/profile/' + ${post.author.id} }" th:utext="${post.author.nick}">user</a>
             <span th:unless="${post.lastAuthorName}">
                发布于
           </span>
-            <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+            <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a th:href="@{'/profile/' + ${post.lastAuthor} }" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
             <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:mm:ss")}'>1小时14分钟前</span>
           </div>
         </div>
@@ -61,10 +61,10 @@
         <a  th:case="'normal'" class="tag tag-sm" th:href="@{'/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
            th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
         <span class="post-author">
-          <a th:href="@{'/profile/' + ${post.author.username} }" class="author-name"  th:utext="${post.author.nick}">user</a> 发布于
+          <a th:href="@{'/profile/' + ${post.author.id} }" class="author-name"  th:utext="${post.author.nick}">user</a> 发布于
         </span>
         <span class="post-time" th:utext='${#dates.format(post.createdTime, "yyyy-MM-dd HH:mm:ss")}'>1天前</span>
-        <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
+        <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a th:href="@{'/profile/' + ${post.lastAuthor} }" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
         <span class="post-time-last" th:if="${post.lastReplyTime}" th:utext='${#dates.format(post.lastReplyTime, "yyyy-MM-dd HH:mm:ss")}'>1小时前</span>
         <span class="post-read-count"><span th:text="${post.readCount}">A</span> 次阅读</span>
       </div>

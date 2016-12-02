@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- *
+ * PostFormAdapter
  *
  * Created by microacup on 2016/11/11.
  */
 @Service
 public class PostFormAdapter {
-    private static final int SUMMARY_LENGTH = 140;
+    private static final int SUMMARY_LENGTH = 2; // 摘要一级节点个数
 
     @Autowired
     private UserRepository userRepository;

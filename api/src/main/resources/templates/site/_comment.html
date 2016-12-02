@@ -29,7 +29,7 @@
         <img class="img-circle img-sm" :src="_ctx+'/api/users/' + comment.author.id + '/avatar'" alt="User Image">
         <div class="comment-text">
           <div class="username">
-            <span class="reply-author">{{comment.author.nick}}</span>
+            <a :href="_ctx + '/profile/' + comment.author.id " class="reply-author">{{comment.author.nick}}</a>
             <a class="text-muted floor" :href="'#floor' + comment.floor"> # {{comment.floor}}</a>
             <span class="text-muted time"><i class="fa fa-clock-o"></i> {{comment.createdTime | moment}}</span>
             <a class="pull-right comment-action action-down" title="收藏"><i class="fa fa-bookmark"></i></a>
@@ -53,7 +53,7 @@
   <div class="box-footer">
     <form action="#" method="post">
       <input id="comment-csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-      <img class="img-responsive img-circle img-sm" th:src="@{/static/lib/admin-lte/dist/img/user3-128x128.jpg}" alt="Alt Text">
+      <img class="img-responsive img-circle img-sm" th:src="@{/api/avatar}" alt="Alt ME">
       <!-- .img-push is used to add margin to elements next to floating images -->
       <div class="img-push">
         <div class="form-group">

@@ -11,7 +11,16 @@ a:hover,
 a:active {
   outline: none;
   text-decoration: none;
-  /*color: #666;*/
+}
+
+a {
+  color: #666;
+
+  /*&:visited,
+  &:hover,
+  &:active {
+    color: #333;
+  }*/
 }
 
 .clearfix:before, .clearfix:after, .modal-footer:before, .modal-footer:after {

@@ -29,51 +29,57 @@
 
 <!--tags-->
 <main layout:fragment="content" id="profiles">
-  <ul class="nav nav-simple" role="tablist">
-    <li role="presentation" class="active"><a href="#">动态</a></li>
-    <li role="presentation"><a href="#">话题</a></li>
-    <li role="presentation"><a href="#">回复</a></li>
-    <li role="presentation"><a href="#">收藏</a></li>
-  </ul>
+  <section class="profile-content">
+    <ul class="nav nav-simple" role="tablist">
+      <li role="presentation" class="active"><a href="#">动态</a></li>
+      <li role="presentation"><a href="#">话题</a></li>
+      <li role="presentation"><a href="#">回复</a></li>
+      <li role="presentation"><a href="#">收藏</a></li>
+    </ul>
 
-  <template v-for="post in posts">
-    <div class="post">
-      <div class="user-block">
-        <img class="img-circle" th:src="@{'/api/users/' + ${user.id} + '/avatar'}" alt="User Image">
-        <span class="username"><a href="#">{{post.author.nick}}</a></span>
-        <span class="description">最后更新时间 {{post.updatedTime | moment}}</span>
-      </div>
-      <!-- /.box-header -->
-      <div class="post-wrapper">
-        <div class="post-content" v-html="post.summary"></div>
-        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> 分享</button>
-        <span class="pull-right text-muted"> {{post.replyCount}} 回复</span>
-      </div>
-      <!-- /.box-body -->
-    </div>
-  </template>
-</main><!--/content-->
-
-<aside layout:fragment="sidebar" id="sidebar">
-  <section class="sidebar box box-widget widget-user" layout:fragment="post-author">
-    <div class="box-footer">
-        <div class="row">
-          <div class="col-sm-6 border-right">
-            <div class="description-block">
-              <h5 class="description-header" th:text="${profile.followCount}">followCount</h5>
-              <span class="description-text">关注</span>
-            </div>
-            <!-- /.description-block -->
-          </div>
-          <!-- /.col -->
-          <div class="col-sm-6">
-            <div class="description-block">
-              <h5 class="description-header" th:text="${profile.fansCount}">fansCount</h5>
-              <span class="description-text">粉丝</span>
-            </div>
-            <!-- /.description-block -->
+    <template v-for="post in posts">
+      <div class="post">
+        <div class="user-block">
+          <img class="img-circle" th:src="@{'/api/users/' + ${user.id} + '/avatar'}" alt="User Image">
+          <span class="username"><a href="#">{{post.author.nick}}</a></span>
+          <span class="description">最后更新时间 {{post.updatedTime | moment}}</span>
+        </div>
+        <!-- /.box-header -->
+        <div class="post-wrapper">
+          <div class="post-content" v-html="post.summary"></div>
+          <div class="post-footer">
+            <span class="text-muted"><i class="fa fa-comments"></i> {{post.replyCount}}</span>
+            <a type="button" href="#"><i class="fa fa-share-alt"></i></a>
+            <a type="button" title="查看全文" class="pull-right" href="#">阅读全文 <i class="fa fa-chevron-down"></i></a>
           </div>
         </div>
+        <!-- /.box-body -->
+      </div>
+    </template>
+
+  </section>
+</main><!--/content-->
+
+<aside layout:fragment="sidebar" class="col-xs-12 col-md-3 main-aside profile-aside"  id="sidebar">
+  <section class="sidebar box box-widget widget-user" layout:fragment="post-author">
+    <div class="box-footer">
+      <div class="row">
+        <div class="col-sm-6 border-right">
+          <div class="description-block">
+            <h5 class="description-header" th:text="${profile.followCount}">followCount</h5>
+            <span class="description-text">关注</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <div class="description-block">
+            <h5 class="description-header" th:text="${profile.fansCount}">fansCount</h5>
+            <span class="description-text">粉丝</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+      </div>
       <!-- /.row -->
     </div>
   </section>
