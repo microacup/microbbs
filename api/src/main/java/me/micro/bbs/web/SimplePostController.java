@@ -44,31 +44,31 @@ public class SimplePostController extends BaseController {
     /**
      * 按照分类下的标签展示话题
      *
-     * @param categoryId
-     * @param tagId
+     * @param category
+     * @param tag
      * @param model
      * @return
      */
-    @GetMapping("/category/{categoryId}/tag/{tagId}")
+    @GetMapping("/category/{category}/tag/{tag}")
     public String postsByTag(HttpServletRequest request,
-                             @PathVariable("categoryId") long categoryId,
-                             @PathVariable("tagId") long tagId,
+                             @PathVariable("category") String category,
+                             @PathVariable("tag") String tag,
                              @RequestParam(defaultValue = "1") int page,
                              Model model) {
         super.injectMode(model);
         WebUtils.setSessionAttribute(request, "entry", request.getRequestURL().toString());
 
-        Category activeCategory = categoryService.findOne(categoryId);
+        Category activeCategory = categoryService.findByCode(category);
         if (activeCategory == null) return "site/404";
 
-        Tag activeTag = tagService.findOne(tagId);
+        Tag activeTag = tagService.findByCode(tag);
         if (activeTag == null) return "site/404";
         model.addAttribute("activeCategory", activeCategory);
         model.addAttribute("activeTag", activeTag);
 
-        List<Long> tagIds = new ArrayList<>(1);
-        tagIds.add(tagId);
-        Page<Post> posts = postService.findByTags(tagIds, page - 1, Setting.PAGE_SIZE);
+        List<String> tagCodes = new ArrayList<>(1);
+        tagCodes.add(tag);
+        Page<Post> posts = postService.findByTags(tagCodes, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);

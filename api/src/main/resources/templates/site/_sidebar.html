@@ -99,14 +99,14 @@
   </div>
 </section><!--/此刻-->
 
-<!--热门话题-->
+<!--热门标签-->
 <section class="sidebar box box-danger" layout:fragment="hot">
   <div class="box-header with-border">
     <h3 class="box-title">热门标签</h3>
   </div>
   <div class="box-body hot-tags">
     <template v-for="ht in hotTags">
-      <a :href="_ctx + '/category/' + ht.categoryId + '/tag/' + ht.id " class="label label-default">{{ht.title}}</a>
+      <a :href="_ctx + '/category/' + ht.category.code + '/tag/' + ht.code " class="label label-default">{{ht.title}}</a>
     </template>
   </div>
 </section>

@@ -25,14 +25,14 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByStatus(PostStatus status, Pageable pageable);
 
-    @Query("select distinct p from Post p INNER JOIN p.tags t WHERE t.id in :tags")
-    Page<Post> findByTags(@Param("tags") Collection<Long> tags, Pageable pageable);
+    @Query("select distinct p from Post p INNER JOIN p.tags t WHERE t.code in :tags")
+    Page<Post> findByTags(@Param("tags") Collection<String> tags, Pageable pageable);
 
-    @Query("select distinct p from Post p INNER JOIN p.tags t WHERE t.id in :tags and p.status = :status")
-    Page<Post> findByTagsAndStatus(@Param("tags") Collection<Long> tags, @Param("status")PostStatus status, Pageable pageable);
+    @Query("select distinct p from Post p INNER JOIN p.tags t WHERE t.code in :tags and p.status = :status")
+    Page<Post> findByTagsAndStatus(@Param("tags") Collection<String> tags, @Param("status")PostStatus status, Pageable pageable);
 
-    @Query("select distinct p from Post p inner join  p.tags t where t.category.id = :category and p.status = :status")
-    Page<Post> findByCategoryIdAndStatus(@Param("category") Long category, @Param("status")PostStatus status, Pageable pageable);
+    @Query("select distinct p from Post p inner join  p.tags t where t.category.code = :category and p.status = :status")
+    Page<Post> findByCategoryAndStatus(@Param("category") String category, @Param("status")PostStatus status, Pageable pageable);
 
     Page<Post> findByPerfectTrue(Pageable pageable);
 

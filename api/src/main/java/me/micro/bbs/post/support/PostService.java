@@ -59,20 +59,20 @@ public class PostService {
         return postRepository.findOne(id);
     }
 
-    public Page<Post> findByTags(Collection<Long> tags, int page, int pageSize) {
+    public Page<Post> findByTags(Collection<String> tags, int page, int pageSize) {
         Page<Post> posts = postRepository.findByTags(tags,
                 new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
         return posts;
     }
 
-    public Page<Post> findByTagsActived(Collection<Long> tags, int page, int pageSize) {
+    public Page<Post> findByTagsActived(Collection<String> tags, int page, int pageSize) {
         Page<Post> posts = postRepository.findByTagsAndStatus(tags, PostStatus.actived,
                 new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
         return posts;
     }
 
-    public Page<Post> findByCategoryId(Long categoryId, int page, int pageSize) {
-        Page<Post> posts = postRepository.findByCategoryIdAndStatus(categoryId, PostStatus.actived,
+    public Page<Post> findByCategory(String category, int page, int pageSize) {
+        Page<Post> posts = postRepository.findByCategoryAndStatus(category, PostStatus.actived,
                 new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
         return posts;
     }

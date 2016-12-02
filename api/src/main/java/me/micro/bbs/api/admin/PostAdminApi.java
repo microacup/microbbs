@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,10 +41,8 @@ public class PostAdminApi {
         Page<Post> posts = null;
         if (!StringUtils.isBlank(tags)) {
             String[] strings = tags.split(",");
-            List<Long> tagList = new ArrayList<>(strings.length);
-            for (String tag : strings) {
-                tagList.add(Long.parseLong(tag));
-            }
+            List<String> tagList = new ArrayList<>(strings.length);
+            tagList.addAll(Arrays.asList(strings));
             posts = postService.findByTags(tagList, page - 1, size);
             return ResponseEntity.ok(posts);
         } else {

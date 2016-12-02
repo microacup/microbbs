@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,10 +48,8 @@ public class PostApi {
         Page<Post> posts = null;
         if (!StringUtils.isBlank(tags)) {
             String[] strings = tags.split(",");
-            List<Long> tagList = new ArrayList<>(strings.length);
-            for (String tag : strings) {
-                tagList.add(Long.parseLong(tag));
-            }
+            List<String> tagList = new ArrayList<>(strings.length);
+            tagList.addAll(Arrays.asList(strings));
             posts = postService.findByTagsActived(tagList, page, pageSize);
             return ResponseEntity.ok(posts);
         } else {
@@ -63,14 +62,14 @@ public class PostApi {
     /**
      * 按照分类找话题
      *
-     * @param categoryId
+     * @param category
      * @param page
      * @return
      */
     @GetMapping(Uris.API_CATEGORIES_POSTS)
-    public ResponseEntity<Page<Post>> postsByCategory(@PathVariable(value = "categoryId") long categoryId,
+    public ResponseEntity<Page<Post>> postsByCategory(@PathVariable(value = "category") String category,
                                                       @RequestParam(defaultValue = "0") int page) {
-        Page<Post> posts = postService.findByCategoryId(categoryId, page, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.findByCategory(category, page, Setting.PAGE_SIZE);
         return ResponseEntity.ok(posts);
     }
 

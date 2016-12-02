@@ -27,13 +27,13 @@ public final class Uris {
     public static final String API_CATEGORIES = "/api/categories";
 
     /** 按分类找标签*/
-    public static final String API_CATEGORIES_TAGS = "/api/categories/{categoryId}/tags";
+    public static final String API_CATEGORIES_TAGS = "/api/categories/{code}/tags";
 
     /** 热门标签 */
     public static final String API_HOT_TAGS = "/api/tags/hot";
 
     /** 按分类找话题*/
-    public static final String API_CATEGORIES_POSTS = "/api/categories/{categoryId}/posts";
+    public static final String API_CATEGORIES_POSTS = "/api/categories/{category}/posts";
 
     /** 按照话题找回复*/
     public static final String API_POSTS_ID_REPLIES = "/api/posts/{postId}/replies";

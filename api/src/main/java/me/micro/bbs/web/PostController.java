@@ -34,15 +34,15 @@ public class PostController extends BaseController {
     /**
      * 按分类展示话题
      *
-     * @param categoryId
+     * @param category
      * @param model
      * @return
      */
-    @GetMapping("/category/{categoryId}")
-    public String postsByCategory(@PathVariable("categoryId") long categoryId,
+    @GetMapping("/category/{category}")
+    public String postsByCategory(@PathVariable("category") String category,
                                   @RequestParam(defaultValue = "1") int page,
                                   Model model) {
-        Category activeCategory = categoryService.findOne(categoryId);
+        Category activeCategory = categoryService.findByCode(category);
         if (activeCategory == null) return "site/404";
 
         List<Category> categories = categoryService.findAll();
@@ -51,14 +51,14 @@ public class PostController extends BaseController {
         model.addAttribute("activeCategory", activeCategory);
         model.addAttribute("categories", categories);
 
-        List<Tag> tags = tagService.findByCategory(activeCategory.getId());
+        List<Tag> tags = tagService.findByCategory(activeCategory.getCode());
         if(tags.isEmpty()) return "site/404";
 
         Tag activeTag = getDefaultTag(activeCategory);
         model.addAttribute("activeTag", activeTag);
         model.addAttribute("tags", tags);
 
-        Page<Post> posts = postService.findByCategoryId(categoryId, page - 1, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.findByCategory(category, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);
@@ -78,34 +78,34 @@ public class PostController extends BaseController {
     /**
      * 按照分类下的标签展示话题
      *
-     * @param categoryId
-     * @param tagId
+     * @param category
+     * @param tag
      * @param model
      * @return
      */
-    @GetMapping("/category/{categoryId}/tag/{tagId}")
-    public String postsByTag(@PathVariable("categoryId") long categoryId,
-                             @PathVariable("tagId") long tagId,
+    @GetMapping("/category/{category}/tag/{tag}")
+    public String postsByTag(@PathVariable("category") String category,
+                             @PathVariable("tag") String tag,
                              @RequestParam(defaultValue = "1") int page,
                              Model model) {
-        Category activeCategory = categoryService.findOne(categoryId);
+        Category activeCategory = categoryService.findByCode(category);
         if (activeCategory == null) return "site/404";
 
         List<Category> categories = categoryService.findAll();
         if (categories == null) return "site/404";
         model.addAttribute("categories", categories);
 
-        Tag activeTag = tagService.findOne(tagId);
+        Tag activeTag = tagService.findByCode(tag);
         if (activeTag == null) return "site/404";
         model.addAttribute("activeCategory", activeCategory);
         model.addAttribute("activeTag", activeTag);
 
-        List<Tag> tags = tagService.findByCategory(activeCategory.getId());
+        List<Tag> tags = tagService.findByCategory(activeCategory.getCode());
         model.addAttribute("tags", tags);
 
-        List<Long> tagIds = new ArrayList<>(1);
-        tagIds.add(tagId);
-        Page<Post> posts = postService.findByTags(tagIds, page - 1, Setting.PAGE_SIZE);
+        List<String> tagCodes = new ArrayList<>(1);
+        tagCodes.add(tag);
+        Page<Post> posts = postService.findByTags(tagCodes, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);

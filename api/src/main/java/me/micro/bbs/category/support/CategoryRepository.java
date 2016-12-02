@@ -14,7 +14,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    
-
-
+    Category findByCode(String code);
 }

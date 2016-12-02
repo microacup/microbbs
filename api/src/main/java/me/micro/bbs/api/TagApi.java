@@ -25,8 +25,8 @@ public class TagApi {
 
     // 按分类找标签
     @GetMapping(Uris.API_CATEGORIES_TAGS)
-    public ResponseEntity<List<Tag>> tags(@PathVariable("categoryId") long categoryId) {
-        List<Tag> tags = tagService.findByCategory(categoryId);
+    public ResponseEntity<List<Tag>> tags(@PathVariable("code") String code) {
+        List<Tag> tags = tagService.findByCategory(code);
         return ResponseEntity.ok(tags);
     }
 
