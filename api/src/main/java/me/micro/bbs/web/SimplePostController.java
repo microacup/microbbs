@@ -60,7 +60,8 @@ public class SimplePostController extends BaseController {
         HttpSession session = request.getSession();
         String lastCategory = (String) session.getAttribute("simple-category");
         if (lastCategory != null && !lastCategory.equals(category)) {
-            return "site/404";
+            model.addAttribute("message", "你还没有权限访问哦");
+            return "site/403";
         }
         session.setAttribute("simple-category", category);
         session.setAttribute("simple-entry", request.getRequestURL().toString());
@@ -108,7 +109,8 @@ public class SimplePostController extends BaseController {
         HttpSession session = request.getSession();
         String lastCategory = (String) session.getAttribute("simple-category");
         if (lastCategory != null && !lastCategory.equals(category)) {
-            return "site/404";
+            model.addAttribute("message", "你还没有权限访问哦");
+            return "site/403";
         }
 
         session.setAttribute("simple-category", category);

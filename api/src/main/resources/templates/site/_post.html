@@ -21,11 +21,11 @@
              th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
           <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
           <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
-          <div class="post-footer" th:switch="${mode}">
-              <a th:case="'simple'" class="label label-default"
+          <div class="post-footer">
+              <a  th:if="${#strings.equals(mode,'simple')}" class="label label-default"
                  th:href="@{'/simple/category/' + ${t.category.code} + '/tag/' + ${t.code}}"
                  th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-              <a th:case="'normal'" class="label label-default"
+              <a  th:if="${#strings.equals(mode,'normal')}" class="label label-default"
                  th:href="@{'/category/' + ${t.category.code} + '/tag/' + ${t.code}}"
                  th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
             <a class="post-author" th:href="@{'/profile/' + ${post.author.id} }" th:utext="${post.author.nick}">user</a>
@@ -55,10 +55,10 @@
       <i class="iconfont icon-zhiding icon-micro"
          th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
       <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
-      <div class="post-footer" th:switch="${mode}">
-        <a  th:case="'simple'" class="tag tag-sm" th:href="@{'/simple/category/' + ${t.category.code} + '/tag/' + ${t.code}}"
-           th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-        <a  th:case="'normal'" class="tag tag-sm" th:href="@{'/category/' + ${t.category.code} + '/tag/' + ${t.code}}"
+      <div class="post-footer">
+        <a th:each="t: ${post.tags}"  th:if="${#strings.equals(mode,'simple')}" class="tag tag-sm" th:href="@{'/simple/category/' + ${t.category.code} + '/tag/' + ${t.code}}"
+            th:utext="${t.title}">Tag</a>
+        <a  th:if="${#strings.equals(mode,'normal')}"  class="tag tag-sm" th:href="@{'/category/' + ${t.category.code} + '/tag/' + ${t.code}}"
            th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
         <span class="post-author">
           <a th:href="@{'/profile/' + ${post.author.id} }" class="author-name"  th:utext="${post.author.nick}">user</a> 发布于
