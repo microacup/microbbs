@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +34,59 @@ public class SimplePostController extends BaseController {
 
     @GetMapping
     public String index(HttpServletRequest request) {
-        String entry = (String) WebUtils.getSessionAttribute(request, "entry");
+        String entry = (String) WebUtils.getSessionAttribute(request, "simple-entry");
         if (entry != null) {
             return "redirect:" + entry;
         }
 
         return "redirect:/404";
     }
+
+    /**
+     * 按照分类下的标签展示话题
+     *
+     * @param category
+     * @param model
+     * @return
+     */
+    @GetMapping("/category/{category}")
+    public String postsByCategory(HttpServletRequest request,
+                             @PathVariable("category") String category,
+                             @RequestParam(defaultValue = "1") int page,
+                             Model model) {
+        super.injectMode(model);
+
+        // 简单的权限校验，更合理的方式是使用Role & Permission，请在forward入口处清空simple-category
+        HttpSession session = request.getSession();
+        String lastCategory = (String) session.getAttribute("simple-category");
+        if (lastCategory != null && !lastCategory.equals(category)) {
+            return "site/404";
+        }
+        session.setAttribute("simple-category", category);
+        session.setAttribute("simple-entry", request.getRequestURL().toString());
+
+        Category activeCategory = categoryService.findByCode(category);
+        if (activeCategory == null) return "site/404";
+
+        model.addAttribute("activeCategory", activeCategory);
+        Page<Post> posts = postService.findByCategory(category, page - 1, Setting.PAGE_SIZE);
+        model.addAttribute("posts", posts);
+        model.addAttribute("totalPages", posts.getTotalPages());
+        model.addAttribute("currentPage", page);
+        Tag activeTag = getDefaultTag(activeCategory);
+        model.addAttribute("activeTag", activeTag);
+
+        return "simple/index";
+    }
+
+    private Tag getDefaultTag(Category activeCategory) {
+        Tag activeTag = new Tag();
+        activeTag.setId(-1L);
+        activeTag.setTitle("全部");
+        activeTag.setCategory(activeCategory);
+        return activeTag;
+    }
+
 
     /**
      * 按照分类下的标签展示话题
@@ -56,7 +103,17 @@ public class SimplePostController extends BaseController {
                              @RequestParam(defaultValue = "1") int page,
                              Model model) {
         super.injectMode(model);
-        WebUtils.setSessionAttribute(request, "entry", request.getRequestURL().toString());
+
+        // 简单的权限校验，更合理的方式是使用Role & Permission，请在forward入口处清空simple-category
+        HttpSession session = request.getSession();
+        String lastCategory = (String) session.getAttribute("simple-category");
+        if (lastCategory != null && !lastCategory.equals(category)) {
+            return "site/404";
+        }
+
+        session.setAttribute("simple-category", category);
+        session.setAttribute("simple-tag", tag);
+        session.setAttribute("simple-entry", request.getRequestURL().toString());
 
         Category activeCategory = categoryService.findByCode(category);
         if (activeCategory == null) return "site/404";

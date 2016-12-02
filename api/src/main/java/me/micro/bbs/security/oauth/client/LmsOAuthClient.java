@@ -2,13 +2,13 @@ package me.micro.bbs.security.oauth.client;
 
 import me.micro.bbs.enums.Channel;
 import me.micro.bbs.enums.ClientType;
-import me.micro.bbs.util.ShortUUID;
 import me.micro.bbs.security.social.SocialToken;
 import me.micro.bbs.user.User;
 import me.micro.bbs.user.UserForm;
 import me.micro.bbs.user.UserSocial;
 import me.micro.bbs.user.support.UserService;
 import me.micro.bbs.user.support.UserSocialRepository;
+import me.micro.bbs.util.ShortUUID;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -81,9 +82,10 @@ public class LmsOAuthClient {
     @GetMapping("/login")
     public String login(HttpServletRequest request,
                         @RequestParam("forward") String forward) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getDetails() instanceof User && authentication.isAuthenticated()) {
+            HttpSession session = request.getSession();
+            session.setAttribute("simple-category", null);
             return "redirect:" + forward;
         }
 

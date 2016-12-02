@@ -15,7 +15,7 @@
 <section layout:fragment="top" class="content-header">
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-    <li th:if="${activeCategory != null}"><a href="#" th:utext="${activeCategory.title}">探索</a></li>
+    <li th:if="${activeCategory != null}"><a th:href="@{'/simple/category/' + ${activeCategory.code}}" th:utext="${activeCategory.title}">探索</a></li>
     <li th:if="${activeCategory == null}"><a href="#">探索</a></li>
     <li class="active" th:if="${activeTag != null}" th:utext="${activeTag.title}">此刻</li>
     <li class="active" th:if="${activeTag == null}" th:utext="${activedExplorer}">此刻</li>
