@@ -56,6 +56,7 @@ oauth2:
     clientId: 2469375966
     clientSecret: 0f0b097b256ed88bb9f21037e36604b8
   lms:
+     server: http://meiqiu.ngrok.cc
      clientId: 1xx1255436
      clientSecret: 7x0b09ssb256ed88bb9f21037e36604b7
 

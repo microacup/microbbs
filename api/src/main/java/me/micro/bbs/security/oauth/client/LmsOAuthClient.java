@@ -49,10 +49,13 @@ import java.io.UnsupportedEncodingException;
 @Controller
 @RequestMapping("/oauth/lms")
 public class LmsOAuthClient {
-    private static final String authorize_url = "http://hxdd.ngrok.cc/oauth2/authorize";
-    private static final String access_token_url = "http://hxdd.ngrok.cc/oauth2/access_token";
-    private static final String user_show = "http://hxdd.ngrok.cc/api/v2/users/%s";
     private static final String OAUTH_CALLBACK = "/oauth/lms/callback";
+    private static final String authorize_url = "/oauth2/authorize";
+    private static final String access_token_url =  "/oauth2/access_token";
+    private static final String user_show = "/api/v2/users/%s";
+
+    @Value("${oauth2.lms.server}")
+    private String lms;
 
     @Value("${oauth2.lms.clientId}")
     private String clientId;
@@ -60,7 +63,8 @@ public class LmsOAuthClient {
     @Value("${oauth2.lms.clientSecret}")
     private String clientSecret;
 
-    private String server = "http://hxdd.ngrok.cc/bbs";
+    @Value("${site.server}")
+    private String server;
 
     @Autowired
     private UserSocialRepository userSocialRepository;
@@ -91,7 +95,7 @@ public class LmsOAuthClient {
 
         try {
             OAuthClientRequest oauthResponse = OAuthClientRequest
-                    .authorizationLocation(authorize_url)
+                    .authorizationLocation(lms + authorize_url)
                     .setResponseType(OAuth.OAUTH_CODE)
                     .setClientId(clientId)
                     .setRedirectURI(server + OAUTH_CALLBACK)
@@ -120,7 +124,7 @@ public class LmsOAuthClient {
             }
 
             OAuthClientRequest oauthClientRequest = OAuthClientRequest
-                    .tokenLocation(access_token_url)
+                    .tokenLocation(lms + access_token_url)
                     .setGrantType(GrantType.AUTHORIZATION_CODE)
                     .setClientId(clientId)
                     .setClientSecret(clientSecret)
@@ -144,7 +148,7 @@ public class LmsOAuthClient {
                 return login(request, user, forward);
             } else {
                 //获得资源服务
-                OAuthClientRequest userInfoRequest = new OAuthBearerClientRequest(String.format(user_show, openId))
+                OAuthClientRequest userInfoRequest = new OAuthBearerClientRequest(String.format(lms + user_show, openId))
                         .setAccessToken(accessToken)
                         .buildQueryMessage();
                 OAuthResourceResponse resourceResponse = oAuthClient.resource(userInfoRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
