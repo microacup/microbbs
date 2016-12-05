@@ -142,7 +142,7 @@ public class TagService {
     public void delete(Long id) throws MicroException {
         Long count = postRepository.countByTagId(id);
         if (count > 0) {
-            throw new MicroException("删除失败，改标签下还有" + count + "个话题");
+            throw new MicroException("删除失败，该标签下还有" + count + "个话题");
         }
         tagRepository.delete(id);
     }

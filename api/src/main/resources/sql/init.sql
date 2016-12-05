@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `microbbs` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `microbbs`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: 192.168.154.3    Database: microbbs
