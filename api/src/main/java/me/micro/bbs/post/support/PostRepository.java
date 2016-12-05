@@ -27,6 +27,8 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByStatus(PostStatus status, Pageable pageable);
 
+    Post findByIdAndStatus(@Param("id") Long id, @Param("status") PostStatus status);
+
     @Query("select distinct p from Post p INNER JOIN p.tags t WHERE t.code in :tags")
     Page<Post> findByTags(@Param("tags") Collection<String> tags, Pageable pageable);
 

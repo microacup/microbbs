@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,7 +59,7 @@ public class PostService {
 
     @Cacheable(value = CACHE_NAME, key = "#id")
     public Post findOne(Long id) {
-        return postRepository.findOne(id);
+        return postRepository.findByIdAndStatus(id, PostStatus.actived);
     }
 
     public Page<Post> findByTags(Collection<String> tags, int page, int pageSize) {
@@ -141,8 +140,7 @@ public class PostService {
     }
 
     public void deletePost(Long postId) {
-        Date now = new Date();
-        postRepository.updateStatus(postId, PostStatus.deleted, now);
-        replyRepository.updateStatusByPost(postId, PostStatus.deleted, now);
+        replyRepository.deleteByPostId(postId);
+        postRepository.delete(postId);
     }
 }

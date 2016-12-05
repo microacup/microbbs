@@ -39,4 +39,8 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     @Query("update Reply r set r.deletedTime = :now , r.status = :status where r.post.id = :postId")
     void updateStatusByPost(@Param("postId") Long postId, @Param("status") PostStatus status, @Param("now") Date now);
 
+    @Modifying
+    @Query("delete from Reply r where r.post.id = :postId")
+    void deleteByPostId(@Param("postId") Long postId);
+
 }

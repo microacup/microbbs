@@ -140,7 +140,6 @@ public class Post {
     @Column(name = "p_topTime")
     private Date topTime;
 
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
