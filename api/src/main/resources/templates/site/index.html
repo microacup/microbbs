@@ -87,39 +87,39 @@
       },
       methods: {
         loadProfile:function () {
-          this.$http.get(ms.Urls.profile).then((response) => {
-            // success callback
-            if(response.status == 200 && response.ok && response.body.code == 200) {
-              this.profile =  response.body.data;
-            } else {
-              error(response.msg || '无法拉取个人信息');
-            }
-          }, (response) => {
+          this.$http.get(ms.Urls.profile).then(function (response) {
+              // success callback
+              if(response.status == 200 && response.ok && response.body.code == 200) {
+                  this.profile =  response.body.data;
+              } else {
+                  error(response.msg || '无法拉取个人信息');
+              }
+          }, function (response) {
               // error callback
               console.log(response);
-            });
+          });
         },
 
         loadNow: function () {
-          this.$http.get(ms.Urls.posts_now_top5).then((response) => {
-            // success callback
-            if(response.status == 200 && response.ok) {
-              this.nows =  response.body;
-            }
-          }, (response) => {
-            // error callback
-            console.log(response);
+          this.$http.get(ms.Urls.posts_now_top5).then(function (response) {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                  this.nows =  response.body;
+              }
+          }, function (response) {
+              // error callback
+              console.log(response);
           });
         },
         loadHotTags: function () {
-          this.$http.get(ms.Urls.tags_hot).then((response) => {
-            // success callback
-            if(response.status == 200 && response.ok) {
-              this.hotTags =  response.body;
-            }
-          }, (response) => {
-            // error callback
-            console.log(response);
+          this.$http.get(ms.Urls.tags_hot).then(function (response) {
+              // success callback
+              if(response.status == 200 && response.ok) {
+                  this.hotTags =  response.body;
+              }
+          }, function (response) {
+              // error callback
+              console.log(response);
           });
         }
       }

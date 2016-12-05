@@ -127,74 +127,74 @@
         },
         methods: {
           loadComments: function () {
-            this.$http.get(ms.Urls.replies.format({postId:postId})).then((response) => {
-              // success callback
-              if(response.status == 200 && response.ok) {
-                this.comments =  response.body.content || [];
-                this.totalComments = response.body.totalElements;
-                this.totalPages = response.body.totalPages || 1;
+            this.$http.get(ms.Urls.replies.format({postId:postId})).then(function (response) {
+                // success callback
+                if(response.status == 200 && response.ok) {
+                    this.comments =  response.body.content || [];
+                    this.totalComments = response.body.totalElements;
+                    this.totalPages = response.body.totalPages || 1;
 
-                var names = [author];
-                for(var i = this.comments.length; i--;) {
-                  names.push(this.comments[i].author.nick);
-                }
-                $.unique(names);
-                ating(names);
-
-
-                // 分页
-                var defaultOption = {
-                  hideOnlyOnePage: true,
-                  initiateStartPageClick: false,
-                  first: '«',
-                  prev:'←',
-                  next:'→',
-                  last:'»',
-                  disabledClass: 'disabled hidden',
-                  startPage: this.currentPage,
-                  totalPages: this.totalPages || 1,
-                  visiblePages: 3,
-                  onPageClick: function (event, page) {
-                    if(commentsApp.currentPage !== page) {
-                      commentsApp.currentPage = page;
-                      commentsApp.nextPage();
+                    var names = [author];
+                    for(var i = this.comments.length; i--;) {
+                        names.push(this.comments[i].author.nick);
                     }
-                  }
-                };
-                $('#pagination-comments').twbsPagination(defaultOption);
-              } else {
+                    $.unique(names);
+                    ating(names);
+
+
+                    // 分页
+                    var defaultOption = {
+                        hideOnlyOnePage: true,
+                        initiateStartPageClick: false,
+                        first: '«',
+                        prev:'←',
+                        next:'→',
+                        last:'»',
+                        disabledClass: 'disabled hidden',
+                        startPage: this.currentPage,
+                        totalPages: this.totalPages || 1,
+                        visiblePages: 3,
+                        onPageClick: function (event, page) {
+                            if(commentsApp.currentPage !== page) {
+                                commentsApp.currentPage = page;
+                                commentsApp.nextPage();
+                            }
+                        }
+                    };
+                    $('#pagination-comments').twbsPagination(defaultOption);
+                } else {
+                    console.log(response);
+                    error(response.statusText || '数据错误');
+                }
+            },function (response) {
+                // error callback
                 console.log(response);
-                error(response.statusText || '数据错误');
-              }
-            }, (response) => {
-              // error callback
-              console.log(response);
             });
           },
           nextPage: function() {
             var _url = ms.Urls.replies.format({postId:postId});
-            this.$http.get(_url + '?page=' + this.currentPage).then((response) => {
-              // success callback
-              if(response.status == 200 && response.ok) {
-                this.comments =  response.body.content;
-                this.totalComments = response.body.totalElements;
-                this.totalPages = response.body.totalPages;
+            this.$http.get(_url + '?page=' + this.currentPage).then(function (response) {
+                // success callback
+                if(response.status == 200 && response.ok) {
+                    this.comments =  response.body.content;
+                    this.totalComments = response.body.totalElements;
+                    this.totalPages = response.body.totalPages;
 
-                // at
-                var names = [author];
-                for(var i = this.comments.length; i--;) {
-                  names.push(this.comments[i].author.nick);
+                    // at
+                    var names = [author];
+                    for(var i = this.comments.length; i--;) {
+                        names.push(this.comments[i].author.nick);
+                    }
+                    $.unique(names);
+                    ating(names);
+                } else {
+                    console.log(response);
+                    error(response.statusText || '数据错误');
                 }
-                $.unique(names);
-                ating(names);
-              } else {
-                console.log(response);
-                error(response.statusText || '数据错误');
-              }
-            }, (response) => {
+            }, function (response) {
                 // error callback
                 console.log(response);
-              });
+            });
             }
           }
       });
@@ -218,39 +218,39 @@
         },
         methods: {
           loadProfile:function () {
-            this.$http.get(ms.Urls.profile_id.format({userId: authorId})).then((response) => {
-              // success callback
-              if(response.status == 200 && response.ok && response.body.code == 200) {
-              this.profile =  response.body.data;
-            } else {
-              error(response.msg || '无法拉取个人信息');
-            }
-          }, (response) => {
-              // error callback
-              console.log(response);
+            this.$http.get(ms.Urls.profile_id.format({userId: authorId})).then( function (response) {
+                // success callback
+                if(response.status == 200 && response.ok && response.body.code == 200) {
+                    this.profile =  response.body.data;
+                } else {
+                    error(response.msg || '无法拉取个人信息');
+                }
+            },function (response) {
+                // error callback
+                console.log(response);
             });
           },
 
           loadNow: function () {
-            this.$http.get(ms.Urls.posts_now_top5).then((response) => {
-              // success callback
-              if(response.status == 200 && response.ok) {
-                this.nows =  response.body;
-              }
-            }, (response) => {
-              // error callback
-              console.log(response);
+            this.$http.get(ms.Urls.posts_now_top5).then(function (response) {
+                // success callback
+                if(response.status == 200 && response.ok) {
+                    this.nows =  response.body;
+                }
+            }, function (response) {
+                // error callback
+                console.log(response);
             });
           },
           loadRelated: function () {
-            this.$http.get(ms.Urls.posts_related_top5.format({postId:postId})).then((response) => {
-              // success callback
-              if(response.status == 200 && response.ok) {
-                this.rps =  response.body;
-              }
-            }, (response) => {
-              // error callback
-              console.log(response);
+            this.$http.get(ms.Urls.posts_related_top5.format({postId:postId})).then(function (response) {
+                // success callback
+                if(response.status == 200 && response.ok) {
+                    this.rps =  response.body;
+                }
+            }, function (response) {
+                // error callback
+                console.log(response);
             });
           }
         }

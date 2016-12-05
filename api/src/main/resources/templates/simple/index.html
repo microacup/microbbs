@@ -62,17 +62,17 @@
       },
       methods: {
         loadProfile:function () {
-          this.$http.get(ms.Urls.profile).then((response) => {
-            // success callback
-            if(response.status == 200 && response.ok && response.body.code == 200) {
-              this.profile =  response.body.data;
-            } else {
-              error(response.msg || '无法拉取个人信息');
-            }
-          }, (response) => {
+          this.$http.get(ms.Urls.profile).then(function (response) {
+              // success callback
+              if(response.status == 200 && response.ok && response.body.code == 200) {
+                  this.profile =  response.body.data;
+              } else {
+                  error(response.msg || '无法拉取个人信息');
+              }
+          }, function (response) {
               // error callback
               console.log(response);
-            });
+          });
         }
       }
     });
