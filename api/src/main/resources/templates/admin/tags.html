@@ -229,7 +229,7 @@
       $('#editModal').data('tag-id',selections[0].id);
       $('#e-code').val(selections[0].code);
       $('#e-title').val(selections[0].title);
-      $('#e-category').val(selections[0].categoryId);
+      $('#e-category').val(selections[0].category.id);
     });
 
     $('#submit-edit').click(function () {
