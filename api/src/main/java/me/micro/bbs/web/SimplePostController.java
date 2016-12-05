@@ -107,8 +107,8 @@ public class SimplePostController extends BaseController {
 
         // 简单的权限校验，更合理的方式是使用Role & Permission，请在forward入口处清空simple-category
         HttpSession session = request.getSession();
-        String lastCategory = (String) session.getAttribute("simple-category");
-        if (lastCategory != null && !lastCategory.equals(category)) {
+        String lastTag = (String) session.getAttribute("simple-tag");
+        if (lastTag != null && !lastTag.equals(tag)) {
             model.addAttribute("message", "你还没有权限访问哦");
             return "site/403";
         }

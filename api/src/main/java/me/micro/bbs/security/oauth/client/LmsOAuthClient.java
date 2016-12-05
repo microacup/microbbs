@@ -90,6 +90,7 @@ public class LmsOAuthClient {
         if (authentication != null && authentication.getDetails() instanceof User && authentication.isAuthenticated()) {
             HttpSession session = request.getSession();
             session.setAttribute("simple-category", null);
+            session.setAttribute("simple-tag", null);
             return "redirect:" + forward;
         }
 
