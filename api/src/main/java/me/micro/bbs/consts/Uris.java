@@ -56,6 +56,7 @@ public final class Uris {
 
     ////////////////////////////admin////////////////////////////////
     public static final String API_ADMIN_POSTS = "/api/admin/posts";
+    public static final String API_ADMIN_POSTS_ID = "/api/admin/posts/{id}";
 
     /** 所有分类*/
     public static final String API_ADMIN_CATEGORIES = "/api/admin/categories";

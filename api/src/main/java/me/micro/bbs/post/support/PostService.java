@@ -3,9 +3,9 @@ package me.micro.bbs.post.support;
 import me.micro.bbs.enums.PostStatus;
 import me.micro.bbs.post.Post;
 import me.micro.bbs.post.PostForm;
+import me.micro.bbs.reply.support.ReplyRepository;
 import me.micro.bbs.tag.Tag;
 import me.micro.bbs.tag.support.TagService;
-import me.micro.bbs.user.User;
 import me.micro.bbs.user.support.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +46,9 @@ public class PostService {
 
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private ReplyRepository replyRepository;
 
     public Page<Post> findAll(int page, int pageSize) {
         return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC,"topTime", "lastTime"));
@@ -82,34 +86,34 @@ public class PostService {
      * 热门
      */
     public Page<Post> hot(int page, int pageSize) {
-        return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC, "topTime", "replyCount", "lastTime"));
+        return postRepository.findByStatus(PostStatus.actived, new PageRequest(page, pageSize, Sort.Direction.DESC, "topTime", "replyCount", "lastTime"));
     }
 
     /**
      * 优选
      */
     public Page<Post> perfect(int page, int pageSize) {
-        return postRepository.findByPerfectTrue(new PageRequest(page, pageSize, Sort.Direction.DESC, "perfectTime", "lastTime"));
+        return postRepository.findByStatusAndPerfectTrue(PostStatus.actived, new PageRequest(page, pageSize, Sort.Direction.DESC, "perfectTime", "lastTime"));
     }
 
     /**
      * 此刻
      */
     public Page<Post> findNow(int page, int pageSize) {
-       return postRepository.findAll(new PageRequest(page, pageSize, Sort.Direction.DESC, "lastTime"));
+       return postRepository.findByStatus(PostStatus.actived, new PageRequest(page, pageSize, Sort.Direction.DESC, "lastTime"));
     }
 
     // 查询前5名
     @Cacheable(value = CACHES_REALTIME_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Post> findTop5Now() {
-        return postRepository.findTop5ByOrderByLastTimeDesc();
+        return postRepository.findTop5ByStatusOrderByLastTimeDesc(PostStatus.actived);
     }
 
     // 相关话题
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Post> findTop5RelatedPosts(Long postId) {
         List<Tag> tags = tagService.findByPostId(postId);
-        List<Post> posts = postRepository.findTop5DistinctByIdNotAndTagsInOrderByLastTimeDesc(postId, tags);
+        List<Post> posts = postRepository.findTop5DistinctByIdNotAndTagsInAndStatusOrderByLastTimeDesc(postId, tags, PostStatus.actived);
         return posts;
     }
 
@@ -132,12 +136,13 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public Page<Post> findByAuthor(User author, int page, int size) {
-        Page<Post> posts = postRepository.findByAuthor(author, new PageRequest(page, size, Sort.Direction.DESC, "updatedTime"));
-        return posts;
-    }
-
     public Page<Post> findByAuthorId(Long authorId, int page, int size) {
         return postRepository.findByAuthorId(authorId, new PageRequest(page, size, Sort.Direction.DESC, "updatedTime"));
+    }
+
+    public void deletePost(Long postId) {
+        Date now = new Date();
+        postRepository.updateStatus(postId, PostStatus.deleted, now);
+        replyRepository.updateStatusByPost(postId, PostStatus.deleted, now);
     }
 }

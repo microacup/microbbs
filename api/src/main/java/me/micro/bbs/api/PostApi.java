@@ -131,7 +131,7 @@ public class PostApi {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof User) {
             User user = (User) authentication.getPrincipal();
-            Page<Post> posts = postService.findByAuthor(user, page, Setting.PAGE_SIZE);
+            Page<Post> posts = postService.findByAuthorId(user.getId(), page, Setting.PAGE_SIZE);
             return Result.ok(posts);
         }
 

@@ -127,7 +127,7 @@ public class SimplePostController extends BaseController {
 
         List<String> tagCodes = new ArrayList<>(1);
         tagCodes.add(tag);
-        Page<Post> posts = postService.findByTags(tagCodes, page - 1, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.findByTagsActived(tagCodes, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);
