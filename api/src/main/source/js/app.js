@@ -1,7 +1,7 @@
 
 
 // 功能开始
-var _ctx = $("meta[name='ctx']").attr("content");
+var _ctx = $("meta[name='ctx']").attr("content") || '';
 
 
 var ms = {

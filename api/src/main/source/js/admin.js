@@ -1,7 +1,7 @@
 'use strict';
 
 // 上下文地址
-var _ctx = $("meta[name='ctx']").attr("content");
+var _ctx = $("meta[name='ctx']").attr("content") || '';
 var ms = {
     Urls: {
         posts: _ctx + '/api/admin/posts',

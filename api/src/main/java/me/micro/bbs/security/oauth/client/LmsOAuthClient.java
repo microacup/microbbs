@@ -214,7 +214,7 @@ public class LmsOAuthClient {
 
 
     String getName() {
-        return "wb";
+        return "lm";
     }
 
 }
