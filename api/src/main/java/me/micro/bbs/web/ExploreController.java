@@ -21,7 +21,7 @@ import java.util.List;
  * Created by microacup on 2016/11/3.
  */
 @Controller
-public class ExploreController {
+public class ExploreController extends BaseController {
 
     // 热门
     @GetMapping("/hot")
@@ -36,6 +36,7 @@ public class ExploreController {
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", posts.getTotalPages());
+        super.injectMode(model);
 
         return "site/index";
     }
@@ -52,6 +53,7 @@ public class ExploreController {
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", posts.getTotalPages());
+        super.injectMode(model);
         return "site/index";
     }
 
@@ -67,6 +69,7 @@ public class ExploreController {
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", posts.getTotalPages());
+        super.injectMode(model);
         return "site/index";
     }
 
@@ -78,4 +81,9 @@ public class ExploreController {
 
     @Autowired
     private PostService postService;
+
+    @Override
+    protected String getMode() {
+        return MODE_NORMAL;
+    }
 }

@@ -29,20 +29,20 @@ import java.util.List;
  * Created by microacup on 2016/11/3.
  */
 @Controller
-public class PostController {
+public class PostController extends BaseController {
 
     /**
      * 按分类展示话题
      *
-     * @param categoryId
+     * @param category
      * @param model
      * @return
      */
-    @GetMapping("/category/{categoryId}")
-    public String postsByCategory(@PathVariable("categoryId") long categoryId,
+    @GetMapping("/category/{category}")
+    public String postsByCategory(@PathVariable("category") String category,
                                   @RequestParam(defaultValue = "1") int page,
                                   Model model) {
-        Category activeCategory = categoryService.findOne(categoryId);
+        Category activeCategory = categoryService.findByCode(category);
         if (activeCategory == null) return "site/404";
 
         List<Category> categories = categoryService.findAll();
@@ -51,17 +51,18 @@ public class PostController {
         model.addAttribute("activeCategory", activeCategory);
         model.addAttribute("categories", categories);
 
-        List<Tag> tags = tagService.findByCategory(activeCategory.getId());
+        List<Tag> tags = tagService.findByCategory(activeCategory.getCode());
         if(tags.isEmpty()) return "site/404";
 
         Tag activeTag = getDefaultTag(activeCategory);
         model.addAttribute("activeTag", activeTag);
         model.addAttribute("tags", tags);
 
-        Page<Post> posts = postService.findByCategoryId(categoryId, page - 1, Setting.PAGE_SIZE);
+        Page<Post> posts = postService.findByCategory(category, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts.getContent());
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);
+        super.injectMode(model);
 
         return "site/index";
     }
@@ -77,37 +78,38 @@ public class PostController {
     /**
      * 按照分类下的标签展示话题
      *
-     * @param categoryId
-     * @param tagId
+     * @param category
+     * @param tag
      * @param model
      * @return
      */
-    @GetMapping("/category/{categoryId}/tag/{tagId}")
-    public String postsByTag(@PathVariable("categoryId") long categoryId,
-                             @PathVariable("tagId") long tagId,
+    @GetMapping("/category/{category}/tag/{tag}")
+    public String postsByTag(@PathVariable("category") String category,
+                             @PathVariable("tag") String tag,
                              @RequestParam(defaultValue = "1") int page,
                              Model model) {
-        Category activeCategory = categoryService.findOne(categoryId);
+        Category activeCategory = categoryService.findByCode(category);
         if (activeCategory == null) return "site/404";
 
         List<Category> categories = categoryService.findAll();
         if (categories == null) return "site/404";
         model.addAttribute("categories", categories);
 
-        Tag activeTag = tagService.findOne(tagId);
+        Tag activeTag = tagService.findByCode(tag);
         if (activeTag == null) return "site/404";
         model.addAttribute("activeCategory", activeCategory);
         model.addAttribute("activeTag", activeTag);
 
-        List<Tag> tags = tagService.findByCategory(activeCategory.getId());
+        List<Tag> tags = tagService.findByCategory(activeCategory.getCode());
         model.addAttribute("tags", tags);
 
-        List<Long> tagIds = new ArrayList<>(1);
-        tagIds.add(tagId);
-        Page<Post> posts = postService.findByTags(tagIds, page - 1, Setting.PAGE_SIZE);
+        List<String> tagCodes = new ArrayList<>(1);
+        tagCodes.add(tag);
+        Page<Post> posts = postService.findByTagsActived(tagCodes, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);
+        super.injectMode(model);
 
         return "site/index";
     }
@@ -128,8 +130,8 @@ public class PostController {
         Post post = postService.findOne(id);
         if (post == null) return "site/404";
 
-        postService.updateReadCount();
-
+        postService.read(post);
+        super.injectMode(model);
         model.addAttribute("post", post);
         return "site/post";
     }
@@ -140,6 +142,7 @@ public class PostController {
         List<Category> categories = categoryService.findAll();
         if (categories == null) return "site/404";
 
+        super.injectMode(model);
         model.addAttribute("categories", categories);
         model.addAttribute("tags", tagService.getTagsMap());
         model.addAttribute("postForm", new PostForm());
@@ -159,6 +162,10 @@ public class PostController {
     public String createPost(Principal principal, @Valid PostForm postForm, BindingResult bindingResult, Model model) {
         String name = principal.getName();
         Post post = postService.addPost(postForm, name);
+        String mode = postForm.getMode();
+        if (MODE_SIMPLE.equalsIgnoreCase(mode)) {
+            return "redirect:/simple/post/" + post.getId();
+        }
         return "redirect:/post/" + post.getId();
     }
 
@@ -170,4 +177,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Override
+    protected String getMode() {
+        return MODE_NORMAL;
+    }
 }

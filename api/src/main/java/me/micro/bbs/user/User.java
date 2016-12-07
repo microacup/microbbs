@@ -3,7 +3,6 @@ package me.micro.bbs.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import me.micro.bbs.enums.Channel;
@@ -18,7 +17,6 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,6 +33,7 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements UserDetails {
 
+    private static final long serialVersionUID = 5227217597181094900L;
     // 主键
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +52,7 @@ public class User implements UserDetails {
     private String nick;
 
     // 一句话介绍
-    @Column(name = "u_info", length = 255)
+    @Column(name = "u_info")
     private String info;
 
     // 密码
@@ -141,7 +140,7 @@ public class User implements UserDetails {
     @Column(name = "u_isActive", nullable = false)
     private Boolean isActive = true;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="sys_user_role",
             joinColumns={@JoinColumn(name="user_id")},
@@ -150,21 +149,19 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
-    // 权限列表
-    @Transient
-    @JsonIgnore
-    private Set<Permission> permissions = new HashSet<>();
-
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (roles.isEmpty() && permissions.isEmpty())
-            return null;
+        if (roles.isEmpty()) return null;
 
-        List<GrantedAuthority> grantedAuthorities = Lists.newArrayListWithExpectedSize(roles.size() + permissions.size());
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.addAll(roles.stream().map(role -> new SimpleGrantedAuthority(role.getCode())).collect(Collectors.toList()));
-        grantedAuthorities.addAll(permissions.stream().map(permission -> new SimpleGrantedAuthority(permission.getCode())).collect(Collectors.toList()));
 
+        for (Role r : roles) {
+            for (Permission p : r.getPermissions()) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(p.getCode()));
+            }
+        }
         return grantedAuthorities;
     }
 

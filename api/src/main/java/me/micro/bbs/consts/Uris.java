@@ -14,6 +14,9 @@ public final class Uris {
     /** 此刻 */
     public static final String API_POSTS_NOW = "/api/posts/now";
 
+    /** 我的帖子 */
+    public static final String API_POSTS_ME = "/api/posts/me";
+
     /** 前5名新话题 */
     public static final String API_POSTS_NOW_TOP5 = "/api/posts/now/top5";
 
@@ -24,13 +27,13 @@ public final class Uris {
     public static final String API_CATEGORIES = "/api/categories";
 
     /** 按分类找标签*/
-    public static final String API_CATEGORIES_TAGS = "/api/categories/{categoryId}/tags";
+    public static final String API_CATEGORIES_TAGS = "/api/categories/{code}/tags";
 
     /** 热门标签 */
     public static final String API_HOT_TAGS = "/api/tags/hot";
 
     /** 按分类找话题*/
-    public static final String API_CATEGORIES_POSTS = "/api/categories/{categoryId}/posts";
+    public static final String API_CATEGORIES_POSTS = "/api/categories/{category}/posts";
 
     /** 按照话题找回复*/
     public static final String API_POSTS_ID_REPLIES = "/api/posts/{postId}/replies";
@@ -46,10 +49,14 @@ public final class Uris {
 
     // 个人信息
     public static final String API_PROFILE = "/api/profile";
+    public static final String API_AVATAR = "/api/avatar";
     public static final String API_USERS_USER_ID_PROFILE = "/api/users/{userId}/profile";
+    public static final String API_USERS_USER_ID_AVATAR = "/api/users/{userId}/avatar";
+    public static final String API_USERS_USER_ID_POSTS = "/api/users/{userId}/posts";
 
     ////////////////////////////admin////////////////////////////////
     public static final String API_ADMIN_POSTS = "/api/admin/posts";
+    public static final String API_ADMIN_POSTS_ID = "/api/admin/posts/{id}";
 
     /** 所有分类*/
     public static final String API_ADMIN_CATEGORIES = "/api/admin/categories";

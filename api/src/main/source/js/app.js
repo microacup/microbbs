@@ -1,13 +1,15 @@
 
 
 // 功能开始
-var _ctx = $("meta[name='ctx']").attr("content");
+var _ctx = $("meta[name='ctx']").attr("content") || '';
 
 
 var ms = {
     Urls: {
         posts_related_top5: _ctx + '/api/posts/{postId}/related/top5',
         posts_now_top5: _ctx + '/api/posts/now/top5',
+        posts_who:  _ctx + '/api/users/{who}/posts',
+        posts_me:  _ctx + '/api/posts/me',
         replies: _ctx + '/api/posts/{postId}/replies',
         do_reply: _ctx + '/api/replies',
         tags_hot: _ctx + '/api/tags/hot',
@@ -62,7 +64,15 @@ $(function () {
     // 提取主色
     $.adaptiveBackground.run({
         parent: '.avatar-bg',
-        normalizeTextColor: true
+        normalizeTextColor: true,
+        normalizedTextColors: {
+            light:      "#fff",
+            dark:       "#444"
+        },
+        lumaClasses:  {
+            light:      "ab-light",
+            dark:       "ab-dark"
+        }
     });
 });
 

@@ -30,21 +30,19 @@
              data-show-toggle="false"
              data-show-footer="false"
              data-side-pagination="client"
-             data-ajax="loadCategories"
+             data-ajax="loadTags"
              data-page-size="50"
              data-page-list="[50, 100, ALL]"
              data-pagination="true"
-             data-filter-control="true"
-             data-filter-show-clear="true"
              data-click-to-select = "true"
              data-toggle="table">
         <thead>
         <tr>
           <th data-radio="true"></th>
           <th data-field="id" data-sortable="true">ID</th>
-          <th data-field="title" data-sortable="true" data-filter-control="input">标题</th>
-          <th data-field="code" data-sortable="true" data-filter-control="input">代码</th>
-          <th data-field="categoryId" data-sortable="true" data-filter-control="select" data-formatter="categoryFormatter">所属分类</th>
+          <th data-field="title" data-sortable="true">标题</th>
+          <th data-field="code" data-sortable="true">代码</th>
+          <th data-field="category.title" data-sortable="true">所属分类</th>
         </tr>
         </thead>
       </table>
@@ -81,7 +79,7 @@
                 <label for="e-category" class="col-sm-2 control-label">分类：</label>
                 <div class="col-sm-10">
                   <select id="c-category" name="category"  class="form-control">
-                    <option th:each="centry : ${categories}" th:value="${centry.key}" th:text="${centry.key + ' - ' + centry.value.title + ' - ' + centry.value.code}">option 1</option>
+                    <option th:each="cate : ${categories}" th:value="${cate.id}" th:text="${cate.id + ' - ' + cate.title + ' - ' + cate.code}">option 1</option>
                   </select>
                 </div>
               </div>
@@ -124,7 +122,7 @@
                 <label for="e-category" class="col-sm-2 control-label">分类：</label>
                 <div class="col-sm-10">
                   <select id="e-category" name="category" class="form-control">
-                    <option th:each="centry : ${categories}" th:value="${centry.key}" th:text="${centry.key + ' - ' + centry.value.title + ' - ' + centry.value.code}">option 1</option>
+                    <option th:each="cate : ${categories}" th:value="${cate.id}" th:text="${cate.id + ' - ' + cate.title + ' - ' + cate.code}">option 1</option>
                   </select>
                 </div>
               </div>
@@ -167,11 +165,8 @@
 </section>
 
 <div layout:fragment="scripts">
-  <script src="//cdn.bootcss.com/bootstrap-table/1.10.1/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
   <script th:inline="javascript"  type="text/javascript">
-    var categories = /*[[${categories}]]*/
-
-    function loadCategories (params) {
+    function loadTags (params) {
       $.get(ms.Urls.tags ,function (result) {
                 params.success({
                   data:  result
@@ -180,8 +175,7 @@
     }
 
     function categoryFormatter(value, row, index) {
-      var _c = categories[value];
-      return value + ' - ' + _c.title + ' - ' + _c.code;
+      return value.id + ' - ' + value.title + ' - ' + value.code;
     }
 
     var $table = $('#tags-table');
@@ -235,7 +229,7 @@
       $('#editModal').data('tag-id',selections[0].id);
       $('#e-code').val(selections[0].code);
       $('#e-title').val(selections[0].title);
-      $('#e-category').val(selections[0].categoryId);
+      $('#e-category').val(selections[0].category.id);
     });
 
     $('#submit-edit').click(function () {

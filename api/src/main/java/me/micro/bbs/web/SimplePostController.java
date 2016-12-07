@@ -19,21 +19,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * 简单模式
  *
  * Created by microacup on 2016/11/22.
  */
 @Controller
 @RequestMapping("/simple")
-public class SimplePostController {
+public class SimplePostController extends BaseController {
 
     @GetMapping
     public String index(HttpServletRequest request) {
-        String entry = (String) WebUtils.getSessionAttribute(request, "entry");
+        String entry = (String) WebUtils.getSessionAttribute(request, "simple-entry");
         if (entry != null) {
             return "redirect:" + entry;
         }
@@ -44,30 +45,95 @@ public class SimplePostController {
     /**
      * 按照分类下的标签展示话题
      *
-     * @param categoryId
-     * @param tagId
+     * @param category
      * @param model
      * @return
      */
-    @GetMapping("/category/{categoryId}/tag/{tagId}")
-    public String postsByTag(HttpServletRequest request,
-                             @PathVariable("categoryId") long categoryId,
-                             @PathVariable("tagId") long tagId,
+    @GetMapping("/category/{category}")
+    public String postsByCategory(HttpServletRequest request,
+                             @PathVariable("category") String category,
                              @RequestParam(defaultValue = "1") int page,
                              Model model) {
-        WebUtils.setSessionAttribute(request, "entry", request.getRequestURL().toString());
+        super.injectMode(model);
 
-        Category activeCategory = categoryService.findOne(categoryId);
+        // 简单的权限校验，更合理的方式是使用Role & Permission，请在forward入口处清空simple-category
+        HttpSession session = request.getSession();
+        String lastTag = (String) session.getAttribute("simple-tag");
+        if (lastTag != null) {
+            model.addAttribute("message", "你还没有权限访问哦");
+            return "site/403";
+        }
+
+        String lastCategory = (String) session.getAttribute("simple-category");
+        if (lastCategory != null && !lastCategory.equals(category)) {
+            model.addAttribute("message", "你还没有权限访问哦");
+            return "site/403";
+        }
+        session.setAttribute("simple-category", category);
+        session.setAttribute("simple-entry", request.getRequestURL().toString());
+
+        Category activeCategory = categoryService.findByCode(category);
         if (activeCategory == null) return "site/404";
 
-        Tag activeTag = tagService.findOne(tagId);
+        model.addAttribute("activeCategory", activeCategory);
+        Page<Post> posts = postService.findByCategory(category, page - 1, Setting.PAGE_SIZE);
+        model.addAttribute("posts", posts);
+        model.addAttribute("totalPages", posts.getTotalPages());
+        model.addAttribute("currentPage", page);
+        Tag activeTag = getDefaultTag(activeCategory);
+        model.addAttribute("activeTag", activeTag);
+
+        return "simple/index";
+    }
+
+    private Tag getDefaultTag(Category activeCategory) {
+        Tag activeTag = new Tag();
+        activeTag.setId(-1L);
+        activeTag.setTitle("全部");
+        activeTag.setCategory(activeCategory);
+        return activeTag;
+    }
+
+
+    /**
+     * 按照分类下的标签展示话题
+     *
+     * @param category
+     * @param tag
+     * @param model
+     * @return
+     */
+    @GetMapping("/category/{category}/tag/{tag}")
+    public String postsByTag(HttpServletRequest request,
+                             @PathVariable("category") String category,
+                             @PathVariable("tag") String tag,
+                             @RequestParam(defaultValue = "1") int page,
+                             Model model) {
+        super.injectMode(model);
+
+        // 简单的权限校验，更合理的方式是使用Role & Permission，请在forward入口处清空simple-category
+        HttpSession session = request.getSession();
+        String lastTag = (String) session.getAttribute("simple-tag");
+        if (lastTag != null && !lastTag.equals(tag)) {
+            model.addAttribute("message", "你还没有权限访问哦");
+            return "site/403";
+        }
+
+        session.setAttribute("simple-category", category);
+        session.setAttribute("simple-tag", tag);
+        session.setAttribute("simple-entry", request.getRequestURL().toString());
+
+        Category activeCategory = categoryService.findByCode(category);
+        if (activeCategory == null) return "site/404";
+
+        Tag activeTag = tagService.findByCode(tag);
         if (activeTag == null) return "site/404";
         model.addAttribute("activeCategory", activeCategory);
         model.addAttribute("activeTag", activeTag);
 
-        List<Long> tagIds = new ArrayList<>(1);
-        tagIds.add(tagId);
-        Page<Post> posts = postService.findByTags(tagIds, page - 1, Setting.PAGE_SIZE);
+        List<String> tagCodes = new ArrayList<>(1);
+        tagCodes.add(tag);
+        Page<Post> posts = postService.findByTagsActived(tagCodes, page - 1, Setting.PAGE_SIZE);
         model.addAttribute("posts", posts);
         model.addAttribute("totalPages", posts.getTotalPages());
         model.addAttribute("currentPage", page);
@@ -84,10 +150,14 @@ public class SimplePostController {
      */
     @GetMapping("/post/{id}")
     public String post(@PathVariable("id") long id, Model model) {
+        super.injectMode(model);
         Post post = postService.findOne(id);
         if (post == null) return "site/404";
 
-        postService.updateReadCount();
+        postService.read(post);
+
+        model.addAttribute("backable", true);
+        model.addAttribute("title", "返回");
         model.addAttribute("post", post);
         return "simple/post";
     }
@@ -95,9 +165,12 @@ public class SimplePostController {
     // 新增Post
     @GetMapping("/create")
     public String create(Model model) {
+        super.injectMode(model);
         List<Category> categories = categoryService.findAll();
         if (categories == null) return "site/404";
 
+        model.addAttribute("backable", true);
+        model.addAttribute("title", "返回");
         model.addAttribute("categories", categories);
         model.addAttribute("tags", tagService.getTagsMap());
         model.addAttribute("postForm", new PostForm());
@@ -113,4 +186,9 @@ public class SimplePostController {
 
     @Autowired
     private PostService postService;
+
+    @Override
+    protected String getMode() {
+        return MODE_SIMPLE;
+    }
 }

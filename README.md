@@ -7,6 +7,8 @@
 - Spring、SpringMVC、Thymeleaf
 - Bootstrap、AdminLTE
 - Java社区
+- Redis Session
+- Redis Cache
 
 ## 架构
 
@@ -17,7 +19,6 @@
 * Admin 采用AdminLTE(去掉了google fonts), 模板引擎thymeleaf
 
  
-
 ## 特性
 
 - markdown 编辑器
@@ -32,11 +33,10 @@
 
 - 强大的后台管理
 
-  ​
 
 ## Stack
 
-* (TODO) `React.js` 全家桶 
+* (TODO) `React.js` 全家桶 or Vue 
 * `Spring Boot` 全家桶
 * `Mysql`
 
@@ -48,9 +48,15 @@
 
 - 创建数据库`microbbs`，数据库表将自动创建
 
-- 如有需要，修改application.yml中的服务器名和端口号等个性化信息
+- 如有需要，修改application.yml中的服务器名和端口号等个性化配置
 
 - `gradle clean bootRun` 运行
+
+## 生成环境
+
+- 安装`JDK`、`Redis`、`Mysql`
+- 修改`application.yml`中的个性化配置
+- `nohup java -jar api-1.0.0.jar > microbbs.log &`
 
   
 ## 开发指导
@@ -67,7 +73,7 @@
 
 - [ ] 优化findByTags 和 findByCategoryId
 
-- [ ] profile页
+- [x] profile页
 
 - [ ] 编辑器内容localStorage
 
@@ -75,10 +81,11 @@
 
 - [ ] 图床
 
-- [ ] 权限支持热加载
+- [x] 权限支持热加载
 
 - [ ] 权限支持黑名单模式
 
+- [ ] 日志
 
 
 ## 开源协议

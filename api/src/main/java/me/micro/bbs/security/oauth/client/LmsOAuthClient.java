@@ -2,13 +2,13 @@ package me.micro.bbs.security.oauth.client;
 
 import me.micro.bbs.enums.Channel;
 import me.micro.bbs.enums.ClientType;
-import me.micro.bbs.file.ShortUUID;
 import me.micro.bbs.security.social.SocialToken;
 import me.micro.bbs.user.User;
 import me.micro.bbs.user.UserForm;
 import me.micro.bbs.user.UserSocial;
 import me.micro.bbs.user.support.UserService;
 import me.micro.bbs.user.support.UserSocialRepository;
+import me.micro.bbs.util.ShortUUID;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -27,33 +27,40 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 
 /**
- * Oauth2账号登录
  *
- * Created by microacup on 2016/11/24.
+ *
+ * Created by microacup on 2016/11/29.
  */
 @Controller
-@RequestMapping("/oauth/weibo")
-public class WeiboController {
-    private static final String authorize_url = "https://api.weibo.com/oauth2/authorize";
-    private static final String access_token_url = "https://api.weibo.com/oauth2/access_token";
-    private static final String user_show = "https://api.weibo.com/2/users/show.json?uid=%s";
-    private static final String STATE_LOGIN = "login";
+@RequestMapping("/oauth/lms")
+public class LmsOAuthClient {
+    private static final String OAUTH_CALLBACK = "/oauth/lms/callback";
+    private static final String authorize_url = "/oauth2/authorize";
+    private static final String access_token_url =  "/oauth2/access_token";
+    private static final String user_show = "/api/v2/users/%s";
 
-    @Value("${oauth2.weibo.clientId}")
+    @Value("${oauth2.lms.server}")
+    private String lms;
+
+    @Value("${oauth2.lms.clientId}")
     private String clientId;
 
-    @Value("${oauth2.weibo.clientSecret}")
+    @Value("${oauth2.lms.clientSecret}")
     private String clientSecret;
 
     @Value("${site.server}")
@@ -70,17 +77,32 @@ public class WeiboController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    /**
+     * 集成LMS
+     *
+     * @param forward 授权成功后转发地址
+     * @return
+     */
     @GetMapping("/login")
-    public String login(HttpServletRequest request) {
+    public String login(HttpServletRequest request,
+                        @RequestParam("forward") String forward) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getDetails() instanceof User && authentication.isAuthenticated()) {
+            HttpSession session = request.getSession();
+            session.setAttribute("simple-category", null);
+            session.setAttribute("simple-tag", null);
+            return "redirect:" + forward;
+        }
+
         try {
             OAuthClientRequest oauthResponse = OAuthClientRequest
-                    .authorizationLocation(authorize_url)
+                    .authorizationLocation(lms + authorize_url)
                     .setResponseType(OAuth.OAUTH_CODE)
                     .setClientId(clientId)
-                    .setRedirectURI(server + "/oauth/weibo/callback")
-                    .setState(STATE_LOGIN)
+                    .setRedirectURI(server + OAUTH_CALLBACK)
+                    .setState(forward)
                     .buildQueryMessage();
-            WebUtils.setSessionAttribute(request, "state", STATE_LOGIN);
+            WebUtils.setSessionAttribute(request, "state", forward);
             return "redirect:"+oauthResponse.getLocationUri();
         } catch (OAuthSystemException e) {
             e.printStackTrace();
@@ -94,20 +116,20 @@ public class WeiboController {
         OAuthAuthzResponse oauthAuthzResponse = null;
         try {
             oauthAuthzResponse = OAuthAuthzResponse.oauthCodeAuthzResponse(request);
-            String state = oauthAuthzResponse.getState();
+            String forward = oauthAuthzResponse.getState();
             String code = oauthAuthzResponse.getCode();
 
-            if (illegal(state, request)) {
+            if (illegal(forward, request)) {
                 model.addAttribute("message", "非法入口");
                 return "site/500";
             }
 
             OAuthClientRequest oauthClientRequest = OAuthClientRequest
-                    .tokenLocation(access_token_url)
+                    .tokenLocation(lms + access_token_url)
                     .setGrantType(GrantType.AUTHORIZATION_CODE)
                     .setClientId(clientId)
                     .setClientSecret(clientSecret)
-                    .setRedirectURI(server + "/oauth/weibo/callback")
+                    .setRedirectURI(server + OAUTH_CALLBACK)
                     .setCode(code)
                     .buildQueryMessage();
             OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
@@ -118,58 +140,55 @@ public class WeiboController {
             // Long expiresIn = oAuthResponse.getExpiresIn();
             String body = oAuthResponse.getBody();
             JSONObject jsonObject = new JSONObject(body);
-            String uid = jsonObject.getString("uid");
+            String openId = jsonObject.getString("openId");
 
             // 根据UID查找是否已经登录过
-            UserSocial userSocial = userSocialRepository.findBySourceAndOpenid(getName(), uid);
+            UserSocial userSocial = userSocialRepository.findBySourceAndOpenid(getName(), openId);
             if (userSocial != null) {
-                // 根据state判断是登录还是绑定
-                if (STATE_LOGIN.equals(state)) {
-                    User user = userSocial.getUser();
-                    return login(request, user);
-                } else {
-                    // TODO 绑定
-                }
-
+                User user = userSocial.getUser();
+                return login(request, user, forward);
             } else {
                 //获得资源服务
-                OAuthClientRequest userInfoRequest = new OAuthBearerClientRequest(String.format(user_show, uid)).setAccessToken(accessToken).buildQueryMessage();
+                OAuthClientRequest userInfoRequest = new OAuthBearerClientRequest(String.format(lms + user_show, openId))
+                        .setAccessToken(accessToken)
+                        .buildQueryMessage();
                 OAuthResourceResponse resourceResponse = oAuthClient.resource(userInfoRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
                 String resBody = resourceResponse.getBody();
                 // 解析这个用户
                 JSONObject userInfo = new JSONObject(resBody);
-
-                // 根据state判断是登录还是绑定
-                if (STATE_LOGIN.equals(state)) {
-                    UserForm userForm = toUserForm(userInfo);
+                if (userInfo.getInt("code") == 200) {
+                    UserForm userForm = toUserForm(userInfo.getJSONObject("data"));
                     User user = userService.newUserAndUserSocial(userForm);
-                    return login(request, user);
+                    return login(request, user, forward);
                 } else {
-                    // TODO 绑定
+                    model.addAttribute("message", userInfo.getString("msg"));
                 }
             }
-
-            return "redirect:/500";
         } catch (OAuthSystemException ex) {
-            return  "redirect:/404";
+            ex.printStackTrace();
+            model.addAttribute("message", ex.getMessage());
         } catch (OAuthProblemException e) {
             e.printStackTrace();
+            model.addAttribute("message", e.getDescription());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            model.addAttribute("message", "无法解码URL");
         }
 
-        return "redirect:/404";
+        return "site/500";
     }
 
     private UserForm toUserForm(JSONObject userInfo) {
         UserForm userForm = new UserForm();
-        userForm.setOpenid(userInfo.getString("idstr"));
+        userForm.setOpenid(userInfo.getString("openId"));
         userForm.setClient(ClientType.WEB);
-        userForm.setGender(userInfo.getString("gender").equals("m") ? 1: 2);
+        userForm.setGender(userInfo.getString("gender").equals("男") ? 1: 2);
         userForm.setChannel(Channel.OPEN);
-        userForm.setInfo(userInfo.getString("description"));
+        userForm.setInfo(userInfo.getString("info"));
         userForm.setName(userInfo.getString("name"));
         userForm.setUsername(ShortUUID.uuid());
-        userForm.setNick(userInfo.getString("screen_name"));
-        userForm.setOpenNickname(userInfo.getString("screen_name"));
+        userForm.setNick(userInfo.getString("nickname"));
+        userForm.setOpenNickname(userInfo.getString("nickname"));
         userForm.setSource(getName());
 
         return userForm;
@@ -181,13 +200,13 @@ public class WeiboController {
         return StringUtils.isBlank(state) || !state.equals(WebUtils.getSessionAttribute(request, "state"));
     }
 
-    private String login(HttpServletRequest request, User user) {
+    private String login(HttpServletRequest request, User user, String forward) throws UnsupportedEncodingException {
         // 第三方登录
         SocialToken socialToken = new SocialToken(user);
         socialToken.setDetails(authenticationDetailsSource.buildDetails(request));
         Authentication authenticate = authenticationManager.authenticate(socialToken);
         if (authenticate  != null && authenticate.isAuthenticated()) {
-            return "redirect:/";
+            return "redirect:" + forward;
         }
 
         return "redirect:/login";
@@ -195,8 +214,7 @@ public class WeiboController {
 
 
     String getName() {
-        return "wb";
+        return "lm";
     }
-
 
 }

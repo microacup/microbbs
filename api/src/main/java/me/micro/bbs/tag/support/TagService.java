@@ -46,12 +46,12 @@ public class TagService {
 
     /**
      * 根据分类找标签
-     * @param categoryId
+     * @param categoryCode
      * @return
      */
     @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
-    public List<Tag> findByCategory(Long categoryId) {
-        return tagRepository.findByCategoryId(categoryId);
+    public List<Tag> findByCategory(String categoryCode) {
+        return tagRepository.findByCategory(categoryCode);
     }
 
     // 是否存在此分类下的标签
@@ -62,6 +62,11 @@ public class TagService {
     @Cacheable(value = CACHE_NAME, key = "#id")
     public Tag findOne(Long id) {
         return tagRepository.findOne(id);
+    }
+
+    @Cacheable(value = CACHE_NAME, key = "#code")
+    public Tag findByCode(String code) {
+        return tagRepository.findByCode(code);
     }
 
     /**
@@ -86,7 +91,7 @@ public class TagService {
         Map<Category, List<Tag>> tags = new HashMap<>();
         List<Tag> list = this.findAll();
         for (Tag tag : list) {
-            Category category = categoryService.findOne(tag.getCategoryId());
+            Category category = tag.getCategory();
             List<Tag> ts = tags.get(category);
             if (ts == null) {
                 ts = Lists.newArrayList();
@@ -137,7 +142,7 @@ public class TagService {
     public void delete(Long id) throws MicroException {
         Long count = postRepository.countByTagId(id);
         if (count > 0) {
-            throw new MicroException("删除失败，改标签下还有" + count + "个话题");
+            throw new MicroException("删除失败，该标签下还有" + count + "个话题");
         }
         tagRepository.delete(id);
     }

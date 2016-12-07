@@ -1,14 +1,16 @@
 .simple {
-  .content-header>.breadcrumb{
-    position: relative;
-    margin-top: 5px;
-    top: 0;
-    right: 0;
-    float: none;
-    background: transparent;
-    padding-left: 10px;
+  .content-header {
+    padding: 5px 0 5px 0;
+    &>.breadcrumb{
+      position: relative;
+      margin-top: 5px;
+      top: 0;
+      right: 0;
+      float: none;
+      background: transparent;
+      padding-left: 10px;
+    }
   }
-
   .main-header #navbar-search-input.form-control:focus, .main-header #navbar-search-input.form-control:active {
     border: none;
   }

@@ -4,18 +4,14 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import me.micro.bbs.security.Permission;
-import me.micro.bbs.user.User;
 import me.micro.bbs.user.support.UserService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * PermissionService
@@ -40,17 +36,6 @@ public class PermissionService implements InitializingBean {
     // @Cacheable(value = CACHES_NAME, keyGenerator = "cacheKeyGenerator")
     public List<Permission> findAll() throws ExecutionException {
         return cache.get(CACHES_NAME);
-    }
-
-    public Set<Permission> findByUserId(Long userId) {
-        User user = userService.findOne(userId);
-        Set<Permission> permissions = new HashSet<>();
-        if (user.getRoles().size() > 0) {
-            user.getRoles().stream().filter(role -> role.getPermissions().size() > 0).forEach(role -> {
-                permissions.addAll(role.getPermissions().stream().collect(Collectors.toSet()));
-            });
-        }
-        return permissions;
     }
 
     public void save(Permission permission) {

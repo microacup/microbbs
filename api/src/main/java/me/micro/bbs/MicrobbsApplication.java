@@ -1,12 +1,10 @@
 package me.micro.bbs;
 
-import me.micro.bbs.file.storage.StorageProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
-@EnableConfigurationProperties(StorageProperties.class)
 public class MicrobbsApplication extends SpringBootServletInitializer {
 	@Value("${server.port}") private String port;
 	@Value("${server.contextPath}") private String contextPath;
@@ -34,7 +31,7 @@ public class MicrobbsApplication extends SpringBootServletInitializer {
 
 		return (container -> {
 			ErrorPage error401Page = new ErrorPage(HttpStatus.UNAUTHORIZED, "/404");
-			ErrorPage error403Page = new ErrorPage(HttpStatus.FORBIDDEN, "/404");
+			ErrorPage error403Page = new ErrorPage(HttpStatus.FORBIDDEN, "/403");
 			ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/404");
 			ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500");
 

@@ -8,49 +8,14 @@
 <body>
 <!--tags-->
 <main layout:fragment="content" id="posts">
-  <ul class="list-group">
-    <!--#numbers.sequence( 1, 8)-->
-    <li class="list-group-item" th:each="post: ${posts}">
-      <div class="media-left">
-        <a th:href="@{'/users/' + ${post.author.id} + '/profile'}">
-          <img class="post-avatar img-circle" th:src="@{/static/lib/admin-lte/dist/img/user8-128x128.jpg}" />
-        </a>
-      </div>
-      <div class="media-body">
-        <a th:href="@{'/simple/post/' + ${post.id}}" class="post-title" th:utext="${post.title}">Title</a>
-        <i class="iconfont icon-zhiding icon-micro"
-           th:if="${#bools.isTrue(post.top) and not #strings.equals(actived,'perfect') and not #strings.equals(actived,'now') }" title="置顶"></i>
-        <i class="iconfont icon-youxuan icon-micro" th:if="${post.perfect}" title="优选"></i>
-        <!--<p class="post-summary">作为程序员在面试的时候碰到的问题还是很多的</p>-->
-        <div class="post-footer">
-          <a class="label label-default"
-             th:href="@{'/simple/category/' + ${t.categoryId} + '/tag/' + ${t.id}}"
-             th:each="t: ${post.tags}" th:utext="${t.title}">Tag</a>
-          <a class="post-author" th:href="@{'/users/' + ${post.author.id} + '/profile'}" th:utext="${post.author.nick}">user</a>
-          <span th:unless="${post.lastAuthorName}">
-               发布于
-          </span>
-          <span class="post-author-last" th:if="${post.lastAuthorName}">最后由 <a href="#" th:utext="${post.lastAuthorName}">小明</a> 回复于</span>
-          <span class="post-time-last" th:utext='${#dates.format(post.lastTime, "yyyy-MM-dd HH:mm:ss")}'>1小时14分钟前</span>
-        </div>
-      </div>
-      <div class="media-right">
-        <span class="badge" th:if="${post.replyCount > 0}" th:text="${post.replyCount}">0</span>
-      </div>
-    </li>
-  </ul>
-
-  <!--分页-->
-  <div class="text-center" th:if="${totalPages > 1}">
-    <ul id="pagination-posts" class="pagination-sm"></ul>
-  </div>
+  <section layout:replace="site/_post :: post-list"></section>
 </main><!--/content-->
 
 <!--content-->
 <section layout:fragment="top" class="content-header">
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-    <li th:if="${activeCategory != null}"><a href="#" th:utext="${activeCategory.title}">探索</a></li>
+    <li th:if="${activeCategory != null}"><a th:href="@{'/simple/category/' + ${activeCategory.code}}" th:utext="${activeCategory.title}">探索</a></li>
     <li th:if="${activeCategory == null}"><a href="#">探索</a></li>
     <li class="active" th:if="${activeTag != null}" th:utext="${activeTag.title}">此刻</li>
     <li class="active" th:if="${activeTag == null}" th:utext="${activedExplorer}">此刻</li>
@@ -58,74 +23,7 @@
 </section><!--/tags-->
 
 <aside class="col-xs-12 col-md-3" layout:fragment="sidebar" id="sidebar">
-
-  <section class="sidebar box box-widget widget-user">
-    <!-- Add the bg color to the header using any of the bg-* classes -->
-    <div class="widget-user-header avatar-bg text-center">
-      <h3 class="widget-user-username" sec:authentication="principal.nick">xm</h3>
-      <h5 class="widget-user-desc" sec:authentication="principal.info">我的愿望是，世界和平</h5>
-      <div class="widget-user-image">
-        <img th:src="@{/static/lib/admin-lte/dist/img/user7-128x128.jpg}" data-adaptive-background class="img-circle"
-             alt="User Image">
-      </div>
-    </div>
-    <div class="box-footer">
-      <template v-if="profile">
-      <div class="row">
-        <div class="col-sm-6 border-right">
-          <div class="description-block">
-            <h5 class="description-header">{{profile.postCount}}</h5>
-            <span class="description-text">话题</span>
-          </div>
-          <!-- /.description-block -->
-        </div>
-        <!-- /.col -->
-        <div class="col-sm-6">
-          <div class="description-block">
-            <h5 class="description-header">{{profile.replyCount}}</h5>
-            <span class="description-text">回复</span>
-          </div>
-          <!-- /.description-block -->
-        </div>
-        <!-- /.col -->
-        <!--<div class="col-sm-4">
-          <div class="description-block">
-            <h5 class="description-header">35</h5>
-            <span class="description-text">关注</span>
-          </div>
-          &lt;!&ndash; /.description-block &ndash;&gt;
-        </div>-->
-        <!-- /.col -->
-      </div>
-      </template>
-      <!-- /.row -->
-    </div>
-  </section>
-
-  <!--此刻-->
-  <section class="sidebar box box-info">
-    <div class="box-header with-border">
-      <h3 class="box-title">此刻</h3>
-    </div>
-    <div class="box-body no-padding">
-      <ul class="list index-nows">
-        <template v-for="n in nows">
-          <li class="item"><a target="_blank" :href="_ctx + '/post/' + n.id">{{n.title}}</a></li>
-        </template>
-      </ul>
-    </div>
-  </section><!--/此刻-->
-
-  <section class="sidebar box box-danger">
-    <div class="box-header with-border">
-      <h3 class="box-title">热门标签</h3>
-    </div>
-    <div class="box-body hot-tags">
-      <template v-for="ht in hotTags">
-        <a :href="_ctx + '/category/' + ht.categoryId + '/tag/' + ht.id " class="label label-default">{{ht.title}}</a>
-      </template>
-    </div>
-  </section>
+  <section layout:replace="site/_sidebar :: me"></section>
 </aside>
 
 <div layout:fragment="scripts">
@@ -152,14 +50,10 @@
     var sidebarApp = new Vue({
       el: '#sidebar',
       data: {
-        profile: null,
-        nows: null,
-        hotTags: null
+        profile: null
       },
       created: function () {
         this.loadProfile();
-        this.loadNow();
-        this.loadHotTags();
       },
       filters: {
         moment: function (date) {
@@ -168,39 +62,16 @@
       },
       methods: {
         loadProfile:function () {
-          this.$http.get(ms.Urls.profile).then((response) => {
-            // success callback
-            if(response.status == 200 && response.ok && response.body.code == 200) {
-              this.profile =  response.body.data;
-            } else {
-              error(response.msg || '无法拉取个人信息');
-            }
-          }, (response) => {
+          this.$http.get(ms.Urls.profile).then(function (response) {
+              // success callback
+              if(response.status == 200 && response.ok && response.body.code == 200) {
+                  this.profile =  response.body.data;
+              } else {
+                  error(response.msg || '无法拉取个人信息');
+              }
+          }, function (response) {
               // error callback
               console.log(response);
-            });
-        },
-
-        loadNow: function () {
-          this.$http.get(ms.Urls.posts_now_top5).then((response) => {
-            // success callback
-            if(response.status == 200 && response.ok) {
-              this.nows =  response.body;
-            }
-          }, (response) => {
-            // error callback
-            console.log(response);
-          });
-        },
-        loadHotTags: function () {
-          this.$http.get(ms.Urls.tags_hot).then((response) => {
-            // success callback
-            if(response.status == 200 && response.ok) {
-              this.hotTags =  response.body;
-            }
-          }, (response) => {
-            // error callback
-            console.log(response);
           });
         }
       }

@@ -1,12 +1,19 @@
 package me.micro.bbs.tag;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import me.micro.bbs.category.Category;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * 标签
@@ -29,29 +36,9 @@ public class Tag {
     @Column(name = "t_title", nullable = false, length = 255)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "t_category")
-    @JsonIgnore
     private Category category;
-
-    @Transient
-    private Long categoryId;
-
-    public Category getCategory() {
-        throw new UnsupportedOperationException("请调用getCategoryId"); // 为什么 thymeleaf admin/tags 会调用此方法？@see 开发问题1
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public Long getCategoryId() {
-        if (this.category != null) {
-            return this.category.getId();
-        }
-
-        return categoryId;
-    }
 
     /*@ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
     @JsonBackReference(value = "postReference")

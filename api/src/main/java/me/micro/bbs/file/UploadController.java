@@ -72,6 +72,8 @@ public class UploadController {
     /**
      * 上传文件
      *
+     * TODO 支持MD5校验，秒传功能
+     *
      * @param part
      * @param file
      * @return

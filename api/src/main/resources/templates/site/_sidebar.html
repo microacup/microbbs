@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+
+<!--我的信息-->
+<section class="sidebar box box-widget widget-user" layout:fragment="me">
+  <!-- Add the bg color to the header using any of the bg-* classes -->
+  <div class="widget-user-header avatar-bg text-center">
+    <h3 class="widget-user-username" sec:authentication="principal.nick">xm</h3>
+    <h5 class="widget-user-desc" sec:authentication="principal.info">我的愿望是，世界和平</h5>
+    <div class="widget-user-image">
+      <img th:src="@{/api/avatar}" data-adaptive-background class="img-circle"
+           alt="User Image">
+    </div>
+  </div>
+  <div class="box-footer">
+    <template v-if="profile">
+      <div class="row">
+        <div class="col-sm-6 border-right">
+          <div class="description-block">
+            <h5 class="description-header">{{profile.postCount}}</h5>
+            <span class="description-text">话题</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <div class="description-block">
+            <h5 class="description-header">{{profile.replyCount}}</h5>
+            <span class="description-text">回复</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <!--<div class="col-sm-4">
+          <div class="description-block">
+            <h5 class="description-header">35</h5>
+            <span class="description-text">关注</span>
+          </div>
+          &lt;!&ndash; /.description-block &ndash;&gt;
+        </div>-->
+        <!-- /.col -->
+      </div>
+    </template>
+    <!-- /.row -->
+  </div>
+</section>
+
+<section class="sidebar box box-widget widget-user" layout:fragment="post-author">
+  <!-- Add the bg color to the header using any of the bg-* classes -->
+  <div class="widget-user-header avatar-bg text-center">
+    <h3 class="widget-user-username" th:utext="${post.author.nick}">author</h3>
+    <h5 class="widget-user-desc" th:utext="${post.author.info}">我的愿望是，世界和平</h5>
+    <div class="widget-user-image">
+      <img th:src="@{'/api/users/' + ${post.author.id} + '/avatar'}" data-adaptive-background class="img-circle"
+           alt="User Image">
+    </div>
+  </div>
+
+  <div class="box-footer">
+    <template v-if="profile">
+      <div class="row">
+        <div class="col-sm-6 border-right">
+          <div class="description-block">
+            <h5 class="description-header">{{profile.postCount}}</h5>
+            <span class="description-text">话题</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <div class="description-block">
+            <h5 class="description-header">{{profile.replyCount}}</h5>
+            <span class="description-text">回复</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+      </div>
+    </template>
+    <!-- /.row -->
+  </div>
+</section>
+
+<!--此刻-->
+<section class="sidebar box box-info" layout:fragment="now">
+  <div class="box-header with-border">
+    <h3 class="box-title">此刻</h3>
+  </div>
+  <div class="box-body no-padding">
+    <ul class="list index-nows">
+      <template v-for="n in nows">
+        <li class="item"><a target="_blank" :href="_ctx + '/post/' + n.id">{{n.title}}</a></li>
+      </template>
+    </ul>
+  </div>
+</section><!--/此刻-->
+
+<!--热门标签-->
+<section class="sidebar box box-danger" layout:fragment="hot">
+  <div class="box-header with-border">
+    <h3 class="box-title">热门标签</h3>
+  </div>
+  <div class="box-body hot-tags">
+    <template v-for="ht in hotTags">
+      <a :href="_ctx + '/category/' + ht.category.code + '/tag/' + ht.code " class="label label-default">{{ht.title}}</a>
+    </template>
+  </div>
+</section>
+
+<!--相关话题-->
+<section class="sidebar box box-success" layout:fragment="related">
+  <div class="box-header with-border">
+    <h3 class="box-title">相关话题</h3>
+  </div>
+  <div class="box-body no-padding">
+    <ul class="list index-nows">
+      <template v-for="rp in rps">
+        <li class="item"  th:switch="${mode}">
+          <a th:case="'simple'" target="_blank" :href="_ctx + '/simple/post/' + rp.id">{{rp.title}}</a>
+          <a th:case="'normal'" target="_blank" :href="_ctx + '/post/' + rp.id">{{rp.title}}</a>
+        </li>
+      </template>
+    </ul>
+  </div>
+</section><!--/相关话题-->
+
+<!--新话题发表指南-->
+<section class="sidebar box box-info" layout:fragment="post-guide">
+  <div class="box-header with-border">
+    <h3 class="box-title">话题发表指南</h3>
+  </div>
+  <div class="box-body">
+    <p>• 话题内容支持 Markdown 文本标记语法</p>
+    <p>• 发表话题之前,可以点击预览查看</p>
+    <p>• ctrl+b 粗体</p>
+    <p>• ctrl+i 斜体</p>
+    <p>• ctrl+k 插入链接</p>
+    <p>• ctrl+alt+i 插入图片</p>
+    <p>• ctrl+' 插入引用</p>
+    <p>• ctrl+alt+l 有序列表</p>
+    <p>• ctrl+l 无序列表</p>
+    <!--<p>• ctrl+Enter 回复</p>-->
+  </div>
+</section>
+
+</body>
+</html>

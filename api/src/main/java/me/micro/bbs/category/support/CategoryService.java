@@ -37,6 +37,12 @@ public class CategoryService {
         return categoryRepository.findOne(id);
     }
 
+    @Cacheable(value = CACHE_NAME, key = "#code")
+    public Category findByCode(String code) {
+        return categoryRepository.findByCode(code);
+    }
+
+
     /**
      * 添加
      *

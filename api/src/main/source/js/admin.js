@@ -1,10 +1,11 @@
 'use strict';
 
 // 上下文地址
-var _ctx = $("meta[name='ctx']").attr("content");
+var _ctx = $("meta[name='ctx']").attr("content") || '';
 var ms = {
     Urls: {
         posts: _ctx + '/api/admin/posts',
+        posts_id: _ctx + '/api/admin/posts/{id}',
         replies:  _ctx + '/api/admin/posts/{postId}/replies',
         categories: _ctx + '/api/admin/categories',
         categories_edit: _ctx + '/api/admin/categories/{id}',

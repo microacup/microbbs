@@ -34,7 +34,11 @@
     <nav class="navbar navbar-static-top" id="nav-bar">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" th:href="@{/simple}" th:utext="#{app.title}">LMS</a>
+
+          <a class="navbar-brand" th:href="@{/simple}">
+            <img th:src="@{/static/images/icons/ic_arrow_back_black_24dp.png}" th:if="${backable}">
+            <span th:utext="${title}?: '在线答疑'"></span>
+          </a>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <i class="fa fa-bars"></i>
           </button>

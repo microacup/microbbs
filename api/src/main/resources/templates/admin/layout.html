@@ -81,7 +81,7 @@
                             <!-- Menu Toggle Button -->
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- The user image in the navbar-->
-                                <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="user-image"
+                                <img th:src="@{/api/avatar}" class="user-image"
                                      alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                 <span class="hidden-xs"><span sec:authentication="principal.nick">Bob</span></span>
@@ -89,7 +89,7 @@
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header">
-                                    <img th:src="@{/static/lib/admin-lte/dist/img/user2-160x160.jpg}" class="img-circle"
+                                    <img th:src="@{/api/avatar}" class="img-circle"
                                          alt="User Image">
                                     <p sec:authentication="principal.nick"></p>
                                     <small sec:authentication="principal.info"></small>
@@ -133,7 +133,7 @@
                   <li th:class="${@uih.adminNavClass(actived?:'report', 'report')}"> <a href="#"><i class="fa fa-dashboard"></i> <span>统计分析</span></a></li>
                   <li th:class="${@uih.adminNavClass(actived?:'', 'info')}"> <a href="#"><i class="fa fa-info-circle"></i> <span>系统状态</span></a></li>
                   <li th:class="${@uih.adminNavClass(actived?:'', 'posts')}"> <a th:href="@{/admin/posts}"><i class="fa fa-twitter"></i> <span>话题管理</span></a></li>
-                  <li th:class="${@uih.adminNavClass(actived?:'', 'replies')}"> <a th:href="@{/admin/replies}"><i class="fa fa-reply-all"></i> <span>回复管理</span></a></li>
+                  <li th:class="${@uih.adminNavClass(actived?:'', 'replies')}"> <a th:href="@{/admin/replies}"><i class="fa fa-comments"></i> <span>回复管理</span></a></li>
                   <li th:class="${@uih.adminNavClass(actived?:'', 'categories')}"> <a th:href="@{/admin/categories}"><i class="fa fa-object-group"></i> <span>分类管理</span></a></li>
                   <li th:class="${@uih.adminNavClass(actived?:'', 'tags')}"> <a th:href="@{/admin/tags}"><i class="fa fa-tags"></i> <span>标签管理</span></a></li>
                   <li th:class="${@uih.adminNavClass(actived?:'', 'users')}"> <a th:href="@{/admin/users}"><i class="fa fa-users"></i> <span>用户管理</span></a></li>

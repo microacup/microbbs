@@ -36,7 +36,7 @@ public class SocialAuthenticationProvider implements AuthenticationProvider {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         authenticationToken.setDetails(userDetails);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        return authentication;
+        return authenticationToken;
     }
 
     @Override

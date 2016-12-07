@@ -1,0 +1,95 @@
+.profile-top {
+  .profile-header {
+    height: 360px;
+    @include display-flex;
+    position: relative;
+    top: 0;
+
+    a, a:link, a:visited, a:hover, a:active {
+      color: white;
+    }
+
+    .profile-inner {
+      color: white;
+      height: 108px;
+      padding: 24px;
+      @include display-flex;
+      @include flex-direction(row);
+      @include align-items(center);
+      @include align-self(flex-end);
+      background-color: rgba(0,0,0,0);
+      background-image: -webkit-linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.46));
+      background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.46));
+      position: relative;
+      z-index: 2;
+
+      .profile-avatar {
+        background-color: #fff;
+        border: 2px solid #fff;
+        @include border-radius(50%);
+        height: 60px;
+        width: 60px;
+        flex: 0 0 auto;
+      }
+
+      .profile-detail {
+        text-align: left;
+        margin-left: 24px;
+        @include flex(1);
+      }
+
+    }
+
+    .profile-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      z-index: 1;
+
+      &>img{
+        position: absolute;
+        left:0;
+        right: 0;
+        top: -9999px;
+        bottom: -9999px;
+        margin: auto 0;
+        width: 100%;
+      }
+    }
+
+    .bg-large {
+      background-size: cover;
+      background: url("http://imgcdn.ph.126.net/msMyIlDY49iOrX6KfmkHBQ==/6608854332282905023.jpg") no-repeat center center;
+    }
+  }
+
+}
+
+.profile-content {
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  .username {
+    &>a {
+      color: $text-color-default;
+      font-weight: bold;
+
+      &:hover, &:active {
+        color: $text-color-grey;
+      }
+    }
+  }
+
+  .post-footer {
+    font-size: 14px;
+  }
+
+}
+
+.profile-aside {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}

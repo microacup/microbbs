@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * RoleService
@@ -24,8 +24,8 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    List<Role> findAll() {
-        return roleRepository.findAll();
+    public Set<Role> findByUser(Long userId) {
+        return roleRepository.findByUser(userId);
     }
 
     public void deleteById(Long id) {

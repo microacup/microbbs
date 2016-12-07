@@ -19,7 +19,7 @@ buildscript {
 
 
 def vJavaLang = '1.8'
-def javaProjects = [project(':api')]
+def javaProjects = [project(':api'), project(':identicon')]
 
 subprojects {
 	version = "1.0.0"
@@ -59,7 +59,7 @@ configure(javaProjects) {
 	afterEvaluate {
 		dependencyManagement {
 			imports {
-				mavenBom ('io.spring.platform:platform-bom:Athens-RELEASE')
+				mavenBom ('io.spring.platform:platform-bom:Athens-SR1')
 				/*{
 					bomProperties([
 							'elasticsearch.version': '2.1.0' // see io.searchbox:jest

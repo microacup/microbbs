@@ -18,10 +18,10 @@ import java.util.List;
 @Transactional
 public interface TagRepository extends JpaRepository<Tag, Long>{
 
-    @Query(value = "select t from Tag t where t.category.id = :categoryId order by t.id")
+    @Query(value = "select t from Tag t where t.category.code = :category order by t.id")
         // nativeQuery时必须返回所有列§3.10.16.1 "Returning Managed Entities from Native Queries" of the JPA spec says:
-        // @Query(value = "select * from M_TAG t where t.t_category = :categoryId", nativeQuery = true)
-    List<Tag> findByCategoryId(@Param("categoryId") Long categoryId);
+        // @Query(value = "select * from M_TAG t where t.t_category = :category", nativeQuery = true)
+    List<Tag> findByCategory(@Param("category") String category);
 
     @Query(value = "select count(1) from m_tag t where t.t_category = :categoryId", nativeQuery = true)
     Long countByCategoryId(@Param("categoryId") Long categoryId);
@@ -33,4 +33,5 @@ public interface TagRepository extends JpaRepository<Tag, Long>{
     @Query(value = "select t.* from m_tag t ,m_posts_tags pt where t.id = pt.tag_id and pt.post_id = :postId", nativeQuery = true)
     List<Tag> findByPostId(@Param("postId") Long postId);
 
+    Tag findByCode(String code);
 }

@@ -14,7 +14,7 @@ spring:
       max-request-size: 2048KB
   datasource:
     driverClassName:  com.mysql.jdbc.Driver
-    url:  jdbc:mysql://127.0.0.1/microbbs?serverTimezone=UTC&useSSL=false
+    url:  jdbc:mysql://127.0.0.1/microbbs?serverTimezone=UTC&useSSL=false&characterEncoding=utf-8
     username: root
     password: root
   session:
@@ -47,8 +47,6 @@ security:
     xss: true
     enable-csrf: false
   ignored: /static/**
-  user:
-    password: 111111
   basic:
     enabled:  true
   require_ssl: false
@@ -57,9 +55,16 @@ oauth2:
   weibo:
     clientId: 2469375966
     clientSecret: 0f0b097b256ed88bb9f21037e36604b8
+  lms:
+     server: http://meiqiu.ngrok.cc
+     clientId: 1xx1255436
+     clientSecret: 7x0b09ssb256ed88bb9f21037e36604b7
 
 site:
   server: http://meiqiu.ngrok.cc/bbs
+  upload:
+    windows: D:\microbbs\upload
+    linux: /opt/microbbs/upload
 
 logging:
   level:
