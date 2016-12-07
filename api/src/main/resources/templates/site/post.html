@@ -27,25 +27,6 @@
 
   <section layout:replace="site/_comment :: comments"></section>
   <section layout:replace="site/_comment :: do-comment"></section>
-  <section class="box box-default box-do-comments" id="do-comments">
-    <div class="box-header with-border">
-      <h3 class="box-title">发表回复</h3>
-    </div>
-    <!-- /.box-footer -->
-    <div class="box-footer">
-      <form action="#" method="post">
-        <input id="comment-csrf" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <img class="img-responsive img-circle img-sm" th:src="@{/static/images/avatar.png}" alt="Alt Text">
-        <!-- .img-push is used to add margin to elements next to floating images -->
-        <div class="img-push">
-          <div class="form-group">
-            <textarea name="reply-content" id="reply-content" rows="3" class="form-control" placeholder="在此输入回复内容，支持Markdown语法哦~"></textarea>
-          </div>
-          <button type="button" id="submit-comment" class="btn btn-info btn-sm btn-flat pull-right">提交回复</button>
-        </div>
-      </form>
-    </div>
-  </section>
 </main><!--/content-->
 
 <aside layout:fragment="sidebar" id="sidebar">
