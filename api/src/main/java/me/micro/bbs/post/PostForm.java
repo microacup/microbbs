@@ -9,7 +9,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * PostForm
@@ -31,7 +32,7 @@ public class PostForm {
     private String summary;
 
     @NotEmpty
-    private List<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedTime;

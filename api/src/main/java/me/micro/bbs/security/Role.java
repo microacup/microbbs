@@ -1,13 +1,11 @@
 package me.micro.bbs.security;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import me.micro.bbs.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,9 +22,10 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"users","permissions","title","code"}, doNotUseGetters = true)
+@EqualsAndHashCode(exclude = {"permissions","title","code"}, doNotUseGetters = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Role implements Serializable {
+    private static final long serialVersionUID = -1442723343650498391L;
 
     @Id
     @GeneratedValue
@@ -40,9 +39,9 @@ public class Role implements Serializable {
     @Column(nullable = false, unique = true)
     private String title;
 
-    @ManyToMany(mappedBy = "roles" ,fetch = FetchType.LAZY)
+    /*@ManyToMany(mappedBy = "roles" ,fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<User> users = new HashSet<>();
+    private Set<User> users = new HashSet<>();*/
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinTable(

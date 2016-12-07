@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.header.writers.HstsHeaderWriter;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 
@@ -36,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/","/static/**", "/test/**","/500", "/404", "/oauth/**","/oauth2/**").permitAll()
                 .anyRequest().authenticated()
-                .and().rememberMe().rememberMeServices(rememberMeServices())
+                .and().rememberMe()
                 .and().formLogin().loginPage("/login").permitAll()
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").permitAll();
 
@@ -68,16 +67,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new SocialAuthenticationProvider();
     }
 
-    @Bean
+    /*@Bean
     public TokenBasedRememberMeServices rememberMeServices() {
         return new TokenBasedRememberMeServices("remember-me-key", userService());
-    }
+    }*/
 
     @Override
     @Bean(name="authenticationManager")
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

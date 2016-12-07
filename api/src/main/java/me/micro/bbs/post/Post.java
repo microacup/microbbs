@@ -16,7 +16,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 话题
@@ -65,7 +66,7 @@ public class Post {
         joinColumns = {@JoinColumn(name = "post_id", nullable = false, updatable = false)},
         inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false, updatable = false)})
     @OrderBy("id")
-    private List<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
     // 作者
     @ManyToOne
