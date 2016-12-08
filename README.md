@@ -2,6 +2,8 @@
 
 轻量化Java社区。
 
+Wiki: [https://github.com/microacup/microbbs/wiki](https://github.com/microacup/microbbs/wiki)
+
 关键词：
 
 - Spring、SpringMVC、Thymeleaf
