@@ -83,7 +83,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `m_post`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `m_post` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `p_content` longtext NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE `m_post` (
   `p_reply_count` bigint(20) NOT NULL,
   `p_replyable` bit(1) NOT NULL,
   `p_status` varchar(255) NOT NULL,
-  `p_summary` longtext,
+  `p_summary` longtext CHARACTER SET 'utf8mb4' ,
   `p_title` varchar(255) NOT NULL,
   `p_top` bit(1) NOT NULL,
   `p_top_time` datetime DEFAULT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE `m_post` (
   KEY `IDX_STATUS` (`p_status`),
   KEY `FK3hsotrueexqled1fda3o2btit` (`p_author`),
   CONSTRAINT `FK3hsotrueexqled1fda3o2btit` FOREIGN KEY (`p_author`) REFERENCES `sys_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +157,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `m_reply`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `m_reply` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `r_adopt` bit(1) NOT NULL,
@@ -187,7 +187,7 @@ CREATE TABLE `m_reply` (
   CONSTRAINT `FK1wsegqt8dnrms7awpum134o0p` FOREIGN KEY (`r_author`) REFERENCES `sys_user` (`id`),
   CONSTRAINT `FKfdqlv37e4t8rr7ldmdnfkc9s1` FOREIGN KEY (`r_reply`) REFERENCES `m_reply` (`id`),
   CONSTRAINT `FKkdqrmgaeh7bye2i528g24dosn` FOREIGN KEY (`r_post`) REFERENCES `m_post` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
