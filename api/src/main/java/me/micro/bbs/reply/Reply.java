@@ -64,7 +64,7 @@ public class Reply {
     private Reply reply;
 
     // 状态
-    @Column(name = "r_status", nullable = false)
+    @Column(name = "r_status", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private PostStatus status;
 

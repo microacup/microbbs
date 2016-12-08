@@ -121,7 +121,7 @@ public class Post {
     private Boolean replyable;
 
     // 状态
-    @Column(name = "p_status", nullable = false)
+    @Column(name = "p_status", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private PostStatus status;
 
