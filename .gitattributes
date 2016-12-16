@@ -11,7 +11,7 @@
 *.htm           text
 *.html          text
 *.java          text
-*.js            text
+*.js            linguist-language=java
 *.json          text
 *.jsp           text
 *.jspf          text
